@@ -64,8 +64,9 @@ namespace NGJ2012
 
 
         Texture2D background;
-        public float gameProgress = 0;
 
+        public float gameProgress = 0;
+        //float tetrisProgressAdd = 10;
         float gameProgressSpeed = 3.5f;
         private GameViewport tetrisViewport;
 
@@ -184,12 +185,10 @@ namespace NGJ2012
             else if (keyboardState.IsKeyDown(Keys.PageDown) && prevKeyboardState.IsKeyUp(Keys.PageDown))
                 manualPosition.Y += 1.0f;
 #endif
-
             // update game progress
             gameProgress += gameProgressSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
             if (gameProgress > Game1.worldWidthInBlocks)
             {
-                // Finished round
                 gameProgress -= Game1.worldWidthInBlocks;
                 SavePlatform.AllowTriggering();
                 WaterLayer.StartRising(5000);
