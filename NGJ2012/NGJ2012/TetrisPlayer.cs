@@ -196,7 +196,7 @@ namespace NGJ2012
             drawer.cameraMatrix = camera;
             foreach (TetrisPiece cur in pieces)
             {
-                drawer.DrawBodyTextured(cur.body, cur.texture);
+                drawer.DrawTetrisPiece(cur);
             }
         }
 

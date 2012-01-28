@@ -18,7 +18,7 @@ using FarseerPhysics.Common;
 
 namespace NGJ2012
 {
-    class TetrisPiece
+    public class TetrisPiece
     {
         public Body body;
         public List<Fixture> fixtures;
@@ -36,7 +36,8 @@ namespace NGJ2012
                 for (int x = 0; x < shape.GetLength(1); x++)
                 {
                     if (!shape[y, x]) continue;
-                    Vertices v = new Vertices(new Vector2[] { new Vector2(x+0, y+0), new Vector2(x+1, y+0), new Vector2(x+1,y+1), new Vector2(x+0, y+1) });
+                    float shrink = 0.1f;
+                    Vertices v = new Vertices(new Vector2[] { new Vector2(x + 0 + shrink, y + 0 + shrink), new Vector2(x + 1 - shrink, y + 0 + shrink), new Vector2(x + 1 - shrink, y + 1 - shrink), new Vector2(x + 0 + shrink, y + 1 - shrink) });
                     fixtures.Add(FixtureFactory.AttachPolygon(v, 1.0f, body));
                 }
             }
