@@ -78,6 +78,9 @@ namespace NGJ2012
         private GameViewport tetrisViewport;
         private GameViewport platformViewport;
 
+        private const float TIME_BETWEEN_POWERUPSPAWNS_SECS = 3.0f;
+        private float elapsedTimeSinceLastPowerUp = 0.0f;
+
 #if DEBUG
         public Vector2 manualPosition = Vector2.Zero;
 #endif
@@ -113,10 +116,6 @@ namespace NGJ2012
             Components.Add(WaterLayer);
             SavePlatform = new SavePlatform(this);
             Components.Add(SavePlatform);
-
-            //TODO: Create PowerUps dynamically
-            Components.Add(new PowerUp(this, world, PowerUp.EPowerUpType.MegaJump, new Vector2(2, -4)));
-            Components.Add(new PowerUp(this, world, PowerUp.EPowerUpType.ExtraLife, new Vector2(4, -4)));
 
             tetrisViewport = new GameViewport(this, 32)
             {
@@ -216,6 +215,8 @@ namespace NGJ2012
             prevKeyboardState = keyboardState;
             prevGamepadState = gamepadState;
 
+            addPowerupToWorld((float)gameTime.ElapsedGameTime.TotalSeconds);
+
             base.Update(gameTime);
         }
 
@@ -250,6 +251,18 @@ namespace NGJ2012
                     (c as DrawableGameComponentExtended).DrawGameWorldOnce(camera, platformMode);
                 }
             }
+        }
+
+        private void addPowerupToWorld(float elapsedSeconds)
+        {
+            elapsedTimeSinceLastPowerUp += elapsedSeconds;
+
+            if (elapsedTimeSinceLastPowerUp >= TIME_BETWEEN_POWERUPSPAWNS_SECS)
+            {
+                PowerUp p = PowerUp.getRandomPowerUp(this, world, platform.cameraPosition + new Vector2(2.0f, -1.0f));
+                Components.Add(p);
+                elapsedTimeSinceLastPowerUp = 0.0f;
+            }    
         }
     }
 }
