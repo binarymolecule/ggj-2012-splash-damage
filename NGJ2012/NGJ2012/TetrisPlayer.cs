@@ -187,6 +187,8 @@ namespace NGJ2012
                 if (spawnR < currentPieceCenter.X && moveDir.X > 0) moveDir.X = 0;
                 currentPiece.body.LinearVelocity = moveDir * movementSpeed;
 
+                if (currentPiece.body.Position.Y > 10) dropCurrentPiece();
+
                 if (currentPieceCenter.X < spawnL) currentPiece.body.LinearVelocity = new Vector2(currentPiece.body.LinearVelocity.X + (spawnL-currentPieceCenter.X)*10,currentPiece.body.LinearVelocity.Y);
 
                 if (state.IsKeyDown(Keys.PageDown) || gstate.IsButtonDown(Buttons.X))

@@ -17,7 +17,6 @@ namespace NGJ2012
         public Game1 game;
         public RenderTarget2D leftScreen;
         public RenderTarget2D rightScreen;
-        public bool platformMode = true;
         private float splitLine;
 
         public GameViewport(Game1 game, float icellWidth)
@@ -58,37 +57,37 @@ namespace NGJ2012
             {
                 splitLine = gameWorldStartInPX - cameraLeftInPX;
                 game.GraphicsDevice.SetRenderTarget(leftScreen);
-                DrawGameWorldOnce(platformMode, -1);
+                DrawGameWorldOnce(-1);
                 GraphicsDevice.SetRenderTarget(rightScreen);
-                DrawGameWorldOnce(platformMode, 0);
+                DrawGameWorldOnce(0);
             }
             else if (gameWorldEndInPX < cameraRightInPX)
             {
                 splitLine = screenWidth - (cameraRightInPX - gameWorldEndInPX);
                 GraphicsDevice.SetRenderTarget(leftScreen);
-                DrawGameWorldOnce(platformMode, 0);
+                DrawGameWorldOnce(0);
                 GraphicsDevice.SetRenderTarget(rightScreen);
-                DrawGameWorldOnce(platformMode, 1);
+                DrawGameWorldOnce(1);
             }
             else
             {
                 GraphicsDevice.SetRenderTarget(leftScreen);
-                DrawGameWorldOnce(platformMode, 0);
+                DrawGameWorldOnce(0);
             }
 
             game.GraphicsDevice.SetRenderTarget(null);
         }
 
-        private void DrawGameWorldOnce(bool platformMode, int wrapAround)
+        private void DrawGameWorldOnce(int wrapAround)
         {
             Matrix camera = Matrix.CreateTranslation(-new Vector3(cameraPosition, 0.0f));
 #if DEBUG
             camera *= Matrix.CreateTranslation(-new Vector3((Game as Game1).manualPosition, 0.0f));
 #endif
             camera *= Matrix.CreateTranslation(new Vector3(wrapAround * Game1.worldWidthInBlocks, 0, 0));
-            camera *= Matrix.CreateScale(platformMode ? Game1.gameBlockSizePlatform : Game1.gameBlockSizeTetris);
+            camera *= Matrix.CreateScale(Game1.gameBlockSizeTetris);
             camera *= Matrix.CreateTranslation(new Vector3(screenWidth, screenHeight, 0.0f) / 2.0f);
-            game.DrawGameWorldOnce(camera, platformMode, wrapAround);
+            game.DrawGameWorldOnce(camera, true, wrapAround);
         }
 
         public void Compose(SpriteBatch spriteBatch, int x = 0, int y = 0)

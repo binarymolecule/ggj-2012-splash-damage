@@ -128,7 +128,7 @@ namespace NGJ2012
             {
                 this.game.SpriteBatch.Begin();
                 animation.Draw(this.game.SpriteBatch, Vector2.Transform(collisionBody.Position, camera),
-                               platformMode ? Game1.ScalePlatformSprites : Game1.ScaleTetrisSprites);
+                               1.0f);
                 this.game.SpriteBatch.End();
 
 #if DEBUG

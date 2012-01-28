@@ -37,12 +37,12 @@ namespace NGJ2012
         public GameStatusLayer(Game game) : base(game)
         {
             parent = (Game1)game;
-            screenRectangle = new Rectangle(Game1.platformModeWidth - 8, 0, 16, 720);
+            screenRectangle = new Rectangle(1000 - 8, 0, 16, 720);
             playerRectangle = new Rectangle(screenRectangle.X - 8, 0, 32, 32);
 
             float offset = 4.0f;
             textPositionP1 = new Vector2(offset, 2.0f);
-            textPositionP2 = new Vector2(Game1.platformModeWidth + offset, 2.0f);
+            textPositionP2 = new Vector2(1000 + offset, 2.0f);
         }
 
         protected override void LoadContent()
