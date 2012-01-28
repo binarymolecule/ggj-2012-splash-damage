@@ -31,6 +31,7 @@ namespace NGJ2012
         List<Texture2D> tetrisTextures = new List<Texture2D>();
 
         List<TetrisPiece> pieces = new List<TetrisPiece>();
+        List<TetrisPiece> activePieces = new List<TetrisPiece>();
         private TetrisPiece currentPiece;
         float currentPieceMaxLen;
         private TetrisPiece nextPiece;
@@ -83,6 +84,7 @@ namespace NGJ2012
             currentPiece.body.OnCollision += currentPieceCollide;
             currentPieceRotation = JointFactory.CreateFixedAngleJoint(_world, currentPiece.body);
             pieces.Add(currentPiece);
+            activePieces.Add(currentPiece);
 
             nextPiece = getRandomTetrisPiece();
 
@@ -98,6 +100,7 @@ namespace NGJ2012
         private void dropCurrentPiece()
         {
             currentPiece.body.LinearVelocity = Vector2.Zero;
+            currentPiece.body.ResetDynamics();
             currentPiece.body.OnCollision -= currentPieceCollide;
             currentPieceCollide = null;
             currentPiece = null;
@@ -187,6 +190,26 @@ namespace NGJ2012
 
             }
 
+            List<TetrisPiece> deactivateUs = new List<TetrisPiece>();
+            foreach (TetrisPiece cur in activePieces)
+            {
+                if (cur.body.Awake) cur.freezeCountdown = 50;
+                else {
+                    Vector2 center = cur.body.GetWorldPoint(cur.body.LocalCenter);
+                    if (center.Y < (Game as Game1).WaterLayer.Position.Y)
+                    {
+                        --cur.freezeCountdown;
+                        if (cur.freezeCountdown < 0)
+                        {
+                            cur.body.BodyType = BodyType.Static;
+                            deactivateUs.Add(cur);
+                        }
+                    }
+                }
+            }
+
+            foreach (TetrisPiece cur in deactivateUs)
+                activePieces.Remove(cur);
 
             base.Update(gameTime);
         }
@@ -197,6 +220,7 @@ namespace NGJ2012
             foreach (TetrisPiece cur in pieces)
             {
                 drawer.DrawTetrisPiece(cur);
+                drawer.DrawBody(cur.body);
             }
         }
 
