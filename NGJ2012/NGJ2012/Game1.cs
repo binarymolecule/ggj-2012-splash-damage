@@ -54,7 +54,7 @@ namespace NGJ2012
             graphics.PreferredBackBufferWidth = 1280;
             graphics.PreferredBackBufferHeight = 720;
             Content.RootDirectory = "Content";
-            world = new World(new Vector2(0, 9.81f));
+            world = new World(new Vector2(0, 25));
 
             staticWorldGround = BodyFactory.CreateRectangle(world, worldWidthInBlocks, 1, 1.0f, new Vector2(worldWidthInBlocks / 2.0f, worldHeightInBlocks));
             staticWorldL = BodyFactory.CreateRectangle(world, 1, worldHeightInBlocks, 1.0f, new Vector2(0, worldHeightInBlocks / 2.0f));
@@ -62,9 +62,9 @@ namespace NGJ2012
             staticWorldGround.BodyType = BodyType.Static;
             staticWorldL.BodyType = BodyType.Static;
             staticWorldR.BodyType = BodyType.Static;
-            staticWorldGround.Friction = float.MaxValue;
-            staticWorldL.Friction = float.MaxValue;
-            staticWorldR.Friction = float.MaxValue;
+            staticWorldGround.Friction = 100.0f;
+            staticWorldL.Friction = 100.0f;
+            staticWorldR.Friction = 100.0f;
             staticWorldGround.CollisionCategories = Category.Cat3;
             staticWorldL.CollisionCategories = Category.Cat3;
             staticWorldR.CollisionCategories = Category.Cat3;

@@ -43,7 +43,7 @@ namespace NGJ2012
             body.Restitution = 0.1f;
             body.Friction = 1.0f;
             body.CollisionCategories = Category.Cat2;
-            body.CollidesWith = Category.Cat2 | Category.Cat3;
+            body.CollidesWith = Category.Cat1 | Category.Cat2 | Category.Cat3;
         }
     }
 }
