@@ -36,7 +36,7 @@ namespace NGJ2012
         TetrisPieceBatch drawer;
 
         // Absolute position in world coordinate system where new pieces are spawned
-        public Vector2 SpawnPosition = new Vector2(2, -25);
+        public Vector2 SpawnPosition = new Vector2(25, -25);
 
         public TetrisPlayer(Game game, World world) : base(game)
         {

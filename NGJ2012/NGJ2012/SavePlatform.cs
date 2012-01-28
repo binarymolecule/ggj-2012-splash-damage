@@ -37,11 +37,12 @@ namespace NGJ2012
             screenRect = new Rectangle(0, 0, 640, 64);
 
             // Create physical objects
-            offsetToWater = new Vector2(6, -3);
-            platformBody = BodyFactory.CreateRectangle(parent.World, 10, 1, 1.0f, parent.WaterLayer.Position + offsetToWater);
+            offsetToWater = new Vector2(5, 0);
+            platformBody = BodyFactory.CreateRectangle(parent.World, 8, 1, 1.0f, parent.WaterLayer.Position + offsetToWater);
             platformBody.BodyType = BodyType.Static;
             platformBody.Friction = float.MaxValue;
             platformBody.CollisionCategories = Game1.COLLISION_GROUP_STATIC_OBJECTS;
+            platformBody.CollidesWith = Game1.COLLISION_GROUP_TETRIS_BLOCKS | Game1.COLLISION_GROUP_DEFAULT;
         }
 
         protected override void LoadContent()
