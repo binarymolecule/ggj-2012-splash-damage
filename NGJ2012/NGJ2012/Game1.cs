@@ -75,7 +75,9 @@ namespace NGJ2012
         RenderTarget2D tetrisModeLeft;
         RenderTarget2D tetrisModeRight;
 
+        Texture2D background;
         public float gameProgress = 0;
+
         float gameProgressSpeed = 1;
         float tetrisProgressAdd = 10;
         private GameViewport tetrisViewport;
@@ -168,7 +170,7 @@ namespace NGJ2012
 
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-
+            background = Content.Load<Texture2D>("graphics/level/Background");
             tetrisBatch = new TetrisPieceBatch(GraphicsDevice, Content);
 
 #if DEBUG
@@ -217,16 +219,10 @@ namespace NGJ2012
                 gameProgress -= Game1.worldWidthInBlocks;
                 SavePlatform.AllowTriggering();
             }
-            
-            platformViewport.cameraPosition = new Vector2(gameProgress, platform.playerCollider.Position.Y);
 
-            var camDiff = MathStuff.WorldDistance(platform.playerCollider.Position.X, platformViewport.cameraPosition.X, worldWidthInBlocks);
-            if (camDiff > 0 && camDiff < 10)
-            {
-                platformViewport.cameraPosition.X -= MathHelper.Clamp(camDiff, 0, 3);
-            }
+            platformViewport.cameraPosition = platform.cameraPosition + new Vector2(platformViewport.screenWidthInGAME/3.0f, 0);
 
-            float tetrisPro = gameProgress + tetrisProgressAdd;
+            float tetrisPro = platformViewport.cameraPosition.X + tetrisProgressAdd;
             if (tetrisPro > Game1.worldWidthInBlocks) tetrisPro -= Game1.worldWidthInBlocks;
             tetrisViewport.cameraPosition = new Vector2(tetrisPro, WaterLayer.Position.Y - 4);
 
@@ -262,10 +258,16 @@ namespace NGJ2012
         public void DrawGameWorldOnce(Matrix camera, bool platformMode, int wrapAround)
         {
             GraphicsDevice.Clear(platformMode ? Color.CornflowerBlue : Color.Coral);
+            spriteBatch.Begin();
+            Vector3 tl = camera.Translation;
+            spriteBatch.Draw(background, new Rectangle(0,0,1280,720), Color.White);
+            spriteBatch.End();
+
             tetrisBatch.cameraMatrix = camera;
             tetrisBatch.DrawBody(staticWorldGround);
             tetrisBatch.DrawBody(staticWorldL);
             tetrisBatch.DrawBody(staticWorldR);
+            //tetrisBatch.DrawAlignedQuad(new Vector2(Game1.worldWidthInBlocks,0)/2, new Vector2(Game1.worldWidthInBlocks,Game1.worldHeightInBlocks), background);
             foreach (GameComponent c in Components)
             {
                 if (c is DrawableGameComponentExtended)

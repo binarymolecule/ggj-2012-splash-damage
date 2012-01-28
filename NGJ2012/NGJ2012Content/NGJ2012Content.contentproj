@@ -158,6 +158,11 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="graphics\level\Background.png">
+      <Name>Background</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
     <Compile Include="shapes\WaterShader.fx">
       <Name>WaterShader</Name>
       <Importer>EffectImporter</Importer>
