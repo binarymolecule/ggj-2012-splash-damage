@@ -31,6 +31,7 @@ namespace NGJ2012
 
         bool canBeTriggered = false;
         public void AllowTriggering() { canBeTriggered = true; }
+        public void DisableTriggering() { canBeTriggered = false; }
         public Body Body { get { return platformBody; } }
 
         // Assets
@@ -72,15 +73,15 @@ namespace NGJ2012
             if (canBeTriggered)
             {
                 canBeTriggered = false;
-                StartRising(3000);
+                StartRising(2000);
             }
         }
 
         public void StartRising(int msec)
         {
-            // Start rising 3 blocks
+            // Start rising one block
             riseTime = msec;
-            riseSpeed = 3.0f / (0.001f * msec);
+            riseSpeed = 1.0f / (0.001f * msec);
             parent.WaterLayer.StartRising(msec);
         }
 
