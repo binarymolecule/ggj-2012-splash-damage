@@ -24,8 +24,7 @@ namespace NGJ2012
         SpriteBatch spriteBatch;
         World world;
         TetrisPlayer tetris;
-
-        List<bool[,]> tetrisShapes = new List<bool[,]>();
+        TetrisPieceBatch tetrisBatch;
 
         float gameBlockSize = 32.0f;
         int worldWidthInBlocks = 24;
@@ -49,13 +48,12 @@ namespace NGJ2012
             staticWorldL.BodyType = BodyType.Static;
             staticWorldR.BodyType = BodyType.Static;
 
-            tetrisShapes.Add(new bool[,] { { true, false }, { true, false }, { true, true } });
-            tetrisShapes.Add(new bool[,] { { true, true }, { true, true } });
-            tetrisShapes.Add(new bool[,] { { false, true, false }, { true, true, true } });
-            tetrisShapes.Add(new bool[,] { { true }, { true }, { true }, { true } });
-
             tetris = new TetrisPlayer(this, world, gameBlockSize);
             Components.Add(tetris);
+
+            tetrisBatch = new TetrisPieceBatch();
+            tetrisBatch.GraphicsDevice = GraphicsDevice;
+            tetrisBatch.cameraMatrix = Matrix.CreateScale(gameBlockSize);
         }
 
         /// <summary>
@@ -117,9 +115,9 @@ namespace NGJ2012
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
-            tetris.DrawBody(staticWorldGround);
-            tetris.DrawBody(staticWorldL);
-            tetris.DrawBody(staticWorldR);
+            tetrisBatch.DrawBody(staticWorldGround);
+            tetrisBatch.DrawBody(staticWorldL);
+            tetrisBatch.DrawBody(staticWorldR);
 
             base.Draw(gameTime);
         }

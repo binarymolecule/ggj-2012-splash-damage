@@ -20,18 +20,31 @@ namespace NGJ2012
     /// <summary>
     /// This is a game component that implements IUpdateable.
     /// </summary>
-    public class TetrisPlayer : Microsoft.Xna.Framework.GameComponent
+    public class TetrisPlayer : Microsoft.Xna.Framework.DrawableGameComponent
     {
         private World _world;
         private float gameBlockSize;
-        private Vector2 cursorPosition;
+        const float movementSpeed = 8.0f;
+
+        List<bool[,]> tetrisShapes = new List<bool[,]>();
+        List<Texture2D> tetrisTextures = new List<Texture2D>();
+
+        List<TetrisPiece> pieces = new List<TetrisPiece>();
+        private TetrisPiece currentPiece;
+        TetrisPieceBatch drawer;
 
         public TetrisPlayer(Game game, World world, float igameBlockSize)
             : base(game)
         {
             _world = world;
             gameBlockSize = igameBlockSize;
-            cursorPosition = new Vector2(3, 3);
+
+            tetrisShapes.Add(new bool[,] { { true, false }, { true, false }, { true, true } });
+            tetrisShapes.Add(new bool[,] { { true, true }, { true, true } });
+            tetrisShapes.Add(new bool[,] { { false, true, false }, { true, true, true } });
+            tetrisShapes.Add(new bool[,] { { true }, { true }, { true }, { true } });
+            currentPiece = new TetrisPiece(world, null, tetrisShapes[0], new Vector2(2,2));
+            pieces.Add(currentPiece);
         }
 
         /// <summary>
@@ -40,13 +53,16 @@ namespace NGJ2012
         /// </summary>
         public override void Initialize()
         {
-            _lineVertices = new VertexPositionColor[1024];
-
-            // set up a new basic effect, and enable vertex colors.
-            _basicEffect = new BasicEffect(Game.GraphicsDevice);
-            _basicEffect.VertexColorEnabled = true;
+            drawer = new TetrisPieceBatch();
+            drawer.GraphicsDevice = GraphicsDevice;
+            drawer.cameraMatrix = Matrix.CreateScale(gameBlockSize);
 
             base.Initialize();
+        }
+
+        protected override void LoadContent()
+        {
+            base.LoadContent();
         }
 
         /// <summary>
@@ -56,58 +72,28 @@ namespace NGJ2012
         public override void Update(GameTime gameTime)
         {
             // TODO: Add your update code here
+            Vector2 moveDir = new Vector2();
+            KeyboardState state = Keyboard.GetState();
+            if (state.IsKeyDown(Keys.Left)) moveDir.X = -1;
+            else if (state.IsKeyDown(Keys.Right)) moveDir.X = +1;
+            else moveDir.X = 0;
+            if (state.IsKeyDown(Keys.Up)) moveDir.Y = -1;
+            else if (state.IsKeyDown(Keys.Down)) moveDir.Y = +1;
+            else moveDir.Y = 0;
+            //cursorPosition += (float)gameTime.ElapsedGameTime.TotalSeconds * moveDir * movementSpeed;
 
             base.Update(gameTime);
         }
 
-
-        private BasicEffect _basicEffect;
-        private VertexPositionColor[] _lineVertices;
-        private int _lineVertsCount;
-
-
-        public void DrawBody(Body bod)
+        public override void Draw(GameTime gameTime)
         {
-            Matrix mat = Matrix.CreateRotationZ(bod.Rotation) * Matrix.CreateTranslation(new Vector3(bod.Position, 0.0f)) * Matrix.CreateScale(gameBlockSize);
 
-            Game.GraphicsDevice.SamplerStates[0] = SamplerState.AnisotropicClamp;
-            //tell our basic effect to begin.
-            _basicEffect.Projection = Matrix.CreateOrthographicOffCenter(0, Game.GraphicsDevice.Viewport.Width, Game.GraphicsDevice.Viewport.Height, 0, 0, 1);
-            _basicEffect.View = mat;
-            _basicEffect.CurrentTechnique.Passes[0].Apply();
-
-            foreach (Fixture fix in bod.FixtureList)
+            foreach (TetrisPiece cur in pieces)
             {
-                DrawLineShape(fix.Shape, Color.Black);
-            }
-
-            Flush();
-        }
-
-        public void DrawLineShape(Shape shape, Color color)
-        {
-            if (shape.ShapeType == ShapeType.Polygon)
-            {
-                PolygonShape loop = (PolygonShape)shape;
-                for (int i = 0; i < loop.Vertices.Count; ++i)
-                {
-                    if (_lineVertsCount >= _lineVertices.Length)
-                        Flush();
-                    _lineVertices[_lineVertsCount].Position = new Vector3(loop.Vertices[i], 0f);
-                    _lineVertices[_lineVertsCount + 1].Position = new Vector3(loop.Vertices.NextVertex(i), 0f);
-                    _lineVertices[_lineVertsCount].Color = _lineVertices[_lineVertsCount + 1].Color = color;
-                    _lineVertsCount += 2;
-                }
+                drawer.DrawBody(cur.body);
             }
         }
 
-
-
-        private void Flush()
-        {
-            if (_lineVertsCount < 2) return;
-            Game.GraphicsDevice.DrawUserPrimitives(PrimitiveType.LineList, _lineVertices, 0, _lineVertsCount / 2);
-            _lineVertsCount = 0;
-        }
+    
     }
 }
