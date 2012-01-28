@@ -35,12 +35,7 @@ namespace NGJ2012
         private Body collisionBody;
         private EPowerUpType powerUpType;
         private bool usageTimerRunning = false;
-        private double actionEnabledTimeSecs = 3;
-
-        public EPowerUpType PowerUpType
-        {
-            get { return powerUpType; }
-        }
+        private double remainingPowerUpTimeInSecs = 3;
 
         public enum EPowerUpType
         {
@@ -91,14 +86,15 @@ namespace NGJ2012
             return false;
         }            
 
+
         protected override void LoadContent()
         {
             // Create animations for power ups
             string[] animationNames = new string[] { "PowerUp_Jump", "PowerUp_Life", "PowerUp_Star" };
             animation = new AnimatedSprite(game, "", animationNames, new Vector2(20, 30));
             animation.AddAnimation("jump", 0, 0, 125, true);
-            animation.AddAnimation("life", 0, 0, 125, true);
-            animation.AddAnimation("star", 0, 0, 125, true);
+            animation.AddAnimation("life", 1, 1, 125, true);
+            animation.AddAnimation("star", 2, 2, 125, true);
 
             switch (this.powerUpType)
             {
@@ -120,10 +116,10 @@ namespace NGJ2012
         public override void Update(GameTime gameTime)
         {
             if (usageTimerRunning) {
-                this.actionEnabledTimeSecs -= gameTime.ElapsedGameTime.TotalSeconds;
+                this.remainingPowerUpTimeInSecs -= gameTime.ElapsedGameTime.TotalSeconds;
             }
 
-            if (actionEnabledTimeSecs <= 0) this.onPowerUpExhausted();
+            if (remainingPowerUpTimeInSecs <= 0) this.onPowerUpExhausted();
 
             base.Update(gameTime);
         }
@@ -136,6 +132,11 @@ namespace NGJ2012
                 animation.Draw(this.game.SpriteBatch, Vector2.Transform(collisionBody.Position, camera),
                                platformMode ? Game1.ScalePlatformSprites : Game1.ScaleTetrisSprites);
                 this.game.SpriteBatch.End();
+
+#if DEBUG
+                this.game.DebugDrawer.cameraMatrix = camera;
+                this.game.DebugDrawer.DrawBody(collisionBody);
+#endif
             }
         }
 
@@ -175,6 +176,20 @@ namespace NGJ2012
             game.Components.Remove(this);
         }
 
+        public bool UsageTimerRunning
+        {
+            get { return usageTimerRunning; }
+        }
+
+        public String getRemainingPowerUpTimeInSecsFixedPoint()
+        {
+            return string.Format("{0:f}", remainingPowerUpTimeInSecs);
+        }
+
+        public EPowerUpType PowerUpType
+        {
+            get { return powerUpType; }
+        }
         
     }
 }

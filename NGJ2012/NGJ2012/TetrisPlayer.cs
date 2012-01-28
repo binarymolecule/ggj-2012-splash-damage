@@ -31,16 +31,18 @@ namespace NGJ2012
         List<Texture2D> tetrisTextures = new List<Texture2D>();
 
         List<TetrisPiece> pieces = new List<TetrisPiece>();
-        private TetrisPiece currentPiece;
+        List<TetrisPiece> activePieces = new List<TetrisPiece>();
+        private TetrisPiece currentPiece, currentCheat;
         float currentPieceMaxLen;
         private TetrisPiece nextPiece;
+        int countdownToCheat = 5;
 
         internal TetrisPiece nextTetrixPiece { get { return nextPiece; } }
         FixedAngleJoint currentPieceRotation;
         OnCollisionEventHandler currentPieceCollide;
         TetrisPieceBatch drawer;
 
-        public float SPAWN_TIME = 1.0f;
+        public float SPAWN_TIME = 2.0f;
 
         // Absolute position in world coordinate system where new pieces are spawned
         public GameViewport viewportToSpawnIn;
@@ -85,6 +87,21 @@ namespace NGJ2012
             currentPiece.body.OnCollision += currentPieceCollide;
             currentPieceRotation = JointFactory.CreateFixedAngleJoint(_world, currentPiece.body);
             pieces.Add(currentPiece);
+            activePieces.Add(currentPiece);
+
+            currentCheat = null;
+            --countdownToCheat;
+            if (countdownToCheat < 0)
+            {
+                currentCheat = new TetrisPiece(_world, tetrisTextures[2], tetrisShapes[2], currentPiece.body.WorldCenter + new Vector2(1, -2));
+                currentCheat.body.FixedRotation = true;
+                currentCheat.body.Rotation = (float)Math.PI / 2;
+                currentCheat.body.OnCollision += currentPieceCollide;
+                JointFactory.CreateRevoluteJoint(_world, currentCheat.body, currentPiece.body, currentPiece.body.LocalCenter);
+                pieces.Add(currentCheat);
+                activePieces.Add(currentCheat);
+                countdownToCheat = 5;
+            }
 
             nextPiece = getRandomTetrisPiece();
 
@@ -100,7 +117,10 @@ namespace NGJ2012
         private void dropCurrentPiece()
         {
             currentPiece.body.LinearVelocity = Vector2.Zero;
+            currentPiece.body.ResetDynamics();
             currentPiece.body.OnCollision -= currentPieceCollide;
+            if(currentCheat!=null)
+                currentCheat.body.OnCollision -= currentPieceCollide;
             currentPieceCollide = null;
             currentPiece = null;
             _world.RemoveJoint(currentPieceRotation);
@@ -189,6 +209,26 @@ namespace NGJ2012
 
             }
 
+            List<TetrisPiece> deactivateUs = new List<TetrisPiece>();
+            foreach (TetrisPiece cur in activePieces)
+            {
+                if (cur.body.Awake) cur.freezeCountdown = 50;
+                else {
+                    Vector2 center = cur.body.GetWorldPoint(cur.body.LocalCenter);
+                    if (center.Y < (Game as Game1).WaterLayer.Position.Y)
+                    {
+                        --cur.freezeCountdown;
+                        if (cur.freezeCountdown < 0)
+                        {
+                            cur.body.BodyType = BodyType.Static;
+                            deactivateUs.Add(cur);
+                        }
+                    }
+                }
+            }
+
+            foreach (TetrisPiece cur in deactivateUs)
+                activePieces.Remove(cur);
 
             base.Update(gameTime);
         }
@@ -199,6 +239,7 @@ namespace NGJ2012
             foreach (TetrisPiece cur in pieces)
             {
                 drawer.DrawTetrisPiece(cur);
+                drawer.DrawBody(cur.body);
             }
         }
 

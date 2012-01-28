@@ -88,6 +88,7 @@ namespace NGJ2012
 
 #if DEBUG
         public Vector2 manualPosition = Vector2.Zero;
+        public TetrisPieceBatch DebugDrawer;
 #endif
 
         public Game1()
@@ -168,9 +169,11 @@ namespace NGJ2012
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-
             tetrisBatch = new TetrisPieceBatch(GraphicsDevice, Content);
-            // TODO: use this.Content to load your game content here
+
+#if DEBUG
+            DebugDrawer = new TetrisPieceBatch(GraphicsDevice, Content);
+#endif
         }
 
         /// <summary>

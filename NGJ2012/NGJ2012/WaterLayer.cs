@@ -30,7 +30,8 @@ namespace NGJ2012
         public float Height { get { return pos.Y; } }
         public int resolution = 5;
 
-        public float WaterSpeed = 0.1f; // rise speed in blocks per second
+        float riseSpeed = 0.1f; // rise speed in blocks per second
+        int riseTime = 0;
 
         // Assets
         Texture2D waterTexture;
@@ -91,10 +92,21 @@ namespace NGJ2012
             base.Initialize();
         }
 
+        public void StartRising(int msec)
+        {
+            riseTime = msec;
+        }
+
         public override void Update(GameTime gameTime)
         {
             // Move water layer upwards
-            pos.Y -= WaterSpeed * (0.001f * gameTime.ElapsedGameTime.Milliseconds);
+            if (riseTime > 0)
+            {
+                pos.Y -= riseSpeed * (0.001f * gameTime.ElapsedGameTime.Milliseconds);
+                riseTime -= gameTime.ElapsedGameTime.Milliseconds;
+                if (riseTime <= 0)
+                    riseTime = 0; // stop rising
+            }
 
             var i = 0;
             for (var x = 0; x <= parent.WorldWidthInBlocks; x++)

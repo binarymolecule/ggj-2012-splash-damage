@@ -30,19 +30,23 @@ namespace NGJ2012
         private const float deacceleration = 256.0f;
         private const float maxRunSpeed = 8.0f;
 
+        private const int JUMP_COOLDOWN_TIME = 500;  // wait 500 msec until next jump
+
         Game1 parent;
 
         World world;
         public Body playerCollider;
         public Vector2 cameraPosition = Vector2.Zero;
-
+        
         private int numberOfLifes;
 
         public int NumberOfLifes
         {
             get { return numberOfLifes; }
         }
+        private int jumpCooldownTime = 0;
         private float jumpForce = 0.5f;
+        private const float BYTE_FORCE = 500.0f;
         private PowerUp currentlySelectedPowerUp;
 
         public PowerUp CurrentlySelectedPowerUp
@@ -51,7 +55,10 @@ namespace NGJ2012
             set { currentlySelectedPowerUp = value; }
         }
 
+        float viewDirection;
+
         AnimatedSprite playerAnimation;
+        int animID_Stand, animID_Walk, animID_Idle, animID_Jump, animID_Fall, animID_Hit;
 
         public PlatformPlayer(Game game, World world) : base(game)
         {
@@ -61,7 +68,7 @@ namespace NGJ2012
             playerCollider = BodyFactory.CreateCapsule(world, 1.0f, 0.2f, 0.001f);
             playerCollider.Position = new Vector2(2, -2);
             playerCollider.OnCollision += new OnCollisionEventHandler(PlayerCollidesWithWorld);
-            playerCollider.OnSeparation += new OnSeparationEventHandler(PlaterSeperatesFromWorld);
+            //playerCollider.OnSeparation += new OnSeparationEventHandler(PlayerSeparatesFromWorld);
             playerCollider.Friction = 0.0f;
             playerCollider.Restitution = 0.0f;
             playerCollider.BodyType = BodyType.Dynamic;
@@ -73,16 +80,19 @@ namespace NGJ2012
             numberOfLifes = INITIAL_NUMBER_OF_LIFES;
         }
 
+        /*
         List<Fixture> canJumpBecauseOf = new List<Fixture>();
 
-        void PlaterSeperatesFromWorld(Fixture fixtureA, Fixture fixtureB)
+        void PlayerSeparatesFromWorld(Fixture fixtureA, Fixture fixtureB)
         {
             canJumpBecauseOf.Remove(fixtureB);
         }
+        */
+
         bool PlayerCollidesWithWorld(Fixture fixtureA, Fixture fixtureB, FarseerPhysics.Dynamics.Contacts.Contact contact)
         {
             if ((fixtureB.CollisionCategories & (Game1.COLLISION_GROUP_TETRIS_BLOCKS | Game1.COLLISION_GROUP_STATIC_OBJECTS)) == 0) return true;
-
+            /*
             Vector2 normal;
             FixedArray2<Vector2> points;
             contact.GetWorldManifold(out normal, out points);
@@ -93,31 +103,34 @@ namespace NGJ2012
             {
                 canJumpBecauseOf.Add(fixtureB);
             }
-
+            */
             return true;
         }
+        
+        protected bool canJump()
+        {
+            Debug.WriteLine("Velocity: X={0} , Y={1}", playerCollider.LinearVelocity.X, playerCollider.LinearVelocity.Y);
 
-        /// <summary>
-        /// Allows the game component to perform any initialization it needs to before starting
-        /// to run.  This is where it can query for any required services and load content.
-        /// </summary>
+            return Math.Abs(playerCollider.LinearVelocity.Y) < 0.015f;
+        }
+
         public override void Initialize()
         {
-            // TODO: Add your initialization code here
-
             base.Initialize();
         }
 
-        TetrisPieceBatch drawer;
         protected override void LoadContent()
         {
-            drawer = new TetrisPieceBatch(GraphicsDevice, Game.Content);
-
             // Create player animation
             string[] playerTextureNames = new string[] { "jumpAndRunPlayer" };
             playerAnimation = new AnimatedSprite(parent, "", playerTextureNames, new Vector2(36, 32));
-            playerAnimation.AddAnimation("walk", 0, 0, 125, true);
-            playerAnimation.SetAnimation("walk");
+            animID_Stand = playerAnimation.AddAnimation("stand", 0, 0, 125, true);
+            animID_Walk = playerAnimation.AddAnimation("walk", 0, 0, 125, true);
+            animID_Idle = playerAnimation.AddAnimation("idle", 0, 0, 125, true);
+            animID_Jump = playerAnimation.AddAnimation("jump", 0, 0, 125, true);
+            animID_Fall = playerAnimation.AddAnimation("fall", 0, 0, 125, true);
+            animID_Hit = playerAnimation.AddAnimation("hit", 0, 0, 125, true);
+            playerAnimation.SetAnimation(animID_Stand);
             
             base.LoadContent();
         }
@@ -134,8 +147,7 @@ namespace NGJ2012
             walkModifier = fraction;
             return 0;
         }
-
-        int jumpCooldown = -1;
+        
         /// <summary>
         /// Allows the game component to update itself.
         /// </summary>
@@ -143,32 +155,50 @@ namespace NGJ2012
         public override void Update(GameTime gameTime)
         {
             // Process user input
+            int msec = gameTime.ElapsedGameTime.Milliseconds;
 
             KeyboardState state = Keyboard.GetState();
-            float move = 0;
+            float move = 0;            
             if (state.IsKeyDown(Keys.A)) move = -acceleration;
             if (state.IsKeyDown(Keys.D)) move = acceleration;
 
             currentRunSpeed *= Math.Max(0.0f, 1.0f - deacceleration*(float)gameTime.ElapsedGameTime.TotalSeconds);
             currentRunSpeed += move * (float)gameTime.ElapsedGameTime.TotalSeconds;
-            if (Math.Abs(currentRunSpeed) > maxRunSpeed) currentRunSpeed *= maxRunSpeed / Math.Abs(currentRunSpeed);
+            if (Math.Abs(currentRunSpeed) > maxRunSpeed)
+                currentRunSpeed *= maxRunSpeed / Math.Abs(currentRunSpeed);
 
-            if(Math.Abs(currentRunSpeed) > 0.001f)
+            bool isRunning = false;
+            if (Math.Abs(currentRunSpeed) > 0.001f)
             {
-                float dir = Math.Sign(currentRunSpeed);
+                viewDirection = Math.Sign(currentRunSpeed);
                 walkModifier = 1.0f;
-                world.RayCast(new RayCastCallback(RayCastCallback), playerCollider.Position + dir* new Vector2(0.2f, 0), playerCollider.Position + dir * new Vector2(0.4f, 0));
+                world.RayCast(new RayCastCallback(RayCastCallback), playerCollider.Position + viewDirection * new Vector2(0.2f, 0), playerCollider.Position + viewDirection * new Vector2(0.4f, 0));
                 currentRunSpeed *= walkModifier;
+                isRunning = true;
             }
-            playerCollider.LinearVelocity = new Vector2(currentRunSpeed,playerCollider.LinearVelocity.Y);
+            else
+                currentRunSpeed = 0;
 
-            jumpCooldown--;
+            playerCollider.LinearVelocity = new Vector2(currentRunSpeed, playerCollider.LinearVelocity.Y);
+
+            // Switch to walking animation
+            bool isFloating = !canJump();
+            if (isFloating)
+            {
+                if (playerCollider.LinearVelocity.Y > 0)
+                    playerAnimation.SetAnimation(animID_Fall);
+            }
+            else if (isRunning)
+                playerAnimation.SetAnimation(animID_Walk);
+
+            if (jumpCooldownTime > 0)
+                jumpCooldownTime -= msec;
             if (state.IsKeyDown(Keys.W))
             {
-                if (canJumpBecauseOf.Count > 0 && jumpCooldown<=0)
+                if (jumpCooldownTime <= 0 && canJump())
                 {
                     jump();
-                    jumpCooldown = 3;
+                    jumpCooldownTime = JUMP_COOLDOWN_TIME; // wait some time until next jump
                 } 
             }
 
@@ -188,10 +218,36 @@ namespace NGJ2012
 
             if (state.IsKeyDown(Keys.Enter) || state.IsKeyDown(Keys.E)) usePowerUp();
 
+            if (state.IsKeyDown(Keys.F)) bite();
+
             // Update player animation
             playerAnimation.Update(gameTime.ElapsedGameTime.Milliseconds);
 
             base.Update(gameTime);
+        }
+
+        private void bite()
+        {
+            Vector2 start = playerCollider.Position + viewDirection * new Vector2(0.2f, 0);
+            //Check for objects slightly above or below to get also objects that are not directly on the height of your head:
+            world.RayCast(new RayCastCallback(biteRayCastCallback), start, playerCollider.Position + viewDirection * new Vector2(0.6f, -0.5f));
+            world.RayCast(new RayCastCallback(biteRayCastCallback), start, playerCollider.Position + viewDirection * new Vector2(0.6f, +0.5f));
+        }
+
+        float biteRayCastCallback(Fixture fixture, Vector2 point, Vector2 normal, float fraction)
+        {
+            if (fixture.CollisionCategories == Game1.COLLISION_GROUP_TETRIS_BLOCKS)
+            {
+                fixture.Body.ApplyForce(new Vector2(-this.viewDirection * BYTE_FORCE, -BYTE_FORCE));
+
+                //Stop raytracing
+                return 0;
+            }
+            else
+            {
+                //Continue raytracing:
+                return -1;
+            }
         }
 
         private void usePowerUp()
@@ -213,6 +269,7 @@ namespace NGJ2012
         public void jump()
         {
             playerCollider.ApplyForce(new Vector2(0, -jumpForce));
+            playerAnimation.SetAnimation(animID_Jump);
         }
 
         public override void DrawGameWorldOnce(Matrix camera, bool platformMode)
@@ -224,8 +281,8 @@ namespace NGJ2012
             parent.SpriteBatch.End();
 
 #if DEBUG
-            drawer.cameraMatrix = camera;
-            drawer.DrawBody(playerCollider);
+            parent.DebugDrawer.cameraMatrix = camera;
+            parent.DebugDrawer.DrawBody(playerCollider);
 #endif
         }
 
