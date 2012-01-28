@@ -33,7 +33,7 @@ namespace NGJ2012
         public WaterLayer(Game game) : base(game)
         {
             parent = (Game1)game;
-            screenRect = new Rectangle(0, 0, 1280, 128);
+            screenRect = new Rectangle(0, 0, 1280 * 4, 512);
 
             // Create physical objects
             /*
