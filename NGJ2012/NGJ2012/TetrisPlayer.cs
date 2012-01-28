@@ -32,6 +32,7 @@ namespace NGJ2012
         Vector2 movementSpeed;
 
         private KeyboardState keyboardAtLastLoop;
+        private GamePadState gamepadAtLastLoop;
 
         float timeElapsedSinceLastSidemovement = 0.0f;
         float timeElapsedSinceMovementKeyDown = 0.0f;
@@ -56,7 +57,8 @@ namespace NGJ2012
         // Absolute position in world coordinate system where new pieces are spawned
         public GameViewport viewportToSpawnIn;
 
-        public TetrisPlayer(Game game, World world) : base(game)
+        public TetrisPlayer(Game game, World world)
+            : base(game)
         {
             _world = world;
 
@@ -76,7 +78,7 @@ namespace NGJ2012
         bool currentPieceCollision(Fixture fixtureA, Fixture fixtureB, FarseerPhysics.Dynamics.Contacts.Contact contact)
         {
             // ignore collisions with Cat30
-//            if ((fixtureA.CollisionCategories & Game1.COLLISION_GROUP_DEFAULT) != 0) return false;
+            //            if ((fixtureA.CollisionCategories & Game1.COLLISION_GROUP_DEFAULT) != 0) return false;
             if ((fixtureB.CollisionCategories & Game1.COLLISION_GROUP_DEFAULT) != 0) return false;
             if ((fixtureB.CollisionCategories & Game1.COLLISION_GROUP_LEVEL_SEPARATOR) != 0) return false;
 
@@ -99,7 +101,7 @@ namespace NGJ2012
 
             currentPiece = nextPiece;
             currentPieceMaxLen = Math.Max(currentPiece.shape.GetLength(0), currentPiece.shape.GetLength(1));
-            currentPiece.body.Position = viewportToSpawnIn.cameraPosition + new Vector2(viewportToSpawnIn.screenWidthInGAME/3.0f, -viewportToSpawnIn.screenHeightInGAME / 2.0f + 0.0f);
+            currentPiece.body.Position = viewportToSpawnIn.cameraPosition + new Vector2(viewportToSpawnIn.screenWidthInGAME / 3.0f, -viewportToSpawnIn.screenHeightInGAME / 2.0f + 0.0f);
             currentPiece.body.Position = roundPosition(currentPiece.body.Position);
             currentPieceCollide = new OnCollisionEventHandler(currentPieceCollision);
             currentPiece.body.OnCollision += currentPieceCollide;
@@ -129,7 +131,7 @@ namespace NGJ2012
         private TetrisPiece getRandomTetrisPiece()
         {
             int shape = (new Random()).Next(tetrisShapes.Count);
-            return new TetrisPiece(_world, tetrisTextures[shape], tetrisShapes[shape], new Vector2(-100,-100));
+            return new TetrisPiece(_world, tetrisTextures[shape], tetrisShapes[shape], new Vector2(-100, -100));
         }
 
         private void dropCurrentPiece()
@@ -137,7 +139,7 @@ namespace NGJ2012
             currentPiece.body.LinearVelocity = Vector2.Zero;
             currentPiece.body.ResetDynamics();
             currentPiece.body.OnCollision -= currentPieceCollide;
-            if(currentCheat!=null)
+            if (currentCheat != null)
                 currentCheat.body.OnCollision -= currentPieceCollide;
             currentPieceCollide = null;
             currentPiece = null;
@@ -160,7 +162,7 @@ namespace NGJ2012
         {
             drawer = new TetrisPieceBatch(GraphicsDevice, Game.Content);
 
-            string[] shapeNames = new string[] { "LR","LL","O","T","I","MZ","Z" };
+            string[] shapeNames = new string[] { "LR", "LL", "O", "T", "I", "MZ", "Z" };
             for (int i = 0; i < shapeNames.Length; i++)
             {
                 string n = "shapes/" + shapeNames[i];
@@ -191,6 +193,11 @@ namespace NGJ2012
             {
                 timeElapsedSinceMovementKeyDown += (float)gameTime.ElapsedGameTime.TotalSeconds;
             }
+            else if (gamepadAtLastLoop != null &&
+                    (gamepadAtLastLoop.ThumbSticks.Left.Length() > 0.5 && gstate.ThumbSticks.Left.Length() > 0.5))
+            {
+                timeElapsedSinceMovementKeyDown += (float)gameTime.ElapsedGameTime.TotalSeconds;
+            }
             else
             {
                 timeElapsedSinceMovementKeyDown = 0;
@@ -198,17 +205,21 @@ namespace NGJ2012
 
             if (timeElapsedSinceLastSidemovement >= TIME_BETWEEN_SIDEMOVEMENT || timeElapsedSinceMovementKeyDown >= TIME_UNTIL_SWITCHING_TO_SMOOTH)
             {
-                if (state.IsKeyDown(Keys.Left)) moveDir.X = -1;
-                else if (state.IsKeyDown(Keys.Right)) moveDir.X = +1;
+                if (state.IsKeyDown(Keys.Left) || gstate.ThumbSticks.Left.X < -0.5) moveDir.X = -1;
+                else if (state.IsKeyDown(Keys.Right) || gstate.ThumbSticks.Left.X > 0.5) moveDir.X = +1;
                 else moveDir.X = 0;
-            } else
+            }
+            else
             {
                 moveDir.X = 0;
             }
 
-            if (moveDir.X == 0) {
+            if (moveDir.X == 0)
+            {
                 timeElapsedSinceLastSidemovement += (float)gameTime.ElapsedGameTime.TotalSeconds;
-            } else {
+            }
+            else
+            {
                 timeElapsedSinceLastSidemovement = 0.0f;
             }
 
@@ -227,7 +238,7 @@ namespace NGJ2012
                 if (spawnR < currentPieceCenter.X && moveDir.X > 0) moveDir.X = 0;
                 currentPiece.body.LinearVelocity = moveDir * movementSpeed;
 
-                if (currentPieceCenter.X < spawnL) currentPiece.body.LinearVelocity = new Vector2(currentPiece.body.LinearVelocity.X + (spawnL-currentPieceCenter.X)*10,currentPiece.body.LinearVelocity.Y);
+                if (currentPieceCenter.X < spawnL) currentPiece.body.LinearVelocity = new Vector2(currentPiece.body.LinearVelocity.X + (spawnL - currentPieceCenter.X) * 10, currentPiece.body.LinearVelocity.Y);
 
                 if (state.IsKeyDown(Keys.PageDown) || gstate.IsButtonDown(Buttons.X))
                 {
@@ -258,7 +269,8 @@ namespace NGJ2012
             foreach (TetrisPiece cur in activePieces)
             {
                 if (cur.body.Awake) cur.freezeCountdown = 10;
-                else {
+                else
+                {
                     Vector2 center = cur.body.GetWorldPoint(cur.body.LocalCenter);
                     if (center.Y < (Game as Game1).WaterLayer.Position.Y)
                     {
@@ -276,6 +288,7 @@ namespace NGJ2012
                 activePieces.Remove(cur);
 
             keyboardAtLastLoop = state;
+            gamepadAtLastLoop = gstate;
 
             base.Update(gameTime);
         }
