@@ -38,23 +38,24 @@ namespace NGJ2012
             : base(game)
         {
             this.world = world;
-            playerCollider = BodyFactory.CreateCapsule(world, 1.0f, 0.2f, 1.0f);
+            playerCollider = BodyFactory.CreateCapsule(world, 1.0f, 0.2f, 0.001f);
             playerCollider.Position = new Vector2(13, 2);
             playerCollider.OnCollision += new OnCollisionEventHandler(PlayerCollidesWithWorld);
             playerCollider.OnSeparation += new OnSeparationEventHandler(PlaterSeperatesFromWorld);
             playerCollider.Friction = 0.0f;
             playerCollider.Restitution = 0.0f;
-            playerCollider.BodyType = BodyType.Kinematic;
-            playerCollider.IsSensor = true;
+            playerCollider.BodyType = BodyType.Dynamic;
             playerCollider.FixedRotation = true;
             playerCollider.Rotation = 0.0f;
-            playerCollider.CollisionCategories = Category.Cat3;
+            playerCollider.CollisionCategories = Category.Cat1;
+            playerCollider.CollidesWith = Category.Cat2 | Category.Cat3;
         }
 
-        bool wallL, wallR;
+        List<Fixture> canJumpBecauseOf = new List<Fixture>();
+
         void PlaterSeperatesFromWorld(Fixture fixtureA, Fixture fixtureB)
         {
-            
+            canJumpBecauseOf.Remove(fixtureB);
         }
         bool PlayerCollidesWithWorld(Fixture fixtureA, Fixture fixtureB, FarseerPhysics.Dynamics.Contacts.Contact contact)
         {
@@ -63,6 +64,12 @@ namespace NGJ2012
             contact.GetWorldManifold(out normal, out points);
             Debug.Print("Point1:" + points[0].X + "," + points[0].Y);
             Debug.Print("Point2:" + points[1].X + "," + points[1].Y);
+
+            if (normal.Y < 0 && playerCollider.LinearVelocity.Y > -0.01f)
+            {
+                canJumpBecauseOf.Add(fixtureB);
+            }
+
             return true;
         }
 
@@ -84,6 +91,19 @@ namespace NGJ2012
             base.LoadContent();
         }
 
+        float currentRunSpeed;
+        float maxRunSpeed = 8.0f;
+        float walkModifier;
+
+        float RayCastCallback(Fixture fixture, Vector2 point, Vector2 normal, float fraction)
+        {
+            if (fixture.Body == playerCollider)
+                return -1;
+            walkModifier = fraction;
+            return 0;
+        }
+
+        bool pressedJump = false;
         /// <summary>
         /// Allows the game component to update itself.
         /// </summary>
@@ -91,14 +111,35 @@ namespace NGJ2012
         public override void Update(GameTime gameTime)
         {
             // TODO: Add your update code here
+            float acceleration = 128.0f;
             KeyboardState state = Keyboard.GetState();
-            Vector2 move = Vector2.Zero;
-            if (state.IsKeyDown(Keys.A)) move.X -= 1;
-            if (state.IsKeyDown(Keys.D)) move.X += 1;
-            if (state.IsKeyDown(Keys.W)) move.Y -= 1;
-            if (state.IsKeyDown(Keys.S)) move.Y += 1;
+            float move = 0;
+            if (state.IsKeyDown(Keys.A)) move = -acceleration;
+            if (state.IsKeyDown(Keys.D)) move = acceleration;
 
-            playerCollider.LinearVelocity = move* 8.0f;
+            currentRunSpeed *= (float)Math.Pow(0.001, gameTime.ElapsedGameTime.TotalSeconds);
+            currentRunSpeed += move * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            if (Math.Abs(currentRunSpeed) > maxRunSpeed) currentRunSpeed *= maxRunSpeed / Math.Abs(currentRunSpeed);
+
+            if(Math.Abs(currentRunSpeed) > 0.001f)
+            {
+                float dir = Math.Sign(currentRunSpeed);
+                walkModifier = 1.0f;
+                world.RayCast(new RayCastCallback(RayCastCallback), playerCollider.Position + dir* new Vector2(0.2f, 0), playerCollider.Position + dir * new Vector2(0.4f, 0));
+                currentRunSpeed *= walkModifier;
+            }
+            playerCollider.LinearVelocity = new Vector2(currentRunSpeed,playerCollider.LinearVelocity.Y);
+
+            if (state.IsKeyDown(Keys.W))
+            {
+                if (canJumpBecauseOf.Count > 0 && !pressedJump)
+                {
+                    playerCollider.ApplyForce(new Vector2(0, -0.5f));
+                    pressedJump = true;
+                }
+            }
+            else pressedJump = false;
+
 
             base.Update(gameTime);
         }
