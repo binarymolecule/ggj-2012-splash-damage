@@ -33,6 +33,11 @@ namespace NGJ2012
         Body staticWorldL;
         Body staticWorldR;
 
+        // Public access to world
+        public World World { get { return world; } }
+        public int WorldWidthInBlocks { get { return worldWidthInBlocks; } }
+        public int WorldHeightInBlocks { get { return worldHeightInBlocks; } }
+
         // Other level components
         public WaterLayer WaterLayer;
 
