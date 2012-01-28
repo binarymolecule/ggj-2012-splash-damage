@@ -25,20 +25,28 @@ namespace NGJ2012
     /// </summary>
     public class PlatformPlayer : DrawableGameComponentExtended
     {
+        private const int INITIAL_NUMBER_OF_LIVES = 3;
+
         World world;
         public Body playerCollider;
         public Vector2 cameraPosition = Vector2.Zero;
 
-        /**
-         * Maps the powerup type to the number of collected powerups of this type.
-         */
-        Dictionary<PowerUp.EPowerUpType, int> collectedPowerUps;
+        private int numberOfLives;
+        private float jumpForce = 0.5f;
+        private PowerUp currentlySelectedPowerUp;
+
+        public PowerUp CurrentlySelectedPowerUp
+        {
+            get { return currentlySelectedPowerUp; }
+            set { currentlySelectedPowerUp = value; }
+        }
 
 
         public PlatformPlayer(Game game, World world)
             : base(game)
         {
             this.world = world;
+
             playerCollider = BodyFactory.CreateCapsule(world, 1.0f, 0.2f, 0.001f);
             playerCollider.Position = new Vector2(0, -2);
             playerCollider.OnCollision += new OnCollisionEventHandler(PlayerCollidesWithWorld);
@@ -50,6 +58,8 @@ namespace NGJ2012
             playerCollider.Rotation = 0.0f;
             playerCollider.CollisionCategories = Game1.COLLISION_GROUP_DEFAULT;
             playerCollider.CollidesWith = Game1.COLLISION_GROUP_DEFAULT | Game1.COLLISION_GROUP_STATIC_OBJECTS | Game1.COLLISION_GROUP_TETRIS_BLOCKS;
+
+            numberOfLives = INITIAL_NUMBER_OF_LIVES;
         }
 
         List<Fixture> canJumpBecauseOf = new List<Fixture>();
@@ -137,7 +147,7 @@ namespace NGJ2012
             {
                 if (canJumpBecauseOf.Count > 0 && !pressedJump)
                 {
-                    playerCollider.ApplyForce(new Vector2(0, -0.5f));
+                    jump();
                     pressedJump = true;
                 }
             }
@@ -155,8 +165,28 @@ namespace NGJ2012
             }
             cameraPosition = 0.9f * cameraPosition + 0.1f * playerCollider.Position;
 
+            if (state.IsKeyDown(Keys.Enter)) usePowerUp();
+
 
             base.Update(gameTime);
+        }
+
+        private void usePowerUp()
+        {
+            if (this.currentlySelectedPowerUp != null)
+            {
+                this.currentlySelectedPowerUp.use();
+                this.currentlySelectedPowerUp = null;
+            }
+        }
+
+        public void increaseJumpPower(float inc) {
+            this.jumpForce += inc;
+        }
+
+        public void jump()
+        {
+            playerCollider.ApplyForce(new Vector2(0, -jumpForce));
         }
 
         public override void DrawGameWorldOnce(Matrix camera, bool platformMode)
@@ -165,15 +195,14 @@ namespace NGJ2012
             drawer.DrawBody(playerCollider);
         }
 
-        public void addPowerUp(PowerUp.EPowerUpType type)
+        public void addPowerUp(PowerUp powerup)
         {
-            int amount;
-            if (this.collectedPowerUps.TryGetValue(type, out amount))
-            {
-                this.collectedPowerUps.Add(type, amount + 1);
-            } else {
-                this.collectedPowerUps.Add(type, 1);
-            }
+            this.currentlySelectedPowerUp = powerup;
+        }
+
+        internal void increaseLives()
+        {
+            this.numberOfLives++;
         }
     }
 }
