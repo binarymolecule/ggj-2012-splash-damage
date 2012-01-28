@@ -31,11 +31,14 @@ namespace NGJ2012
         public Body playerCollider;
 
         private int numberOfLives;
+        private float jumpForce = 0.5f;
+        private PowerUp currentlySelectedPowerUp;
 
-        /**
-         * Maps the powerup type to the number of collected powerups of this type.
-         */
-        Dictionary<PowerUp.EPowerUpType, int> collectedPowerUps = new Dictionary<PowerUp.EPowerUpType,int>();
+        public PowerUp CurrentlySelectedPowerUp
+        {
+            get { return currentlySelectedPowerUp; }
+            set { currentlySelectedPowerUp = value; }
+        }
 
 
         public PlatformPlayer(Game game, World world)
@@ -141,14 +144,34 @@ namespace NGJ2012
             {
                 if (canJumpBecauseOf.Count > 0 && !pressedJump)
                 {
-                    playerCollider.ApplyForce(new Vector2(0, -0.5f));
+                    jump();
                     pressedJump = true;
                 }
             }
             else pressedJump = false;
 
+            if (state.IsKeyDown(Keys.Enter)) usePowerUp();
+
 
             base.Update(gameTime);
+        }
+
+        private void usePowerUp()
+        {
+            if (this.currentlySelectedPowerUp != null)
+            {
+                this.currentlySelectedPowerUp.use();
+                this.currentlySelectedPowerUp = null;
+            }
+        }
+
+        public void increaseJumpPower(float inc) {
+            this.jumpForce += inc;
+        }
+
+        public void jump()
+        {
+            playerCollider.ApplyForce(new Vector2(0, -jumpForce));
         }
 
         public override void DrawGameWorldOnce(Matrix camera, bool platformMode)
@@ -157,15 +180,9 @@ namespace NGJ2012
             drawer.DrawBody(playerCollider);
         }
 
-        public void addPowerUp(PowerUp.EPowerUpType type)
+        public void addPowerUp(PowerUp powerup)
         {
-            int amount;
-            if (!this.collectedPowerUps.TryGetValue(type, out amount))
-            {
-                amount = 0;
-            }
-
-            this.collectedPowerUps[type] = amount + 1;
+            this.currentlySelectedPowerUp = powerup;
         }
 
         internal void increaseLives()

@@ -29,6 +29,11 @@ namespace NGJ2012
         private Body collisionBody;
         private EPowerUpType powerUpType;
 
+        public EPowerUpType PowerUpType
+        {
+            get { return powerUpType; }
+        }
+
         public enum EPowerUpType
         {
             MegaJump, ExtraLive
@@ -54,10 +59,10 @@ namespace NGJ2012
             switch (this.powerUpType)
             {
                 case EPowerUpType.MegaJump:
-                    game.PlatformPlayer.addPowerUp(this.powerUpType);
+                    game.PlatformPlayer.addPowerUp(this);
                     break;
                 case EPowerUpType.ExtraLive:
-                    game.PlatformPlayer.increaseLives();
+                    this.use();
                     break;
             }
 
@@ -83,6 +88,20 @@ namespace NGJ2012
             this.game.SpriteBatch.Begin();
             this.game.SpriteBatch.Draw(texture, Vector2.Transform(collisionBody.Position, camera), Color.White);
             this.game.SpriteBatch.End();
+        }
+
+        public void use()
+        {
+            switch (this.powerUpType)
+            {
+                case EPowerUpType.MegaJump:
+                    game.PlatformPlayer.increaseJumpPower(0.3f);
+                    break;
+                case EPowerUpType.ExtraLive:
+                    game.PlatformPlayer.increaseLives();
+                    break;
+            }
+            
         }
 
         
