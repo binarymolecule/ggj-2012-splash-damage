@@ -24,6 +24,7 @@ namespace NGJ2012
         SpriteBatch spriteBatch;
         World world;
         TetrisPlayer tetris;
+        jumpAndRunPlayerFigure jumpAndRunPlayer;
 
         List<bool[,]> tetrisShapes = new List<bool[,]>();
 
@@ -56,6 +57,9 @@ namespace NGJ2012
 
             tetris = new TetrisPlayer(this, world, gameBlockSize);
             Components.Add(tetris);
+
+            jumpAndRunPlayer = new jumpAndRunPlayerFigure(this, world, this.spriteBatch);
+            this.Components.Add(jumpAndRunPlayer);
         }
 
         /// <summary>
