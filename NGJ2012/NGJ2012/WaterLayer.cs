@@ -29,7 +29,7 @@ namespace NGJ2012
         public Vector2 Position { get { return pos; } }
         public float Height { get { return pos.Y; } }
 
-        float riseSpeed = 0.1f; // rise speed in blocks per second
+        float riseSpeed = 0;
         int riseTime = 0;
 
         // Assets
@@ -66,7 +66,9 @@ namespace NGJ2012
 
         public void StartRising(int msec)
         {
+            // Start rising one block
             riseTime = msec;
+            riseSpeed = 1.0f / (0.001f * msec);
         }
 
         public override void Update(GameTime gameTime)
@@ -74,8 +76,9 @@ namespace NGJ2012
             // Move water layer upwards
             if (riseTime > 0)
             {
-                pos.Y -= riseSpeed * (0.001f * gameTime.ElapsedGameTime.Milliseconds);
-                riseTime -= gameTime.ElapsedGameTime.Milliseconds;
+                int msec = gameTime.ElapsedGameTime.Milliseconds;
+                pos.Y -= riseSpeed * (0.001f * msec);
+                riseTime -= msec;
                 if (riseTime <= 0)
                     riseTime = 0; // stop rising
             }

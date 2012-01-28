@@ -109,8 +109,7 @@ namespace NGJ2012
         
         protected bool canJump()
         {
-            Debug.WriteLine("Velocity: X={0} , Y={1}", playerCollider.LinearVelocity.X, playerCollider.LinearVelocity.Y);
-
+            //Debug.WriteLine("Velocity: X={0} , Y={1}", playerCollider.LinearVelocity.X, playerCollider.LinearVelocity.Y);
             return Math.Abs(playerCollider.LinearVelocity.Y) < 0.015f;
         }
 

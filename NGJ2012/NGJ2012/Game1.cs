@@ -211,7 +211,13 @@ namespace NGJ2012
 
             // update game progress
             gameProgress += gameProgressSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
-            if (gameProgress > Game1.worldWidthInBlocks) gameProgress -= Game1.worldWidthInBlocks;
+            if (gameProgress > Game1.worldWidthInBlocks)
+            {
+                // Finished round
+                gameProgress -= Game1.worldWidthInBlocks;
+                WaterLayer.StartRising(5000);
+                SavePlatform.StartRising(5000);
+            }
             
             platformViewport.cameraPosition = new Vector2(gameProgress, platform.playerCollider.Position.Y);
 
