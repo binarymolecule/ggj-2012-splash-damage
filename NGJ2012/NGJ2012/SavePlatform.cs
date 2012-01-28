@@ -26,6 +26,7 @@ namespace NGJ2012
         // Physical objects
         Body platformBody;
         Vector2 offsetToWater;
+        public float WaterSpeed = 0.1f; // rise speed in blocks per second
 
         // Assets
         Texture2D platformTexture;
@@ -39,7 +40,7 @@ namespace NGJ2012
             // Create physical objects
             offsetToWater = new Vector2(5, 0);
             platformBody = BodyFactory.CreateRectangle(parent.World, 8, 1, 1.0f, parent.WaterLayer.Position + offsetToWater);
-            platformBody.BodyType = BodyType.Static;
+            platformBody.BodyType = BodyType.Kinematic;
             platformBody.Friction = float.MaxValue;
             platformBody.CollisionCategories = Game1.COLLISION_GROUP_STATIC_OBJECTS;
             platformBody.CollidesWith = Game1.COLLISION_GROUP_TETRIS_BLOCKS | Game1.COLLISION_GROUP_DEFAULT;
@@ -63,7 +64,7 @@ namespace NGJ2012
         public override void Update(GameTime gameTime)
         {
             // Update position of platform linked to water
-            platformBody.SetTransform(parent.WaterLayer.Position + offsetToWater, 0);
+            platformBody.LinearVelocity = new Vector2(0, -WaterSpeed);
 
             base.Update(gameTime);
         }
