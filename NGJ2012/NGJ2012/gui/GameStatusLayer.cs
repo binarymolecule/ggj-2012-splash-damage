@@ -18,6 +18,8 @@ namespace NGJ2012
     {
         Game1 parent;
         Vector2 pos;
+
+        // Assets
         SpriteFont font;
 
         public GameStatusLayer(Game game) : base(game)
