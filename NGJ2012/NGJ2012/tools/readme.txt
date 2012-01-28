@@ -1,0 +1,1 @@
+pngcrush.exe -rem gAMA -rem cHRM -rem iCCP -rem sRGB input.png output.png
