@@ -63,7 +63,7 @@ namespace NGJ2012
         public const float gameBlockSizePlatform = 96.0f;
         public const float gameBlockSizeTetris = 32.0f;
 
-        public const int platformModeWidth = 1000;
+        public const int platformModeWidth = 850;
         public const int tetrisModeWidth = 1280 - platformModeWidth;
 
         RenderTarget2D platformModeLeft;
@@ -206,7 +206,7 @@ namespace NGJ2012
             platformViewport.cameraPosition = new Vector2(gameProgress, platform.cameraPosition.Y);
             float tetrisPro = gameProgress + tetrisProgressAdd;
             if (tetrisPro > Game1.worldWidthInBlocks) tetrisPro -= Game1.worldWidthInBlocks;
-            tetrisViewport.cameraPosition = new Vector2(tetrisPro, WaterLayer.Position.Y - 6);
+            tetrisViewport.cameraPosition = new Vector2(tetrisPro, WaterLayer.Position.Y - 4);
 
             world.Step((float)gameTime.ElapsedGameTime.TotalSeconds);
 
