@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
@@ -36,7 +37,7 @@ namespace NGJ2012
         TetrisPieceBatch drawer;
 
         // Absolute position in world coordinate system where new pieces are spawned
-        public Vector2 SpawnPosition = new Vector2(25, -25);
+        public Vector2 SpawnPosition = new Vector2(12, -25);
 
         public TetrisPlayer(Game game, World world) : base(game)
         {
@@ -71,6 +72,8 @@ namespace NGJ2012
             currentPiece.body.OnCollision += currentPieceCollide;
             currentPieceRotation = JointFactory.CreateFixedAngleJoint(_world, currentPiece.body);
             pieces.Add(currentPiece);
+
+            Debug.Print("Spawn new tetris piece at: {0}, {1}", currentPiece.body.Position.X, currentPiece.body.Position.Y);
         }
 
         private void dropCurrentPiece()
