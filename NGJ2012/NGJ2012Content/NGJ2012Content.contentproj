@@ -46,6 +46,7 @@
       <Name>jumpAndRunPlayer</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
+    </Compile>
     <Compile Include="fonts\GuiFont.spritefont">
       <Name>guifont</Name>
       <Importer>FontDescriptionImporter</Importer>

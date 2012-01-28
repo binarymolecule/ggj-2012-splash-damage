@@ -49,12 +49,15 @@ namespace NGJ2012
 
         public override void Draw(GameTime gameTime)
         {
+            spriteBatch.Begin();
             spriteBatch.Draw(texture, playerBody.Position, null, Color.White, playerBody.Rotation, new Vector2(WIDTH, HEIGHT) / 2.0f, 1.0f, SpriteEffects.None, 0.0f);
+            spriteBatch.End();
             base.Draw(gameTime);
         }
 
         protected override void LoadContent()
         {
+            this.spriteBatch = new SpriteBatch(game.GraphicsDevice);
             this.texture = game.Content.Load<Texture2D>("jumpAndRunPlayer");
 
             base.LoadContent();
