@@ -110,7 +110,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Game1.cs" />
+    <Compile Include="DrawableGameComponentExtended.cs" />
     <Compile Include="jumpAndRunPlayerFigure.cs" />
     <Compile Include="PlatformPlayer.cs" />
     <Compile Include="gui\GameStatusLayer.cs" />
@@ -118,6 +118,7 @@
     <Compile Include="TetrisPiece.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />
+    <Compile Include="Game1.cs" />
     <Compile Include="TetrisPieceBatch.cs" />
     <Compile Include="TetrisPlayer.cs" />
     <Compile Include="WaterLayer.cs" />

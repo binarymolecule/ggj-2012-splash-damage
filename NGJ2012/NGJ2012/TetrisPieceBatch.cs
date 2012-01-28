@@ -25,10 +25,9 @@ namespace NGJ2012
         public GraphicsDevice GraphicsDevice;
         public Matrix cameraMatrix;
 
-        public TetrisPieceBatch(GraphicsDevice iGraphicsDevice, Matrix icameraMatrix)
+        public TetrisPieceBatch(GraphicsDevice iGraphicsDevice)
         {
             GraphicsDevice = iGraphicsDevice;
-            cameraMatrix = icameraMatrix;
             _lineVertices = new VertexPositionColor[1024];
 
             // set up a new basic effect, and enable vertex colors.

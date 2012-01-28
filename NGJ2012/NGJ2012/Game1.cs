@@ -25,13 +25,17 @@ namespace NGJ2012
         World world;
         TetrisPlayer tetris;
         TetrisPieceBatch tetrisBatch;
+        PlatformPlayer platform;
 
-        float gameBlockSize = 32.0f;
         int worldWidthInBlocks = 24;
         int worldHeightInBlocks = 20;
         Body staticWorldGround;
         Body staticWorldL;
         Body staticWorldR;
+
+        public const Category COLLISION_GROUP_DEFAULT = Category.Cat1;
+        public const Category COLLISION_GROUP_TETRIS_BLOCKS = Category.Cat2;
+        public const Category COLLISION_GROUP_STATIC_OBJECTS = Category.Cat3;
 
         // Player related components
         jumpAndRunPlayerFigure jumpAndRunPlayer;
@@ -46,7 +50,22 @@ namespace NGJ2012
 
         // GUI components
         public GameStatusLayer StatusLayer { get; protected set; }
-        public SpriteBatch SpriteBatch { get { return spriteBatch; } } 
+        public SpriteBatch SpriteBatch { get { return spriteBatch; } }
+
+        public Vector2 cameraPosition = Vector2.Zero;
+
+        public const float gameBlockSizePlatform = 96.0f;
+        public const float gameBlockSizeTetris = 32.0f;
+
+        const int platformModeWidth = 1000;
+        const int tetrisModeWidth = 1280 - platformModeWidth;
+
+        RenderTarget2D platformModeLeft;
+        RenderTarget2D platformModeRight;
+
+        RenderTarget2D tetrisModeLeft;
+        RenderTarget2D tetrisModeRight;
+
 
         public Game1()
         {
@@ -65,14 +84,14 @@ namespace NGJ2012
             staticWorldGround.Friction = 100.0f;
             staticWorldL.Friction = 100.0f;
             staticWorldR.Friction = 100.0f;
-            staticWorldGround.CollisionCategories = Category.Cat3;
-            staticWorldL.CollisionCategories = Category.Cat3;
-            staticWorldR.CollisionCategories = Category.Cat3;
+            staticWorldGround.CollisionCategories = COLLISION_GROUP_STATIC_OBJECTS;
+            staticWorldL.CollisionCategories = COLLISION_GROUP_STATIC_OBJECTS;
+            staticWorldR.CollisionCategories = COLLISION_GROUP_STATIC_OBJECTS;
 
-            tetris = new TetrisPlayer(this, world, gameBlockSize);
+            tetris = new TetrisPlayer(this, world);
             Components.Add(tetris);
 
-            Components.Add(new PlatformPlayer(this, world));
+            Components.Add(platform = new PlatformPlayer(this, world));
             // Create other level components
             WaterLayer = new WaterLayer(this);
             Components.Add(WaterLayer);
@@ -104,11 +123,16 @@ namespace NGJ2012
         /// </summary>
         protected override void LoadContent()
         {
+            platformModeLeft = new RenderTarget2D(GraphicsDevice, platformModeWidth, 720);
+            platformModeRight = new RenderTarget2D(GraphicsDevice, platformModeWidth, 720);
+            tetrisModeLeft = new RenderTarget2D(GraphicsDevice, tetrisModeWidth, 720);
+            tetrisModeRight = new RenderTarget2D(GraphicsDevice, tetrisModeWidth, 720);
+
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
 
-            tetrisBatch = new TetrisPieceBatch(GraphicsDevice, Matrix.CreateScale(gameBlockSize));
+            tetrisBatch = new TetrisPieceBatch(GraphicsDevice);
             // TODO: use this.Content to load your game content here
         }
 
@@ -133,6 +157,7 @@ namespace NGJ2012
                 this.Exit();
 
             // TODO: Add your update logic here
+            cameraPosition = 0.9f * cameraPosition + 0.1f * platform.playerCollider.Position;
             world.Step((float)gameTime.ElapsedGameTime.TotalSeconds);
 
             base.Update(gameTime);
@@ -144,14 +169,39 @@ namespace NGJ2012
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.SetRenderTarget(platformModeLeft);
+            DrawGameWorldOnce(true);
 
-            // TODO: Add your drawing code here
+            GraphicsDevice.SetRenderTarget(tetrisModeLeft);
+            DrawGameWorldOnce(false);
+
+            GraphicsDevice.SetRenderTarget(null);
+            spriteBatch.Begin();
+            spriteBatch.Draw(platformModeLeft, new Rectangle(0, 0, platformModeWidth, 720), Color.White);
+            spriteBatch.Draw(tetrisModeLeft, new Rectangle(platformModeWidth, 0, tetrisModeWidth, 720), Color.White);
+            spriteBatch.End();
+
+            base.Draw(gameTime);
+        }
+
+        public void DrawGameWorldOnce(bool platformMode)
+        {
+            Matrix camera = Matrix.CreateTranslation(-new Vector3(cameraPosition, 0.0f));
+            camera *= Matrix.CreateScale(platformMode ? Game1.gameBlockSizePlatform : Game1.gameBlockSizeTetris);
+            camera *= Matrix.CreateTranslation(new Vector3(platformMode ? platformModeWidth : tetrisModeWidth, 720, 0.0f) / 2.0f);
+
+            GraphicsDevice.Clear(platformMode ? Color.CornflowerBlue : Color.Coral);
+            tetrisBatch.cameraMatrix = camera;
             tetrisBatch.DrawBody(staticWorldGround);
             tetrisBatch.DrawBody(staticWorldL);
             tetrisBatch.DrawBody(staticWorldR);
-
-            base.Draw(gameTime);
+            foreach (GameComponent c in Components)
+            {
+                if (c is DrawableGameComponentExtended)
+                {
+                    (c as DrawableGameComponentExtended).DrawGameWorldOnce(camera, platformMode);
+                }
+            }
         }
     }
 }

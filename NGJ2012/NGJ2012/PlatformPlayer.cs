@@ -23,10 +23,10 @@ namespace NGJ2012
     /// <summary>
     /// This is a game component that implements IUpdateable.
     /// </summary>
-    public class PlatformPlayer : Microsoft.Xna.Framework.DrawableGameComponent
+    public class PlatformPlayer : DrawableGameComponentExtended
     {
         World world;
-        Body playerCollider;
+        public Body playerCollider;
 
         /**
          * Maps the powerup type to the number of collected powerups of this type.
@@ -47,8 +47,8 @@ namespace NGJ2012
             playerCollider.BodyType = BodyType.Dynamic;
             playerCollider.FixedRotation = true;
             playerCollider.Rotation = 0.0f;
-            playerCollider.CollisionCategories = Category.Cat1;
-            playerCollider.CollidesWith = Category.Cat1 | Category.Cat2 | Category.Cat3;
+            playerCollider.CollisionCategories = Game1.COLLISION_GROUP_DEFAULT;
+            playerCollider.CollidesWith = Game1.COLLISION_GROUP_STATIC_OBJECTS | Game1.COLLISION_GROUP_TETRIS_BLOCKS;
         }
 
         List<Fixture> canJumpBecauseOf = new List<Fixture>();
@@ -87,7 +87,7 @@ namespace NGJ2012
         TetrisPieceBatch drawer;
         protected override void LoadContent()
         {
-            drawer = new TetrisPieceBatch(GraphicsDevice, Matrix.CreateScale(32.0f));
+            drawer = new TetrisPieceBatch(GraphicsDevice);
             base.LoadContent();
         }
 
@@ -144,10 +144,10 @@ namespace NGJ2012
             base.Update(gameTime);
         }
 
-        public override void Draw(GameTime gameTime)
+        public override void DrawGameWorldOnce(Matrix camera, bool platformMode)
         {
+            drawer.cameraMatrix = camera;
             drawer.DrawBody(playerCollider);
-            base.Draw(gameTime);
         }
 
         public void addPowerUp(PowerUp.EPowerUpType type)
