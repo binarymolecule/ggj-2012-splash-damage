@@ -71,11 +71,12 @@ namespace NGJ2012
         RenderTarget2D tetrisModeRight;
 
         float gameProgress = 0;
+        float gameProgressSpeed = 10.0f;
         private GameViewport tetrisViewport;
         private GameViewport platformViewport;
 
 #if DEBUG
-        Vector2 manualPosition = Vector2.Zero;
+        public Vector2 manualPosition = Vector2.Zero;
 #endif
 
         public Game1()
@@ -114,14 +115,13 @@ namespace NGJ2012
             Components.Add(new PowerUp(this, world, PowerUp.EPowerUpType.MegaJump, new Vector2(2, -4)));
             Components.Add(new PowerUp(this, world, PowerUp.EPowerUpType.ExtraLife, new Vector2(4, -4)));
 
-            tetrisViewport = new GameViewport(this)
+            tetrisViewport = new GameViewport(this, 32)
             {
                 screenWidth = tetrisModeWidth,
-                scale = 0.33f,
                 platformMode = false
             };
 
-            platformViewport = new GameViewport(this)
+            platformViewport = new GameViewport(this, 96)
             {
                 screenWidth = platformModeWidth
             };
@@ -200,6 +200,11 @@ namespace NGJ2012
                 manualPosition.Y += 1.0f;
 #endif
 
+            gameProgress += gameProgressSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            if (gameProgress > Game1.worldWidthInBlocks) gameProgress -= Game1.worldWidthInBlocks;
+            platformViewport.cameraPosition = new Vector2(gameProgress, platform.cameraPosition.Y);
+            tetrisViewport.cameraPosition = new Vector2(gameProgress, platform.cameraPosition.Y);
+
             world.Step((float)gameTime.ElapsedGameTime.TotalSeconds);
 
             Timers.Update(gameTime);
@@ -227,16 +232,8 @@ namespace NGJ2012
             base.Draw(gameTime);
         }
 
-        public void DrawGameWorldOnce(bool platformMode, int wrapAround)
+        public void DrawGameWorldOnce(Matrix camera, bool platformMode, int wrapAround)
         {
-            Matrix camera = Matrix.CreateTranslation(-new Vector3(platform.cameraPosition, 0.0f));
-#if DEBUG
-            camera *= Matrix.CreateTranslation(-new Vector3(manualPosition, 0.0f));
-#endif
-            camera *= Matrix.CreateTranslation(new Vector3(wrapAround*worldWidthInBlocks,0,0));
-            camera *= Matrix.CreateScale(platformMode ? Game1.gameBlockSizePlatform : Game1.gameBlockSizeTetris);
-            camera *= Matrix.CreateTranslation(new Vector3(platformMode ? platformModeWidth : tetrisModeWidth, 720, 0.0f) / 2.0f);
-
             GraphicsDevice.Clear(platformMode ? Color.CornflowerBlue : Color.Coral);
             tetrisBatch.cameraMatrix = camera;
             tetrisBatch.DrawBody(staticWorldGround);

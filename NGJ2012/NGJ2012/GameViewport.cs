@@ -10,22 +10,20 @@ namespace NGJ2012
     class GameViewport : DrawableGameComponent
     {
         public Vector2 cameraPosition = new Vector2(0,0);
-        public float scale = 1;
-        public float cellWidth = 32;
-        public float horizontalCells = 24;
-        public float verticalCells = 20;
-        public float screenWidth = 1024;
-        public float screenHeight = 720;
+        public float cellSizeInPX = 32;
+        public int screenWidth = 1024;
+        public int screenHeight = 720;
         public Game1 game;
         public RenderTarget2D leftScreen;
         public RenderTarget2D rightScreen;
         public bool platformMode = true;
         private float splitLine;
 
-        public GameViewport(Game1 game)
+        public GameViewport(Game1 game, float icellWidth)
             : base(game)
         {
             this.game = game;
+            this.cellSizeInPX = icellWidth;
             this.Visible = false;
         }
 
@@ -39,35 +37,48 @@ namespace NGJ2012
 
         public override void Draw(GameTime gameTime)
         {
+
             splitLine = -1;
-            float gameWorldStartInPX = cellWidth * 0;
-            float gameWorldEndInPX = cellWidth * horizontalCells;
-            float cameraLeftInPX = cameraPosition.X * cellWidth * horizontalCells * scale - screenWidth / 2.0f;
-            float cameraRightInPX = cameraPosition.X * cellWidth * horizontalCells * scale + screenWidth / 2.0f;
+            float gameWorldStartInPX = cellSizeInPX * 0;
+            float gameWorldEndInPX = cellSizeInPX * Game1.worldWidthInBlocks;
+            float cameraLeftInPX = cameraPosition.X * cellSizeInPX - screenWidth / 2.0f;
+            float cameraRightInPX = cameraPosition.X * cellSizeInPX + screenWidth / 2.0f;
 
             if (cameraLeftInPX < gameWorldStartInPX)
             {
                 splitLine = gameWorldStartInPX - cameraLeftInPX;
                 game.GraphicsDevice.SetRenderTarget(leftScreen);
-                game.DrawGameWorldOnce(platformMode, -1);
-                game.GraphicsDevice.SetRenderTarget(rightScreen);
-                game.DrawGameWorldOnce(platformMode, 0);
+                DrawGameWorldOnce(platformMode, -1);
+                GraphicsDevice.SetRenderTarget(rightScreen);
+                DrawGameWorldOnce(platformMode, 0);
             }
             else if (gameWorldEndInPX < cameraRightInPX)
             {
                 splitLine = screenWidth - (cameraRightInPX - gameWorldEndInPX);
-                game.GraphicsDevice.SetRenderTarget(leftScreen);
-                game.DrawGameWorldOnce(platformMode, 0);
-                game.GraphicsDevice.SetRenderTarget(rightScreen);
-                game.DrawGameWorldOnce(platformMode, 1);
+                GraphicsDevice.SetRenderTarget(leftScreen);
+                DrawGameWorldOnce(platformMode, 0);
+                GraphicsDevice.SetRenderTarget(rightScreen);
+                DrawGameWorldOnce(platformMode, 1);
             }
             else
             {
-                game.GraphicsDevice.SetRenderTarget(leftScreen);
-                game.DrawGameWorldOnce(platformMode, 0);
+                GraphicsDevice.SetRenderTarget(leftScreen);
+                DrawGameWorldOnce(platformMode, 0);
             }
 
             game.GraphicsDevice.SetRenderTarget(null);
+        }
+
+        private void DrawGameWorldOnce(bool platformMode, int wrapAround)
+        {
+            Matrix camera = Matrix.CreateTranslation(-new Vector3(cameraPosition, 0.0f));
+#if DEBUG
+            camera *= Matrix.CreateTranslation(-new Vector3((Game as Game1).manualPosition, 0.0f));
+#endif
+            camera *= Matrix.CreateTranslation(new Vector3(wrapAround * Game1.worldWidthInBlocks, 0, 0));
+            camera *= Matrix.CreateScale(platformMode ? Game1.gameBlockSizePlatform : Game1.gameBlockSizeTetris);
+            camera *= Matrix.CreateTranslation(new Vector3(screenWidth, screenHeight, 0.0f) / 2.0f);
+            game.DrawGameWorldOnce(camera, platformMode, wrapAround);
         }
 
         public void Compose(SpriteBatch spriteBatch, int x = 0, int y = 0)
@@ -78,8 +89,8 @@ namespace NGJ2012
             }
             else
             {
-                spriteBatch.Draw(leftScreen, new Rectangle(x, 0, (int)splitLine, 720), new Rectangle(0, 0, (int)splitLine, 720), Color.White);
-                spriteBatch.Draw(rightScreen, new Rectangle(x + (int)splitLine, 0, (int)screenWidth - (int)splitLine, 720), new Rectangle((int)splitLine, 0, (int)screenWidth - (int)splitLine, 720), Color.White);
+                spriteBatch.Draw(leftScreen, new Rectangle(x, 0, (int)splitLine, screenHeight), new Rectangle(0, 0, (int)splitLine, screenHeight), Color.White);
+                spriteBatch.Draw(rightScreen, new Rectangle(x + (int)splitLine, 0, (int)screenWidth - (int)splitLine, screenHeight), new Rectangle((int)splitLine, 0, (int)screenWidth - (int)splitLine, screenHeight), Color.White);
             }
         }
     }
