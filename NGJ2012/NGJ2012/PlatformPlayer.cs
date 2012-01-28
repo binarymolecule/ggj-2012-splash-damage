@@ -186,7 +186,7 @@ namespace NGJ2012
 
             cameraPosition = 0.9f * cameraPosition + 0.1f * playerCollider.Position;
 
-            if (state.IsKeyDown(Keys.Enter)) usePowerUp();
+            if (state.IsKeyDown(Keys.Enter) || state.IsKeyDown(Keys.E)) usePowerUp();
 
             // Update player animation
             playerAnimation.Update(gameTime.ElapsedGameTime.Milliseconds);
