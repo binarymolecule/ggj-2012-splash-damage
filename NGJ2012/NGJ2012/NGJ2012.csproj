@@ -114,14 +114,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Game1.cs" />
-<<<<<<< HEAD
     <Compile Include="TetrisPiece.cs" />
     <Compile Include="TetrisPieceBatch.cs" />
     <Compile Include="TetrisPlayer.cs" />
     <Compile Include="WaterLayer.cs" />
-=======
-    <Compile Include="TetrisPlayer.cs" />
->>>>>>> b41be84bd02b9a25037979e5a5276e3e087bae37
   </ItemGroup>
   <ItemGroup>
     <Content Include="Game.ico" />
