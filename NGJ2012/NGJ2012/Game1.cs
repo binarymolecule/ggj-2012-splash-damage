@@ -28,7 +28,7 @@ namespace NGJ2012
         TetrisPieceBatch tetrisBatch;
 
         float gameBlockSize = 32.0f;
-        int worldWidthInBlocks = 24;
+        int worldWidthInBlocks = 32;
         int worldHeightInBlocks = 20;
         Body staticWorldGround;
         Body staticWorldL;
