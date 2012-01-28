@@ -48,7 +48,7 @@ namespace NGJ2012
             playerCollider.FixedRotation = true;
             playerCollider.Rotation = 0.0f;
             playerCollider.CollisionCategories = Category.Cat1;
-            playerCollider.CollidesWith = Category.Cat2 | Category.Cat3;
+            playerCollider.CollidesWith = Category.Cat1 | Category.Cat2 | Category.Cat3;
         }
 
         List<Fixture> canJumpBecauseOf = new List<Fixture>();

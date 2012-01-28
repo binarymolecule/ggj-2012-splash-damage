@@ -42,12 +42,11 @@ namespace NGJ2012
             this.powerUpType = powerUpType;
 
             collisionBody = BodyFactory.CreateCapsule(world, 1.0f, 0.2f, 1.0f);
-            collisionBody.Position = new Vector2(200, 550);
+            collisionBody.Position = new Vector2(12, 12);
             collisionBody.OnCollision += new OnCollisionEventHandler(onPlayerCollision);
-            collisionBody.Friction = 0.0f;
-            collisionBody.Restitution = 0.0f;
-            collisionBody.BodyType = BodyType.Static;
-            collisionBody.CollisionCategories = Category.Cat3;
+            collisionBody.BodyType = BodyType.Kinematic;
+            collisionBody.CollisionCategories = Category.Cat1;
+            collisionBody.CollidesWith = Category.Cat1;
         }
 
         bool onPlayerCollision(Fixture fixtureA, Fixture fixtureB, Contact contact)
@@ -60,6 +59,7 @@ namespace NGJ2012
                 case EPowerUpType.ExtraLive:
                     break;
             }
+
             return true;
         }            
 
