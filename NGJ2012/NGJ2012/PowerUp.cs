@@ -27,19 +27,15 @@ namespace NGJ2012
         Game1 game;
         World world;
 
-        private Texture2D texture;
+        private AnimatedSprite animation;
 
-        public Texture2D Texture { get { return texture; } }
+        // Public getter used for displaying items in GUI
+        public Texture2D Texture { get { return animation.CurrentTexture; } }
 
         private Body collisionBody;
         private EPowerUpType powerUpType;
         private bool usageTimerRunning = false;
-        private double actionEnabledTimeSecs = 3;
-
-        public EPowerUpType PowerUpType
-        {
-            get { return powerUpType; }
-        }
+        private double remainingPowerUpTimeInSecs = 3;
 
         public enum EPowerUpType
         {
@@ -92,16 +88,23 @@ namespace NGJ2012
 
         protected override void LoadContent()
         {
+            // Create animations for power ups
+            string[] animationNames = new string[] { "PowerUp_Jump", "PowerUp_Life", "PowerUp_Star" };
+            animation = new AnimatedSprite(game, "", animationNames, new Vector2(20, 30));
+            animation.AddAnimation("jump", 0, 0, 125, true);
+            animation.AddAnimation("life", 1, 1, 125, true);
+            animation.AddAnimation("star", 2, 2, 125, true);
+
             switch (this.powerUpType)
             {
                 case EPowerUpType.MegaJump:
-                    this.texture = game.Content.Load<Texture2D>("PowerUp_Jump");
+                    animation.SetAnimation("jump");
                     break;
                 case EPowerUpType.ExtraLife:
-                    this.texture = game.Content.Load<Texture2D>("PowerUp_Life");
+                    animation.SetAnimation("life");
                     break;
                 default:
-                    this.texture = game.Content.Load<Texture2D>("PowerUp_Star");
+                    animation.SetAnimation("star");
                     break;
             }
             
@@ -112,10 +115,10 @@ namespace NGJ2012
         public override void Update(GameTime gameTime)
         {
             if (usageTimerRunning) {
-                this.actionEnabledTimeSecs -= gameTime.ElapsedGameTime.TotalSeconds;
+                this.remainingPowerUpTimeInSecs -= gameTime.ElapsedGameTime.TotalSeconds;
             }
 
-            if (actionEnabledTimeSecs <= 0) this.onPowerUpExhausted();
+            if (remainingPowerUpTimeInSecs <= 0) this.onPowerUpExhausted();
 
             base.Update(gameTime);
         }
@@ -125,7 +128,8 @@ namespace NGJ2012
             if (this.Visible)
             {
                 this.game.SpriteBatch.Begin();
-                this.game.SpriteBatch.Draw(texture, Vector2.Transform(collisionBody.Position, camera), Color.White);
+                animation.Draw(this.game.SpriteBatch, Vector2.Transform(collisionBody.Position, camera),
+                               platformMode ? Game1.ScalePlatformSprites : Game1.ScaleTetrisSprites);
                 this.game.SpriteBatch.End();
             }
         }
@@ -166,6 +170,20 @@ namespace NGJ2012
             game.Components.Remove(this);
         }
 
+        public bool UsageTimerRunning
+        {
+            get { return usageTimerRunning; }
+        }
+
+        public String getRemainingPowerUpTimeInSecsFixedPoint()
+        {
+            return string.Format("{0:f}", remainingPowerUpTimeInSecs);
+        }
+
+        public EPowerUpType PowerUpType
+        {
+            get { return powerUpType; }
+        }
         
     }
 }

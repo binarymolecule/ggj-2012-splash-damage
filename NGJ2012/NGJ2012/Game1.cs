@@ -40,6 +40,9 @@ namespace NGJ2012
         public const int worldWidthInBlocks = 24;
         public const int worldHeightInBlocks = 20;
 
+        public const float ScalePlatformSprites = 1.0f;
+        public const float ScaleTetrisSprites = 0.25f;
+
         public const Category COLLISION_GROUP_DEFAULT = Category.Cat1;
         public const Category COLLISION_GROUP_TETRIS_BLOCKS = Category.Cat2;
         public const Category COLLISION_GROUP_STATIC_OBJECTS = Category.Cat3;
@@ -73,7 +76,7 @@ namespace NGJ2012
         RenderTarget2D tetrisModeRight;
 
         float gameProgress = 0;
-        float gameProgressSpeed = 2;
+        float gameProgressSpeed = 1;
         float tetrisProgressAdd = 10;
         private GameViewport tetrisViewport;
         private GameViewport platformViewport;
@@ -203,9 +206,18 @@ namespace NGJ2012
                 manualPosition.Y += 1.0f;
 #endif
 
+            // update game progress
             gameProgress += gameProgressSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
             if (gameProgress > Game1.worldWidthInBlocks) gameProgress -= Game1.worldWidthInBlocks;
-            platformViewport.cameraPosition = new Vector2(gameProgress, platform.cameraPosition.Y);
+            
+            platformViewport.cameraPosition = new Vector2(gameProgress, platform.playerCollider.Position.Y);
+
+            var camDiff = MathStuff.WorldDistance(platform.playerCollider.Position.X, platformViewport.cameraPosition.X, worldWidthInBlocks);
+            if (camDiff > 0 && camDiff < 10)
+            {
+                platformViewport.cameraPosition.X -= MathHelper.Clamp(camDiff, 0, 3);
+            }
+
             float tetrisPro = gameProgress + tetrisProgressAdd;
             if (tetrisPro > Game1.worldWidthInBlocks) tetrisPro -= Game1.worldWidthInBlocks;
             tetrisViewport.cameraPosition = new Vector2(tetrisPro, WaterLayer.Position.Y - 4);
@@ -262,10 +274,12 @@ namespace NGJ2012
             if (elapsedTimeSinceLastPowerUp >= TIME_BETWEEN_POWERUPSPAWNS_SECS)
             {
                 //Position the power up on the "screen next to the currenct visible area":
-                float maxWidthInGame = Math.Max(this.tetrisViewport.screenWidthInGAME, this.platformViewport.screenWidthInGAME);
+                int maxWidthInGame = (int)Math.Ceiling(Math.Max(this.tetrisViewport.screenWidthInGAME, this.platformViewport.screenWidthInGAME));
+                int distanceToRightBorder = maxWidthInGame - (int)PlatformPlayer.cameraPosition.X % maxWidthInGame;
+                int randomOffset = (new Random()).Next(0, maxWidthInGame);
                 
                 //Get a random power up:
-                PowerUp p = PowerUp.getRandomPowerUp(this, world, platform.cameraPosition + new Vector2(maxWidthInGame, -SPAWNHEIGHT_OF_PWUP_ABOVE_PLAYER));
+                PowerUp p = PowerUp.getRandomPowerUp(this, world, platform.cameraPosition + new Vector2(distanceToRightBorder+randomOffset, -SPAWNHEIGHT_OF_PWUP_ABOVE_PLAYER));
                 Components.Add(p);
                 elapsedTimeSinceLastPowerUp = 0.0f;
             }    
