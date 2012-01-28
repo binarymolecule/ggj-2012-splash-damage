@@ -28,6 +28,8 @@ namespace NGJ2012
 
         World world;
         TetrisPlayer tetris;
+
+        public TetrisPlayer TetrisPlayer { get { return tetris; } }
         TetrisPieceBatch tetrisBatch;
         PlatformPlayer platform;
         public PlatformPlayer PlatformPlayer { get { return platform; } }
@@ -58,10 +60,10 @@ namespace NGJ2012
         public GameStatusLayer StatusLayer { get; protected set; }
         public SpriteBatch SpriteBatch { get { return spriteBatch; } }
 
-        public const float gameBlockSizePlatform = 96.0f;
+        public const float gameBlockSizePlatform = 64.0f;
         public const float gameBlockSizeTetris = 32.0f;
 
-        public const int platformModeWidth = 1000;
+        public const int platformModeWidth = 850;
         public const int tetrisModeWidth = 1280 - platformModeWidth;
 
         RenderTarget2D platformModeLeft;
@@ -75,6 +77,11 @@ namespace NGJ2012
         float tetrisProgressAdd = 10;
         private GameViewport tetrisViewport;
         private GameViewport platformViewport;
+
+        //Power-Ups:
+        private const float TIME_BETWEEN_POWERUPSPAWNS_SECS = 3.0f;
+        private const int SPAWNHEIGHT_OF_PWUP_ABOVE_PLAYER = 2;
+        private float elapsedTimeSinceLastPowerUp = 0.0f;
 
 #if DEBUG
         public Vector2 manualPosition = Vector2.Zero;
@@ -112,20 +119,15 @@ namespace NGJ2012
             SavePlatform = new SavePlatform(this);
             Components.Add(SavePlatform);
 
-            //TODO: Create PowerUps dynamically
-            Components.Add(new PowerUp(this, world, PowerUp.EPowerUpType.MegaJump, new Vector2(2, -4)));
-            Components.Add(new PowerUp(this, world, PowerUp.EPowerUpType.ExtraLife, new Vector2(4, -4)));
-
-            tetrisViewport = new GameViewport(this, 32)
+            tetrisViewport = new GameViewport(this, gameBlockSizeTetris)
             {
-                screenWidth = tetrisModeWidth,
                 platformMode = false
             };
+            tetrisViewport.resize(tetrisModeWidth, 720);
+            tetris.viewportToSpawnIn = tetrisViewport;
 
-            platformViewport = new GameViewport(this, 96)
-            {
-                screenWidth = platformModeWidth
-            };
+            platformViewport = new GameViewport(this, gameBlockSizePlatform);
+            platformViewport.resize(platformModeWidth, 720);
 
             Components.Add(platformViewport);
             Components.Add(tetrisViewport);
@@ -221,7 +223,7 @@ namespace NGJ2012
 
             float tetrisPro = gameProgress + tetrisProgressAdd;
             if (tetrisPro > Game1.worldWidthInBlocks) tetrisPro -= Game1.worldWidthInBlocks;
-            tetrisViewport.cameraPosition = new Vector2(tetrisPro, platform.cameraPosition.Y);
+            tetrisViewport.cameraPosition = new Vector2(tetrisPro, WaterLayer.Position.Y - 4);
 
             world.Step((float)gameTime.ElapsedGameTime.TotalSeconds);
 
@@ -229,6 +231,8 @@ namespace NGJ2012
 
             prevKeyboardState = keyboardState;
             prevGamepadState = gamepadState;
+
+            addPowerupToWorld((float)gameTime.ElapsedGameTime.TotalSeconds);
 
             base.Update(gameTime);
         }
@@ -264,6 +268,22 @@ namespace NGJ2012
                     (c as DrawableGameComponentExtended).DrawGameWorldOnce(camera, platformMode);
                 }
             }
+        }
+
+        private void addPowerupToWorld(float elapsedSeconds)
+        {
+            elapsedTimeSinceLastPowerUp += elapsedSeconds;
+
+            if (elapsedTimeSinceLastPowerUp >= TIME_BETWEEN_POWERUPSPAWNS_SECS)
+            {
+                //Position the power up on the "screen next to the currenct visible area":
+                float maxWidthInGame = Math.Max(this.tetrisViewport.screenWidthInGAME, this.platformViewport.screenWidthInGAME);
+                
+                //Get a random power up:
+                PowerUp p = PowerUp.getRandomPowerUp(this, world, platform.cameraPosition + new Vector2(maxWidthInGame, -SPAWNHEIGHT_OF_PWUP_ABOVE_PLAYER));
+                Components.Add(p);
+                elapsedTimeSinceLastPowerUp = 0.0f;
+            }    
         }
     }
 }
