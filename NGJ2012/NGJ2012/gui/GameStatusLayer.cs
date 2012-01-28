@@ -24,9 +24,9 @@ namespace NGJ2012
         private String textPowerup;
         private Texture2D texturePowerUp;
 
-        private Vector2 positionPowerUp = new Vector2(16.0f, 16.0f);
-        private Vector2 textPositionP1 = new Vector2(64.0f, 20.0f);
-        private Vector2 textPositionP2 = new Vector2(800.0f, 20.0f);
+        private Vector2 positionPowerUp;
+        private Vector2 textPositionP1;
+        private Vector2 textPositionP2;
 
         private const float TETRIS_SCALE = 0.125f;
 
@@ -43,6 +43,7 @@ namespace NGJ2012
             float offset = 4.0f;
             textPositionP1 = new Vector2(offset, 2.0f);
             textPositionP2 = new Vector2(Game1.platformModeWidth + offset, 2.0f);
+            positionPowerUp = new Vector2(Game1.platformModeWidth - 64, 2.0f);
         }
 
         protected override void LoadContent()

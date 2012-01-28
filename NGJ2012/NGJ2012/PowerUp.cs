@@ -92,8 +92,8 @@ namespace NGJ2012
             string[] animationNames = new string[] { "PowerUp_Jump", "PowerUp_Life", "PowerUp_Star" };
             animation = new AnimatedSprite(game, "", animationNames, new Vector2(20, 30));
             animation.AddAnimation("jump", 0, 0, 125, true);
-            animation.AddAnimation("life", 0, 0, 125, true);
-            animation.AddAnimation("star", 0, 0, 125, true);
+            animation.AddAnimation("life", 1, 1, 125, true);
+            animation.AddAnimation("star", 2, 2, 125, true);
 
             switch (this.powerUpType)
             {

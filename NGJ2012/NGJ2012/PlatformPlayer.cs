@@ -35,13 +35,14 @@ namespace NGJ2012
         World world;
         public Body playerCollider;
         public Vector2 cameraPosition = Vector2.Zero;
-
+        
         private int numberOfLifes;
 
         public int NumberOfLifes
         {
             get { return numberOfLifes; }
         }
+        private int jumpCooldownTime = 0;
         private float jumpForce = 0.5f;
         private PowerUp currentlySelectedPowerUp;
 
@@ -140,8 +141,7 @@ namespace NGJ2012
             walkModifier = fraction;
             return 0;
         }
-
-        int jumpCooldown = -1;
+        
         /// <summary>
         /// Allows the game component to update itself.
         /// </summary>
@@ -149,6 +149,7 @@ namespace NGJ2012
         public override void Update(GameTime gameTime)
         {
             // Process user input
+            int msec = gameTime.ElapsedGameTime.Milliseconds;
 
             KeyboardState state = Keyboard.GetState();
             float move = 0;            
@@ -183,13 +184,14 @@ namespace NGJ2012
             else if (isRunning)
                 playerAnimation.SetAnimation(animID_Walk);
 
-            jumpCooldown--;
+            if (jumpCooldownTime > 0)
+                jumpCooldownTime -= msec;
             if (state.IsKeyDown(Keys.W))
             {
-                if (canJumpBecauseOf.Count > 0 && jumpCooldown<=0)
+                if (canJumpBecauseOf.Count > 0 && jumpCooldownTime <= 0)
                 {
                     jump();
-                    jumpCooldown = 3;
+                    jumpCooldownTime = 150; // wait 150 msec for next jump
                 } 
             }
 
