@@ -26,9 +26,11 @@ namespace NGJ2012
         // Physical objects
         Body platformBody;
         Vector2 offsetToWater;
+        public float WaterSpeed = 0.1f; // rise speed in blocks per second
 
         // Assets
         Texture2D platformTexture;
+        TetrisPieceBatch drawer;
 
         public SavePlatform(Game game) : base(game)
         {
@@ -36,16 +38,18 @@ namespace NGJ2012
             screenRect = new Rectangle(0, 0, 640, 64);
 
             // Create physical objects
-            offsetToWater = new Vector2(0, -1);
-            platformBody = BodyFactory.CreateRectangle(parent.World, 10, 1, 1.0f, parent.WaterLayer.Position + offsetToWater);
-            platformBody.BodyType = BodyType.Static;
-            platformBody.Friction = float.MaxValue;
+            offsetToWater = new Vector2(2, 0);
+            platformBody = BodyFactory.CreateRectangle(parent.World, 4, 1, 1.0f, parent.WaterLayer.Position + offsetToWater);
+            platformBody.BodyType = BodyType.Kinematic;
+            platformBody.Friction = 100.0f;
             platformBody.CollisionCategories = Game1.COLLISION_GROUP_STATIC_OBJECTS;
+            platformBody.CollidesWith = Game1.COLLISION_GROUP_TETRIS_BLOCKS | Game1.COLLISION_GROUP_DEFAULT;
         }
 
         protected override void LoadContent()
         {
             platformTexture = parent.Content.Load<Texture2D>("graphics/level/platform");
+            drawer = new TetrisPieceBatch(GraphicsDevice, Game.Content);
         }
 
         protected override void UnloadContent()
@@ -60,7 +64,7 @@ namespace NGJ2012
         public override void Update(GameTime gameTime)
         {
             // Update position of platform linked to water
-            platformBody.SetTransform(parent.WaterLayer.Position + offsetToWater, 0);
+            platformBody.LinearVelocity = new Vector2(0, -WaterSpeed);
 
             base.Update(gameTime);
         }
@@ -71,14 +75,17 @@ namespace NGJ2012
 
         public override void DrawGameWorldOnce(Matrix camera, bool platformMode)
         {
-            Vector2 pos = platformBody.GetWorldPoint(Vector2.Zero);
-            Vector2 screenPos = Vector2.Transform(pos, camera);
+            /*
+            Vector2 screenPos = Vector2.Transform(platformBody.Position, camera);
             screenRect.X = (int)screenPos.X;
             screenRect.Y = (int)screenPos.Y;
-
             parent.SpriteBatch.Begin();
             parent.SpriteBatch.Draw(platformTexture, screenRect, Color.White);
             parent.SpriteBatch.End();
+            */
+
+            drawer.cameraMatrix = camera;
+            drawer.DrawBodyTextured(platformBody, platformTexture,1.0f/8.0f);
         }
     }
 }

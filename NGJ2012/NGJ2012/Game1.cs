@@ -22,15 +22,15 @@ namespace NGJ2012
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+
+        KeyboardState prevKeyboardState;
+        GamePadState prevGamepadState;
+
         World world;
         TetrisPlayer tetris;
         TetrisPieceBatch tetrisBatch;
         PlatformPlayer platform;
-
-        public PlatformPlayer PlatformPlayer
-        {
-            get { return platform; }
-        }
+        public PlatformPlayer PlatformPlayer { get { return platform; } }
 
         Body staticWorldGround;
         Body staticWorldL;
@@ -61,8 +61,8 @@ namespace NGJ2012
         public const float gameBlockSizePlatform = 96.0f;
         public const float gameBlockSizeTetris = 32.0f;
 
-        const int platformModeWidth = 1000;
-        const int tetrisModeWidth = 1280 - platformModeWidth;
+        public const int platformModeWidth = 1000;
+        public const int tetrisModeWidth = 1280 - platformModeWidth;
 
         RenderTarget2D platformModeLeft;
         RenderTarget2D platformModeRight;
@@ -74,6 +74,9 @@ namespace NGJ2012
         private GameViewport tetrisViewport;
         private GameViewport platformViewport;
 
+#if DEBUG
+        Vector2 manualPosition = Vector2.Zero;
+#endif
 
         public Game1()
         {
@@ -84,7 +87,7 @@ namespace NGJ2012
             world = new World(new Vector2(0, 25));
 
             staticWorldGround = BodyFactory.CreateRectangle(world, worldWidthInBlocks, 1, 1.0f, new Vector2(worldWidthInBlocks / 2.0f, 0));
-            staticWorldL = BodyFactory.CreateRectangle(world, 1, worldHeightInBlocks, 1.0f, new Vector2(0, -worldHeightInBlocks / 2.0f));
+            staticWorldL = BodyFactory.CreateRectangle(world, 4, worldHeightInBlocks, 1.0f, new Vector2(2.0f, -worldHeightInBlocks / 2.0f));
             staticWorldR = BodyFactory.CreateRectangle(world, 1, worldHeightInBlocks, 1.0f, new Vector2(worldWidthInBlocks, -worldHeightInBlocks / 2.0f));
             staticWorldGround.BodyType = BodyType.Static;
             staticWorldL.BodyType = BodyType.Static;
@@ -104,12 +107,12 @@ namespace NGJ2012
             // Create other level components
             WaterLayer = new WaterLayer(this);
             Components.Add(WaterLayer);
-            //SavePlatform = new SavePlatform(this);
-            //Components.Add(SavePlatform);
+            SavePlatform = new SavePlatform(this);
+            Components.Add(SavePlatform);
 
             //TODO: Create PowerUps dynamically
-            Components.Add(new PowerUp(this, world, PowerUp.EPowerUpType.MegaJump, new Vector2(10, -8)));
-            Components.Add(new PowerUp(this, world, PowerUp.EPowerUpType.ExtraLive, new Vector2(16, -8)));
+            Components.Add(new PowerUp(this, world, PowerUp.EPowerUpType.MegaJump, new Vector2(2, -4)));
+            Components.Add(new PowerUp(this, world, PowerUp.EPowerUpType.ExtraLife, new Vector2(4, -4)));
 
             tetrisViewport = new GameViewport(this)
             {
@@ -128,7 +131,7 @@ namespace NGJ2012
 
             // Add GUI components
             StatusLayer = new GameStatusLayer(this);
-            //Components.Add(StatusLayer);
+            Components.Add(StatusLayer);
         }
 
         /// <summary>
@@ -160,7 +163,7 @@ namespace NGJ2012
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
 
-            tetrisBatch = new TetrisPieceBatch(GraphicsDevice);
+            tetrisBatch = new TetrisPieceBatch(GraphicsDevice, Content);
             // TODO: use this.Content to load your game content here
         }
 
@@ -181,15 +184,29 @@ namespace NGJ2012
         protected override void Update(GameTime gameTime)
         {
             // Allows the game to exit
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
+            KeyboardState keyboardState = Keyboard.GetState();
+            GamePadState gamepadState = GamePad.GetState(PlayerIndex.One);
+            if (gamepadState.Buttons.Back == ButtonState.Pressed ||
+                keyboardState.IsKeyDown(Keys.Escape))
+            {
                 this.Exit();
+            }
 
-            // TODO: Add your update logic here
-
+            // Move camera manually
+#if DEBUG
+            if (keyboardState.IsKeyDown(Keys.PageUp) && prevKeyboardState.IsKeyUp(Keys.PageUp))
+                manualPosition.Y -= 1.0f;
+            else if (keyboardState.IsKeyDown(Keys.PageDown) && prevKeyboardState.IsKeyUp(Keys.PageDown))
+                manualPosition.Y += 1.0f;
+#endif
 
             world.Step((float)gameTime.ElapsedGameTime.TotalSeconds);
 
             Timers.Update(gameTime);
+
+            prevKeyboardState = keyboardState;
+            prevGamepadState = gamepadState;
+
             base.Update(gameTime);
         }
 
@@ -213,6 +230,9 @@ namespace NGJ2012
         public void DrawGameWorldOnce(bool platformMode, int wrapAround)
         {
             Matrix camera = Matrix.CreateTranslation(-new Vector3(platform.cameraPosition, 0.0f));
+#if DEBUG
+            camera *= Matrix.CreateTranslation(-new Vector3(manualPosition, 0.0f));
+#endif
             camera *= Matrix.CreateTranslation(new Vector3(wrapAround*worldWidthInBlocks,0,0));
             camera *= Matrix.CreateScale(platformMode ? Game1.gameBlockSizePlatform : Game1.gameBlockSizeTetris);
             camera *= Matrix.CreateTranslation(new Vector3(platformMode ? platformModeWidth : tetrisModeWidth, 720, 0.0f) / 2.0f);

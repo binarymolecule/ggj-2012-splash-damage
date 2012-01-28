@@ -29,6 +29,8 @@ namespace NGJ2012
         public Vector2 Position { get { return pos; } }
         public float Height { get { return pos.Y; } }
 
+        public float WaterSpeed = 0.1f; // rise speed in blocks per second
+
         // Assets
         Texture2D waterTexture;
 
@@ -44,7 +46,7 @@ namespace NGJ2012
             waterBody.BodyType = BodyType.Static;
             waterBody.Friction = float.MaxValue;
             */
-            pos = new Vector2(0, 2);
+            pos = new Vector2(0, 0);
         }
 
         protected override void LoadContent()
@@ -64,7 +66,7 @@ namespace NGJ2012
         public override void Update(GameTime gameTime)
         {
             // Move water layer upwards
-            pos.Y -= 0.00001f * gameTime.ElapsedGameTime.Milliseconds;
+            pos.Y -= WaterSpeed * (0.001f * gameTime.ElapsedGameTime.Milliseconds);
 
             base.Update(gameTime);
         }

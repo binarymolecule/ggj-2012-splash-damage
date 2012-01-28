@@ -25,13 +25,20 @@ namespace NGJ2012
     /// </summary>
     public class PlatformPlayer : DrawableGameComponentExtended
     {
-        private const int INITIAL_NUMBER_OF_LIVES = 3;
+        private const int INITIAL_NUMBER_OF_LIFES = 3;
+        private const float acceleration = 128.0f;
+        private const float maxRunSpeed = 8.0f;
 
         World world;
         public Body playerCollider;
         public Vector2 cameraPosition = Vector2.Zero;
 
-        private int numberOfLives;
+        private int numberOfLifes;
+
+        public int NumberOfLifes
+        {
+            get { return numberOfLifes; }
+        }
         private float jumpForce = 0.5f;
         private PowerUp currentlySelectedPowerUp;
 
@@ -41,14 +48,14 @@ namespace NGJ2012
             set { currentlySelectedPowerUp = value; }
         }
 
+        Texture2D playerTexture;
 
-        public PlatformPlayer(Game game, World world)
-            : base(game)
+        public PlatformPlayer(Game game, World world) : base(game)
         {
             this.world = world;
 
             playerCollider = BodyFactory.CreateCapsule(world, 1.0f, 0.2f, 0.001f);
-            playerCollider.Position = new Vector2(0, -2);
+            playerCollider.Position = new Vector2(2, -2);
             playerCollider.OnCollision += new OnCollisionEventHandler(PlayerCollidesWithWorld);
             playerCollider.OnSeparation += new OnSeparationEventHandler(PlaterSeperatesFromWorld);
             playerCollider.Friction = 0.0f;
@@ -59,7 +66,7 @@ namespace NGJ2012
             playerCollider.CollisionCategories = Game1.COLLISION_GROUP_DEFAULT;
             playerCollider.CollidesWith = Game1.COLLISION_GROUP_DEFAULT | Game1.COLLISION_GROUP_STATIC_OBJECTS | Game1.COLLISION_GROUP_TETRIS_BLOCKS;
 
-            numberOfLives = INITIAL_NUMBER_OF_LIVES;
+            numberOfLifes = INITIAL_NUMBER_OF_LIFES;
         }
 
         List<Fixture> canJumpBecauseOf = new List<Fixture>();
@@ -98,12 +105,12 @@ namespace NGJ2012
         TetrisPieceBatch drawer;
         protected override void LoadContent()
         {
-            drawer = new TetrisPieceBatch(GraphicsDevice);
+            drawer = new TetrisPieceBatch(GraphicsDevice, Game.Content);
+            playerTexture = Game.Content.Load<Texture2D>("jumpAndRunPlayer");
             base.LoadContent();
         }
 
         float currentRunSpeed;
-        float maxRunSpeed = 8.0f;
         float walkModifier;
 
         float RayCastCallback(Fixture fixture, Vector2 point, Vector2 normal, float fraction)
@@ -124,7 +131,7 @@ namespace NGJ2012
         public override void Update(GameTime gameTime)
         {
             // TODO: Add your update code here
-            float acceleration = 128.0f;
+            
             KeyboardState state = Keyboard.GetState();
             float move = 0;
             if (state.IsKeyDown(Keys.A)) move = -acceleration;
@@ -178,8 +185,11 @@ namespace NGJ2012
             if (this.currentlySelectedPowerUp != null)
             {
                 this.currentlySelectedPowerUp.use();
-                this.currentlySelectedPowerUp = null;
             }
+        }
+
+        public void clearCurrentPowerUp() {
+            this.currentlySelectedPowerUp = null;
         }
 
         public void increaseJumpPower(float inc) {
@@ -193,8 +203,12 @@ namespace NGJ2012
 
         public override void DrawGameWorldOnce(Matrix camera, bool platformMode)
         {
+            Vector2 screenPos = Vector2.Transform(playerCollider.Position, camera);
+            Rectangle screenRect = new Rectangle((int)screenPos.X, (int)screenPos.Y, 64, 64);
+#if DEBUG
             drawer.cameraMatrix = camera;
             drawer.DrawBody(playerCollider);
+#endif
         }
 
         public void addPowerUp(PowerUp powerup)
@@ -202,9 +216,9 @@ namespace NGJ2012
             this.currentlySelectedPowerUp = powerup;
         }
 
-        internal void increaseLives()
+        internal void increaseLifes()
         {
-            this.numberOfLives++;
+            this.numberOfLifes++;
         }
     }
 }

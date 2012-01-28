@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
@@ -36,7 +37,8 @@ namespace NGJ2012
         TetrisPieceBatch drawer;
 
         // Absolute position in world coordinate system where new pieces are spawned
-        public Vector2 SpawnPosition = new Vector2(2, -25);
+        public Vector2 SpawnPosition = new Vector2(12, -12);
+        public Vector2 MinMaxX = new Vector2(10, 14);
 
         public TetrisPlayer(Game game, World world) : base(game)
         {
@@ -65,11 +67,14 @@ namespace NGJ2012
 
         private void Spawn(Utility.Timer timer)
         {
-            currentPiece = new TetrisPiece(_world, null, tetrisShapes[(new Random()).Next(tetrisShapes.Count)], SpawnPosition);
+            int shape = (new Random()).Next(tetrisShapes.Count);
+            currentPiece = new TetrisPiece(_world, tetrisTextures[shape], tetrisShapes[shape], SpawnPosition);
             currentPieceCollide = new OnCollisionEventHandler(currentPieceCollision);
             currentPiece.body.OnCollision += currentPieceCollide;
             currentPieceRotation = JointFactory.CreateFixedAngleJoint(_world, currentPiece.body);
             pieces.Add(currentPiece);
+
+            Debug.Print("Spawn new tetris piece at: {0}, {1}", currentPiece.body.Position.X, currentPiece.body.Position.Y);
         }
 
         private void dropCurrentPiece()
@@ -95,7 +100,14 @@ namespace NGJ2012
 
         protected override void LoadContent()
         {
-            drawer = new TetrisPieceBatch(GraphicsDevice);
+            drawer = new TetrisPieceBatch(GraphicsDevice, Game.Content);
+
+            string[] shapeNames = new string[] { "LR","LL","O","T","I","MZ","Z" };
+            for (int i = 0; i < shapeNames.Length; i++)
+            {
+                string n = "shapes/" + shapeNames[i];
+                tetrisTextures.Add(Game.Content.Load<Texture2D>(n));
+            }
 
             base.LoadContent();
         }
@@ -125,7 +137,8 @@ namespace NGJ2012
 
             if (currentPiece != null)
             {
-
+                if (currentPiece.body.Position.X < MinMaxX.X && moveDir.X < 0) moveDir.X = 0;
+                if (MinMaxX.Y < currentPiece.body.Position.X && moveDir.X > 0) moveDir.X = 0;
                 currentPiece.body.LinearVelocity = moveDir * movementSpeed;
 
                 if (state.IsKeyDown(Keys.Down))
@@ -159,7 +172,7 @@ namespace NGJ2012
             drawer.cameraMatrix = camera;
             foreach (TetrisPiece cur in pieces)
             {
-                drawer.DrawBody(cur.body);
+                drawer.DrawBodyTextured(cur.body, cur.texture);
             }
         }
 
