@@ -48,9 +48,9 @@ namespace NGJ2012
 
         public override void Draw(GameTime gameTime)
         {
-            parent.SpriteBatch.Begin();
-            parent.SpriteBatch.DrawString(font, "Test", pos, Color.White);
-            parent.SpriteBatch.End();
+            //parent.SpriteBatch.Begin();
+            //parent.SpriteBatch.DrawString(font, "Test", pos, Color.White);
+            //parent.SpriteBatch.End();
         }
     }
 }

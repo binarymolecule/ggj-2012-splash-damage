@@ -36,8 +36,9 @@ namespace NGJ2012
             playerCollider.OnSeparation += new OnSeparationEventHandler(PlaterSeperatesFromWorld);
             playerCollider.Friction = 0.0f;
             playerCollider.Restitution = 0.0f;
-            playerCollider.BodyType = BodyType.Dynamic;
-            JointFactory.CreateFixedAngleJoint(world, playerCollider);
+            playerCollider.BodyType = BodyType.Kinematic;
+            playerCollider.FixedRotation = true;
+            playerCollider.Rotation = 0.0f;
         }
 
         bool wallL, wallR;
@@ -80,8 +81,9 @@ namespace NGJ2012
             if (state.IsKeyDown(Keys.A)) move.X -= 1;
             if (state.IsKeyDown(Keys.D)) move.X += 1;
             if (state.IsKeyDown(Keys.W)) move.Y -= 1;
+            if (state.IsKeyDown(Keys.S)) move.Y += 1;
 
-            playerCollider.LinearVelocity = new Vector2(move.X * 8.0f, playerCollider.LinearVelocity.Y + move.Y);
+            playerCollider.LinearVelocity = move* 8.0f;
 
             base.Update(gameTime);
         }
