@@ -44,7 +44,7 @@ namespace NGJ2012
         }
         private bool didFallSinceLastJump = true;
         private float jumpForce = 0.5f;
-        private const float BYTE_FORCE = 500.0f;
+        private const float BYTE_FORCE = 300.0f;
         private PowerUp currentlySelectedPowerUp;
 
         public PowerUp CurrentlySelectedPowerUp
@@ -248,23 +248,22 @@ namespace NGJ2012
 
         private void bite()
         {
-            Vector2 start = playerCollider.Position + viewDirection * new Vector2(0.2f, 0);
             //Check for objects slightly above or below to get also objects that are not directly on the height of your head:
-            world.RayCast(new RayCastCallback(biteRayCastCallback), start, playerCollider.Position + viewDirection * new Vector2(0.6f, -0.5f));
-            world.RayCast(new RayCastCallback(biteRayCastCallback), start, playerCollider.Position + viewDirection * new Vector2(0.6f, +0.5f));
+            world.RayCast(new RayCastCallback(biteRayCastCallback), playerCollider.Position, playerCollider.Position + new Vector2(0.6f * viewDirection, -0.5f));
+            world.RayCast(new RayCastCallback(biteRayCastCallback), playerCollider.Position, playerCollider.Position + new Vector2(0.6f * viewDirection, 0.0f));
+            world.RayCast(new RayCastCallback(biteRayCastCallback), playerCollider.Position, playerCollider.Position + new Vector2(0.6f * viewDirection, +0.5f));
         }
 
         float biteRayCastCallback(Fixture fixture, Vector2 point, Vector2 normal, float fraction)
         {
             if (fixture.CollisionCategories == Game1.COLLISION_GROUP_TETRIS_BLOCKS)
             {
+                parent.TetrisPlayer.reactiveAllPieces();
                 fixture.Body.ApplyForce(new Vector2(-this.viewDirection * BYTE_FORCE, -BYTE_FORCE));
-
+              
                 //Stop raytracing
                 return 0;
-            }
-            else
-            {
+            } else {
                 //Continue raytracing:
                 return -1;
             }

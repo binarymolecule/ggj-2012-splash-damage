@@ -281,5 +281,17 @@ namespace NGJ2012
         }
 
 
+
+        internal void reactiveAllPieces()
+        {
+            foreach (TetrisPiece piece in pieces)
+            {
+                if (!activePieces.Contains(piece))
+                {
+                    piece.body.BodyType = BodyType.Dynamic;
+                    activePieces.Remove(piece);
+                }
+            }
+        }
     }
 }
