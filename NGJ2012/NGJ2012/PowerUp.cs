@@ -37,6 +37,8 @@ namespace NGJ2012
         private bool usageTimerRunning = false;
         private double remainingPowerUpTimeInSecs = 3;
 
+        private bool isUsedOnCollectingAndHasNoDuration;
+
         public enum EPowerUpType
         {
             MegaJump, ExtraLife
@@ -48,6 +50,9 @@ namespace NGJ2012
             this.game = game;
             this.world = world;
             this.powerUpType = powerUpType;
+
+
+            isUsedOnCollectingAndHasNoDuration = (powerUpType == EPowerUpType.ExtraLife);
 
             //Physics:
             collisionBody = BodyFactory.CreateCircle(world, 0.5f, 1.0f);
@@ -70,15 +75,8 @@ namespace NGJ2012
         {
             if (this.Visible)
             {
-                switch (this.powerUpType)
-                {
-                    case EPowerUpType.MegaJump:
-                        game.PlatformPlayer.addPowerUp(this);
-                        break;
-                    case EPowerUpType.ExtraLife:
-                        this.use();
-                        break;
-                }
+                if (this.isUsedOnCollectingAndHasNoDuration) this.use();
+                else game.PlatformPlayer.addPowerUp(this);
 
                 this.Visible = false;
             }
@@ -144,7 +142,7 @@ namespace NGJ2012
         {
             if(!usageTimerRunning)
             {
-                usageTimerRunning = true;
+                if (!isUsedOnCollectingAndHasNoDuration) usageTimerRunning = true;
 
                 switch (this.powerUpType)
                 {
@@ -154,7 +152,6 @@ namespace NGJ2012
 
                     case EPowerUpType.ExtraLife:
                         game.PlatformPlayer.increaseLifes();
-                        onPowerUpExhausted();
                         break;
                 }
             }
