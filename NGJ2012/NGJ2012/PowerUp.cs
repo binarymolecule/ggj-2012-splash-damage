@@ -62,6 +62,14 @@ namespace NGJ2012
             collisionBody.CollidesWith = Category.Cat1;
         }
 
+        public static PowerUp getRandomPowerUp(Game1 game, World world, Vector2 position) 
+        {
+            Type type = typeof(EPowerUpType);
+            String[] enumArray = (String[])Enum.GetNames(type);
+            int random = (new Random()).Next(enumArray.Length);
+            return new PowerUp(game, world, (EPowerUpType)Enum.Parse(type, enumArray[random]), position);
+        }
+
         bool onPlayerCollision(Fixture fixtureA, Fixture fixtureB, Contact contact)
         {
             if (this.Visible)

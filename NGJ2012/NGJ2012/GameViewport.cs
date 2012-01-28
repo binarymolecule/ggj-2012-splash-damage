@@ -7,12 +7,13 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace NGJ2012
 {
-    class GameViewport : DrawableGameComponent
+    public class GameViewport : DrawableGameComponent
     {
         public Vector2 cameraPosition = new Vector2(0,0);
         public float cellSizeInPX = 32;
-        public int screenWidth = 1024;
-        public int screenHeight = 720;
+        int screenWidth = 1024;
+        int screenHeight = 720;
+        public float screenWidthInGAME, screenHeightInGAME;
         public Game1 game;
         public RenderTarget2D leftScreen;
         public RenderTarget2D rightScreen;
@@ -26,6 +27,15 @@ namespace NGJ2012
             this.cellSizeInPX = icellWidth;
             this.Visible = false;
         }
+
+        public void resize(int x, int y)
+        {
+            screenWidth = x;
+            screenWidthInGAME = screenWidth / cellSizeInPX;
+            screenHeight = y;
+            screenHeightInGAME = screenHeight / cellSizeInPX;
+        }
+
 
         protected override void  LoadContent()
         {

@@ -20,9 +20,11 @@ namespace NGJ2012
         Rectangle screenRectangle, playerRectangle;
 
         private String p1Text;
+        private String p2Text;
         private String textPowerup;
         private Texture2D texturePowerUp;
-        private Vector2 textPosition = new Vector2(20.0f, 20.0f);
+        private Vector2 textPositionP1 = new Vector2(20.0f, 20.0f);
+        private Vector2 textPositionP2 = new Vector2(800.0f, 20.0f);
 
         // Assets
         SpriteFont font;
@@ -58,6 +60,8 @@ namespace NGJ2012
             textPowerup = "Power-Up = ";
             texturePowerUp = (parent.PlatformPlayer.CurrentlySelectedPowerUp != null) ? parent.PlatformPlayer.CurrentlySelectedPowerUp.Texture : null;
 
+            p2Text = "Next tetris: ";
+
             base.Update(gameTime);
         }
 
@@ -67,15 +71,20 @@ namespace NGJ2012
             parent.SpriteBatch.Draw(tex, screenRectangle, Color.White);
             parent.SpriteBatch.Draw(tex, playerRectangle, Color.Red);
 
-            //Texts:
+            //Texts p1:
             Vector2 widthHeight = font.MeasureString(p1Text);
-            Vector2 pos2 = new Vector2(textPosition.X, textPosition.Y + widthHeight.Y);
+            Vector2 pos2 = new Vector2(textPositionP1.X, textPositionP1.Y + widthHeight.Y);
 
-            parent.SpriteBatch.DrawString(font, p1Text, textPosition, Color.White);
+            parent.SpriteBatch.DrawString(font, p1Text, textPositionP1, Color.White);
             parent.SpriteBatch.DrawString(font, textPowerup, pos2, Color.White);
 
             widthHeight = font.MeasureString(p1Text);
-            if (texturePowerUp != null) parent.SpriteBatch.Draw(texturePowerUp, new Vector2(pos2.X + widthHeight.X, textPosition.Y + widthHeight.Y), Color.White);
+            if (texturePowerUp != null) parent.SpriteBatch.Draw(texturePowerUp, pos2 + widthHeight, Color.White);
+
+            //Texts p2:
+            parent.SpriteBatch.DrawString(font, p2Text, textPositionP2, Color.White);
+            widthHeight = font.MeasureString(p2Text);
+            if (parent.TetrisPlayer.nextTetrixPiece != null) parent.SpriteBatch.Draw(parent.TetrisPlayer.nextTetrixPiece.texture, textPositionP2 + widthHeight, null, Color.White, 0.0f, new Vector2(), 0.25f, SpriteEffects.None, 0.0f);
 
             parent.SpriteBatch.End();
 
