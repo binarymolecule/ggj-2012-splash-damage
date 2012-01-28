@@ -48,7 +48,7 @@ namespace NGJ2012
             playerCollider.FixedRotation = true;
             playerCollider.Rotation = 0.0f;
             playerCollider.CollisionCategories = Game1.COLLISION_GROUP_DEFAULT;
-            playerCollider.CollidesWith = Game1.COLLISION_GROUP_STATIC_OBJECTS | Game1.COLLISION_GROUP_TETRIS_BLOCKS;
+            playerCollider.CollidesWith = Game1.COLLISION_GROUP_DEFAULT | Game1.COLLISION_GROUP_STATIC_OBJECTS | Game1.COLLISION_GROUP_TETRIS_BLOCKS;
         }
 
         List<Fixture> canJumpBecauseOf = new List<Fixture>();

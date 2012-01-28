@@ -20,7 +20,7 @@ using FarseerPhysics.Dynamics.Contacts;
 
 namespace NGJ2012
 {
-    public class PowerUp : Microsoft.Xna.Framework.DrawableGameComponent
+    public class PowerUp : DrawableGameComponentExtended
     {
         Game1 game;
         World world;
@@ -41,8 +41,8 @@ namespace NGJ2012
             this.world = world;
             this.powerUpType = powerUpType;
 
-            collisionBody = BodyFactory.CreateCapsule(world, 1.0f, 0.2f, 1.0f);
-            collisionBody.Position = new Vector2(12, 12);
+            collisionBody = BodyFactory.CreateCircle(world, 1.0f, 1.0f);
+            collisionBody.Position = new Vector2(12, 17);
             collisionBody.OnCollision += new OnCollisionEventHandler(onPlayerCollision);
             collisionBody.BodyType = BodyType.Kinematic;
             collisionBody.CollisionCategories = Category.Cat1;
@@ -51,7 +51,6 @@ namespace NGJ2012
 
         bool onPlayerCollision(Fixture fixtureA, Fixture fixtureB, Contact contact)
         {
-            Debug.Print("Coll with PU");
             switch (this.powerUpType)
             {
                 case EPowerUpType.MegaJump:
@@ -60,7 +59,9 @@ namespace NGJ2012
                     break;
             }
 
-            return true;
+            game.Components.Remove(this);
+
+            return false;
         }            
 
         protected override void LoadContent()
@@ -75,13 +76,11 @@ namespace NGJ2012
             base.Update(gameTime);
         }
 
-        public override void Draw(GameTime gameTime)
+        public override void DrawGameWorldOnce(Matrix camera, bool platformMode)
         {
             this.game.SpriteBatch.Begin();
-            this.game.SpriteBatch.Draw(texture, collisionBody.Position, Color.White);
+            this.game.SpriteBatch.Draw(texture, Vector2.Transform(collisionBody.Position, camera), Color.White);
             this.game.SpriteBatch.End();
-
-            base.Draw(gameTime);
         }
 
         
