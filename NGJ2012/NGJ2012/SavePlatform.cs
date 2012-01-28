@@ -49,7 +49,7 @@ namespace NGJ2012
         protected override void LoadContent()
         {
             platformTexture = parent.Content.Load<Texture2D>("graphics/level/platform");
-            drawer = new TetrisPieceBatch(GraphicsDevice);
+            drawer = new TetrisPieceBatch(GraphicsDevice, Game.Content);
         }
 
         protected override void UnloadContent()

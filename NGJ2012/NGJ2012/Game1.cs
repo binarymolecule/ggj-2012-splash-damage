@@ -141,7 +141,7 @@ namespace NGJ2012
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
 
-            tetrisBatch = new TetrisPieceBatch(GraphicsDevice);
+            tetrisBatch = new TetrisPieceBatch(GraphicsDevice, Content);
             // TODO: use this.Content to load your game content here
         }
 
@@ -242,7 +242,7 @@ namespace NGJ2012
                 DrawGameWorldOnce(false, 0);
             }
             GraphicsDevice.SetRenderTarget(null);
-            spriteBatch.Begin();
+            spriteBatch.Begin(SpriteSortMode.Immediate,BlendState.Opaque,SamplerState.PointClamp,DepthStencilState.None,RasterizerState.CullNone);
             if (platformSplitLine < 0)
                 spriteBatch.Draw(platformModeLeft, new Rectangle(0, 0, platformModeWidth, 720), Color.White);
             else
@@ -258,6 +258,9 @@ namespace NGJ2012
                 spriteBatch.Draw(tetrisModeRight, new Rectangle(platformModeWidth+(int)tetrisSplitLine, 0, tetrisModeWidth - (int)tetrisSplitLine, 720), new Rectangle((int)tetrisSplitLine, 0, tetrisModeWidth - (int)tetrisSplitLine, 720), Color.White);
             }
             spriteBatch.End();
+
+            //DrawGameWorldOnce(true, 0);
+
 
             base.Draw(gameTime);
         }
