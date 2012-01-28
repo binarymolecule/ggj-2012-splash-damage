@@ -86,12 +86,15 @@ namespace NGJ2012
 
         bool upDown = false;
         bool downDown = false;
+        bool paused = false;
         /// <summary>
         /// Allows the game component to update itself.
         /// </summary>
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         public override void Update(GameTime gameTime)
         {
+            if (paused) return;
+
             if (currentPiece == null)
             {
                 currentPiece = new TetrisPiece(_world, null, tetrisShapes[(new Random()).Next(tetrisShapes.Count)], new Vector2(2, 2));
@@ -110,6 +113,8 @@ namespace NGJ2012
 
             if (state.IsKeyDown(Keys.Space)) moveDir.Y = 3;
             else moveDir.Y = 0.25f;
+
+            if (state.IsKeyDown(Keys.M)) paused = true;
 
 
             currentPiece.body.LinearVelocity = moveDir * movementSpeed;
