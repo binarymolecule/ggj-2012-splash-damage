@@ -86,6 +86,7 @@ namespace NGJ2012
             return false;
         }            
 
+
         protected override void LoadContent()
         {
             // Create animations for power ups
@@ -131,6 +132,11 @@ namespace NGJ2012
                 animation.Draw(this.game.SpriteBatch, Vector2.Transform(collisionBody.Position, camera),
                                platformMode ? Game1.ScalePlatformSprites : Game1.ScaleTetrisSprites);
                 this.game.SpriteBatch.End();
+
+#if DEBUG
+                this.game.DebugDrawer.cameraMatrix = camera;
+                this.game.DebugDrawer.DrawBody(collisionBody);
+#endif
             }
         }
 

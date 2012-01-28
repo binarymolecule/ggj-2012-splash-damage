@@ -119,11 +119,8 @@ namespace NGJ2012
             base.Initialize();
         }
 
-        TetrisPieceBatch drawer;
         protected override void LoadContent()
         {
-            drawer = new TetrisPieceBatch(GraphicsDevice, Game.Content);
-
             // Create player animation
             string[] playerTextureNames = new string[] { "jumpAndRunPlayer" };
             playerAnimation = new AnimatedSprite(parent, "", playerTextureNames, new Vector2(36, 32));
@@ -281,8 +278,8 @@ namespace NGJ2012
             parent.SpriteBatch.End();
 
 #if DEBUG
-            drawer.cameraMatrix = camera;
-            drawer.DrawBody(playerCollider);
+            parent.DebugDrawer.cameraMatrix = camera;
+            parent.DebugDrawer.DrawBody(playerCollider);
 #endif
         }
 
