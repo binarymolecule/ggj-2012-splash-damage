@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <ProjectGuid>{C6EAFF33-A242-4AF2-8C19-6C1376159E20}</ProjectGuid>
@@ -108,6 +108,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="jumpAndRunPlayerFigure.cs" />
+    <Compile Include="PlatformPlayer.cs" />
+    <Compile Include="gui\GameStatusLayer.cs" />
+    <Compile Include="TetrisPieceBatch.cs" />
+    <Compile Include="TetrisPiece.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Game1.cs" />

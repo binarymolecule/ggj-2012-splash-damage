@@ -13,6 +13,7 @@ using FarseerPhysics.Dynamics;
 using FarseerPhysics.Factories;
 using FarseerPhysics.Collision;
 using FarseerPhysics.Collision.Shapes;
+using FarseerPhysics.Dynamics.Joints;
 
 
 namespace NGJ2012
@@ -20,18 +21,51 @@ namespace NGJ2012
     /// <summary>
     /// This is a game component that implements IUpdateable.
     /// </summary>
-    public class TetrisPlayer : Microsoft.Xna.Framework.GameComponent
+    public class TetrisPlayer : Microsoft.Xna.Framework.DrawableGameComponent
     {
         private World _world;
         private float gameBlockSize;
-        private Vector2 cursorPosition;
+        const float movementSpeed = 8.0f;
+
+        List<bool[,]> tetrisShapes = new List<bool[,]>();
+        List<Texture2D> tetrisTextures = new List<Texture2D>();
+
+        List<TetrisPiece> pieces = new List<TetrisPiece>();
+        private TetrisPiece currentPiece;
+        FixedAngleJoint currentPieceRotation;
+        OnCollisionEventHandler currentPieceCollide;
+        TetrisPieceBatch drawer;
 
         public TetrisPlayer(Game game, World world, float igameBlockSize)
             : base(game)
         {
             _world = world;
             gameBlockSize = igameBlockSize;
-            cursorPosition = new Vector2(3, 3);
+
+            tetrisShapes.Add(new bool[,] { { true, false }, { true, false }, { true, true } });
+            tetrisShapes.Add(new bool[,] { { false, true }, { false, true }, { true, true } });
+            tetrisShapes.Add(new bool[,] { { true, true }, { true, true } });
+            tetrisShapes.Add(new bool[,] { { false, true, false }, { true, true, true } });
+            tetrisShapes.Add(new bool[,] { { true }, { true }, { true }, { true } });
+            tetrisShapes.Add(new bool[,] { { false, true, true }, { true, true, false } });
+            tetrisShapes.Add(new bool[,] { { true, true, false }, { false, true, true } });
+            currentPiece = null;
+        }
+
+        bool currentPieceCollision(Fixture fixtureA, Fixture fixtureB, FarseerPhysics.Dynamics.Contacts.Contact contact)
+        {
+            dropCurrentPiece();
+            return true;
+        }
+
+        private void dropCurrentPiece()
+        {
+            currentPiece.body.LinearVelocity = Vector2.Zero;
+            currentPiece.body.OnCollision -= currentPieceCollide;
+            currentPieceCollide = null;
+            currentPiece = null;
+            _world.RemoveJoint(currentPieceRotation);
+            currentPieceRotation = null;
         }
 
         /// <summary>
@@ -40,74 +74,84 @@ namespace NGJ2012
         /// </summary>
         public override void Initialize()
         {
-            _lineVertices = new VertexPositionColor[1024];
-
-            // set up a new basic effect, and enable vertex colors.
-            _basicEffect = new BasicEffect(Game.GraphicsDevice);
-            _basicEffect.VertexColorEnabled = true;
-
             base.Initialize();
         }
 
+        protected override void LoadContent()
+        {
+            drawer = new TetrisPieceBatch(GraphicsDevice, Matrix.CreateScale(gameBlockSize));
+
+            base.LoadContent();
+        }
+
+        bool upDown = false;
+        bool downDown = false;
+        bool paused = false;
         /// <summary>
         /// Allows the game component to update itself.
         /// </summary>
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         public override void Update(GameTime gameTime)
         {
+            if (paused) return;
+
+            if (currentPiece == null)
+            {
+                currentPiece = new TetrisPiece(_world, null, tetrisShapes[(new Random()).Next(tetrisShapes.Count)], new Vector2(2, 2));
+                currentPieceCollide = new OnCollisionEventHandler(currentPieceCollision);
+                currentPiece.body.OnCollision += currentPieceCollide;
+                currentPieceRotation = JointFactory.CreateFixedAngleJoint(_world, currentPiece.body);
+                pieces.Add(currentPiece);
+            }
+
             // TODO: Add your update code here
+            Vector2 moveDir = new Vector2();
+            KeyboardState state = Keyboard.GetState();
+            if (state.IsKeyDown(Keys.Left)) moveDir.X = -1;
+            else if (state.IsKeyDown(Keys.Right)) moveDir.X = +1;
+            else moveDir.X = 0;
+
+            if (state.IsKeyDown(Keys.Space)) moveDir.Y = 3;
+            else moveDir.Y = 0.25f;
+
+            if (state.IsKeyDown(Keys.M)) paused = true;
+
+
+            currentPiece.body.LinearVelocity = moveDir * movementSpeed;
+
+            if (state.IsKeyDown(Keys.Down))
+            {
+                if (!downDown)
+                {
+                    currentPieceRotation.TargetAngle += (float)Math.PI / 2;
+                    downDown = true;
+                }
+            }
+            else downDown = false;
+
+            if (state.IsKeyDown(Keys.Up))
+            {
+                if (!upDown)
+                {
+                    currentPieceRotation.TargetAngle -= (float)Math.PI / 2;
+                    upDown = true;
+                }
+            }
+            else upDown = false;
+
 
             base.Update(gameTime);
         }
 
-
-        private BasicEffect _basicEffect;
-        private VertexPositionColor[] _lineVertices;
-        private int _lineVertsCount;
-
-
-        public void DrawBody(Body bod)
+        public override void Draw(GameTime gameTime)
         {
-            Matrix mat = Matrix.CreateRotationZ(bod.Rotation) * Matrix.CreateTranslation(new Vector3(bod.Position, 0.0f)) * Matrix.CreateScale(gameBlockSize);
 
-            Game.GraphicsDevice.SamplerStates[0] = SamplerState.AnisotropicClamp;
-            //tell our basic effect to begin.
-            _basicEffect.Projection = Matrix.CreateOrthographicOffCenter(0, Game.GraphicsDevice.Viewport.Width, Game.GraphicsDevice.Viewport.Height, 0, 0, 1);
-            _basicEffect.View = mat;
-            _basicEffect.CurrentTechnique.Passes[0].Apply();
-
-            foreach (Fixture fix in bod.FixtureList)
+            foreach (TetrisPiece cur in pieces)
             {
-                DrawLineShape(fix.Shape, Color.Black);
-            }
-
-            Flush();
-        }
-
-        public void DrawLineShape(Shape shape, Color color)
-        {
-            if (shape.ShapeType == ShapeType.Polygon)
-            {
-                PolygonShape loop = (PolygonShape)shape;
-                for (int i = 0; i < loop.Vertices.Count; ++i)
-                {
-                    if (_lineVertsCount >= _lineVertices.Length)
-                        Flush();
-                    _lineVertices[_lineVertsCount].Position = new Vector3(loop.Vertices[i], 0f);
-                    _lineVertices[_lineVertsCount + 1].Position = new Vector3(loop.Vertices.NextVertex(i), 0f);
-                    _lineVertices[_lineVertsCount].Color = _lineVertices[_lineVertsCount + 1].Color = color;
-                    _lineVertsCount += 2;
-                }
+                drawer.DrawBody(cur.body);
             }
         }
 
-
-
-        private void Flush()
-        {
-            if (_lineVertsCount < 2) return;
-            Game.GraphicsDevice.DrawUserPrimitives(PrimitiveType.LineList, _lineVertices, 0, _lineVertsCount / 2);
-            _lineVertsCount = 0;
-        }
+    
     }
 }
