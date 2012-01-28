@@ -111,6 +111,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AnimatedSprite.cs" />
     <Compile Include="DrawableGameComponentExtended.cs" />
     <Compile Include="GameViewport.cs" />
     <Compile Include="PlatformPlayer.cs" />
