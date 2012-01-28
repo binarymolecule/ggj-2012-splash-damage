@@ -121,6 +121,12 @@
     <Compile Include="Game1.cs" />
     <Compile Include="TetrisPieceBatch.cs" />
     <Compile Include="TetrisPlayer.cs" />
+    <Compile Include="timers\Interpolator.cs" />
+    <Compile Include="timers\InterpolatorCollection.cs" />
+    <Compile Include="timers\InterpolatorScales.cs" />
+    <Compile Include="timers\Pool.cs" />
+    <Compile Include="timers\Timer.cs" />
+    <Compile Include="timers\TimerCollection.cs" />
     <Compile Include="WaterLayer.cs" />
   </ItemGroup>
   <ItemGroup>
