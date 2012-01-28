@@ -20,6 +20,9 @@ namespace NGJ2012
     /// </summary>
     public class Game1 : Microsoft.Xna.Framework.Game
     {
+        // Global constants
+        public const int ScreenWidth = 1280, ScreenHeight = 720;
+
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         World world;
@@ -28,14 +31,22 @@ namespace NGJ2012
 
         float gameBlockSize = 96.0f;
 
+        // Game components
+        public GameStatusLayer StatusLayer;
+        public SpriteBatch SpriteBatch { get { return spriteBatch; } }
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
-            graphics.PreferredBackBufferWidth = 1280;
-            graphics.PreferredBackBufferHeight = 720;
+            graphics.PreferredBackBufferWidth = ScreenWidth;
+            graphics.PreferredBackBufferHeight = ScreenHeight;
             Content.RootDirectory = "Content";
             world = new World(new Vector2(0, 9.81f));
             tetrisShapes.Add(new bool[,] { { true, false }, { true, false }, { true, true } });
+
+            // Add game components
+            StatusLayer = new GameStatusLayer(this);
+            Components.Add(StatusLayer);
         }
 
         /// <summary>
