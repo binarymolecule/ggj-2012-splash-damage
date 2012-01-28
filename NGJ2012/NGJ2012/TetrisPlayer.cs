@@ -166,11 +166,13 @@ namespace NGJ2012
             // TODO: Add your update code here
             Vector2 moveDir = new Vector2();
             KeyboardState state = Keyboard.GetState();
+            GamePadState gstate = GamePad.GetState(PlayerIndex.Two);
             if (state.IsKeyDown(Keys.Left)) moveDir.X = -1;
             else if (state.IsKeyDown(Keys.Right)) moveDir.X = +1;
             else moveDir.X = 0;
+            if (gstate.IsConnected) moveDir.X = gstate.ThumbSticks.Left.X;
 
-            if (state.IsKeyDown(Keys.Down)) moveDir.Y = 3;
+            if (state.IsKeyDown(Keys.Down) || gstate.IsButtonDown(Buttons.A)) moveDir.Y = 3;
             else moveDir.Y = 0.25f;
 
             if (state.IsKeyDown(Keys.M)) paused = true;
@@ -187,7 +189,7 @@ namespace NGJ2012
 
                 if (currentPieceCenter.X < spawnL) currentPiece.body.LinearVelocity = new Vector2(currentPiece.body.LinearVelocity.X + (spawnL-currentPieceCenter.X)*10,currentPiece.body.LinearVelocity.Y);
 
-                if (state.IsKeyDown(Keys.PageDown))
+                if (state.IsKeyDown(Keys.PageDown) || gstate.IsButtonDown(Buttons.X))
                 {
                     if (!downDown)
                     {
@@ -197,7 +199,7 @@ namespace NGJ2012
                 }
                 else downDown = false;
 
-                if (state.IsKeyDown(Keys.Up))
+                if (state.IsKeyDown(Keys.Up) || gstate.IsButtonDown(Buttons.B))
                 {
                     if (!upDown)
                     {

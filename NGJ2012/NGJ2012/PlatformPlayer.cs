@@ -231,7 +231,7 @@ namespace NGJ2012
 
             if (state.IsKeyDown(Keys.Enter) || state.IsKeyDown(Keys.E) || gstate.IsButtonDown(Buttons.B)) usePowerUp();
 
-            if (state.IsKeyDown(Keys.F)) bite();
+            if (state.IsKeyDown(Keys.F) || gstate.IsButtonDown(Buttons.X)) bite();
 
             // Update player animation
             playerAnimation.Update(gameTime.ElapsedGameTime.Milliseconds);

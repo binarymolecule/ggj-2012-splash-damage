@@ -37,8 +37,8 @@ namespace NGJ2012
         Body staticWorldGround;
         Body staticWorldL;
         Body staticWorldR;
-        public const int worldWidthInBlocks = 24;
-        public const int worldHeightInBlocks = 20;
+        public const int worldWidthInBlocks = 80;
+        public const int worldHeightInBlocks = 40;
 
         public const float ScalePlatformSprites = 1.0f;
         public const float ScaleTetrisSprites = 0.25f;
