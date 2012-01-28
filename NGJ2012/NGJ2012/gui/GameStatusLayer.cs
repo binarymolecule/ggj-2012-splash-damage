@@ -21,7 +21,7 @@ namespace NGJ2012
 
         private String p1Text;
         private String textPowerup;
-        private Texture2D powerUpTex;
+        private Texture2D texturePowerUp;
         private Vector2 textPosition = new Vector2(20.0f, 20.0f);
 
         // Assets
@@ -54,9 +54,9 @@ namespace NGJ2012
         {
             playerRectangle.Y = (int)(700 + (parent.PlatformPlayer.cameraPosition.Y / parent.WorldHeightInBlocks) * 680);
 
-            p1Text = "#Lifes = " + parent.PlatformPlayer.NumberOfLifes + "\n Pos = ";
+            p1Text = "#Lifes = " + parent.PlatformPlayer.NumberOfLifes + "\n cameraPosition Player = " + parent.PlatformPlayer.cameraPosition;
             textPowerup = "Power-Up = ";
-            powerUpTex = (parent.PlatformPlayer.CurrentlySelectedPowerUp != null) ? parent.PlatformPlayer.CurrentlySelectedPowerUp.Texture : null;
+            texturePowerUp = (parent.PlatformPlayer.CurrentlySelectedPowerUp != null) ? parent.PlatformPlayer.CurrentlySelectedPowerUp.Texture : null;
 
             base.Update(gameTime);
         }
@@ -64,14 +64,18 @@ namespace NGJ2012
         public override void Draw(GameTime gameTime)
         {
             parent.SpriteBatch.Begin();
-            //parent.SpriteBatch.DrawString(font, "Test", Vector2.Zero, Color.White);
             parent.SpriteBatch.Draw(tex, screenRectangle, Color.White);
             parent.SpriteBatch.Draw(tex, playerRectangle, Color.Red);
 
             //Texts:
+            Vector2 widthHeight = font.MeasureString(p1Text);
+            Vector2 pos2 = new Vector2(textPosition.X, textPosition.Y + widthHeight.Y);
+
             parent.SpriteBatch.DrawString(font, p1Text, textPosition, Color.White);
-            //font.MeasureString(tex);
-            if (powerUpTex != null) parent.SpriteBatch.Draw(powerUpTex, textPosition, Color.White);
+            parent.SpriteBatch.DrawString(font, textPowerup, pos2, Color.White);
+
+            widthHeight = font.MeasureString(p1Text);
+            if (texturePowerUp != null) parent.SpriteBatch.Draw(texturePowerUp, new Vector2(pos2.X + widthHeight.X, textPosition.Y + widthHeight.Y), Color.White);
 
             parent.SpriteBatch.End();
 
