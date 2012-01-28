@@ -176,8 +176,11 @@ namespace NGJ2012
             if (this.currentlySelectedPowerUp != null)
             {
                 this.currentlySelectedPowerUp.use();
-                this.currentlySelectedPowerUp = null;
             }
+        }
+
+        public void clearCurrentPowerUp() {
+            this.currentlySelectedPowerUp = null;
         }
 
         public void increaseJumpPower(float inc) {
