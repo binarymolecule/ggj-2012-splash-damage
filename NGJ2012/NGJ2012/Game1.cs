@@ -28,6 +28,8 @@ namespace NGJ2012
 
         World world;
         TetrisPlayer tetris;
+
+        public TetrisPlayer TetrisPlayer { get { return tetris; } }
         TetrisPieceBatch tetrisBatch;
         PlatformPlayer platform;
         public PlatformPlayer PlatformPlayer { get { return platform; } }

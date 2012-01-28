@@ -33,6 +33,9 @@ namespace NGJ2012
         List<TetrisPiece> pieces = new List<TetrisPiece>();
         private TetrisPiece currentPiece;
         float currentPieceMaxLen;
+        private TetrisPiece nextPiece;
+
+        internal TetrisPiece nextTetrixPiece { get { return nextPiece; } }
         FixedAngleJoint currentPieceRotation;
         OnCollisionEventHandler currentPieceCollide;
         TetrisPieceBatch drawer;
@@ -67,15 +70,28 @@ namespace NGJ2012
 
         private void Spawn(Utility.Timer timer)
         {
-            int shape = (new Random()).Next(tetrisShapes.Count);
+            if (nextPiece == null)
             currentPieceMaxLen = Math.Max(tetrisShapes[shape].GetLength(0), tetrisShapes[shape].GetLength(1));
             currentPiece = new TetrisPiece(_world, tetrisTextures[shape], tetrisShapes[shape], viewportToSpawnIn.cameraPosition + new Vector2(0,-viewportToSpawnIn.screenHeightInGAME/2.0f + 1.0f));
+            {
+                nextPiece = getRandomTetrisPiece();
+            }
+
+            currentPiece = nextPiece;
             currentPieceCollide = new OnCollisionEventHandler(currentPieceCollision);
             currentPiece.body.OnCollision += currentPieceCollide;
             currentPieceRotation = JointFactory.CreateFixedAngleJoint(_world, currentPiece.body);
             pieces.Add(currentPiece);
 
+            nextPiece = getRandomTetrisPiece();
+
             Debug.Print("Spawn new tetris piece at: {0}, {1}", currentPiece.body.Position.X, currentPiece.body.Position.Y);
+        }
+
+        private TetrisPiece getRandomTetrisPiece()
+        {
+            int shape = (new Random()).Next(tetrisShapes.Count);
+            return new TetrisPiece(_world, tetrisTextures[shape], tetrisShapes[shape], SpawnPosition);
         }
 
         private void dropCurrentPiece()
