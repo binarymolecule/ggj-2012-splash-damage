@@ -23,7 +23,8 @@ namespace NGJ2012
         private String p2Text;
         private String textPowerup;
         private Texture2D texturePowerUp;
-        private Vector2 textPositionP1 = new Vector2(20.0f, 20.0f);
+        private Vector2 positionPowerUp = new Vector2(16.0f, 16.0f);
+        private Vector2 textPositionP1 = new Vector2(64.0f, 20.0f);
         private Vector2 textPositionP2 = new Vector2(800.0f, 20.0f);
 
         // Assets
@@ -73,13 +74,15 @@ namespace NGJ2012
 
             //Texts p1:
             Vector2 widthHeight = font.MeasureString(p1Text);
-            Vector2 pos2 = new Vector2(textPositionP1.X, textPositionP1.Y + widthHeight.Y);
+            //Vector2 pos2 = new Vector2(textPositionP1.X, textPositionP1.Y + widthHeight.Y);
+            Vector2 pos2 = new Vector2(16, 16);
 
             parent.SpriteBatch.DrawString(font, p1Text, textPositionP1, Color.White);
-            parent.SpriteBatch.DrawString(font, textPowerup, pos2, Color.White);
+            //parent.SpriteBatch.DrawString(font, textPowerup, pos2, Color.White);
 
             widthHeight = font.MeasureString(p1Text);
-            if (texturePowerUp != null) parent.SpriteBatch.Draw(texturePowerUp, pos2 + widthHeight, Color.White);
+            if (texturePowerUp != null) 
+                parent.SpriteBatch.Draw(texturePowerUp, positionPowerUp, Color.White);
 
             //Texts p2:
             parent.SpriteBatch.DrawString(font, p2Text, textPositionP2, Color.White);

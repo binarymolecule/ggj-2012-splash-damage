@@ -18,6 +18,7 @@ namespace NGJ2012
     {
         struct Animation
         {
+            public int ID;
             public int StartFrame;
             public int NumOfFrames;
             public int MsPerFrame;
@@ -32,6 +33,7 @@ namespace NGJ2012
         Animation currentAnimation;
         Texture2D currentTexture;
         public Texture2D CurrentTexture { get { return currentTexture; } }
+        public int CurrentID { get { return currentAnimation.ID; } }
 
         int currentMsec;
         int currentFrame;
@@ -46,6 +48,7 @@ namespace NGJ2012
             animationIDs = new Dictionary<string, int>();
             animations = new List<Animation>();
             textureOrigin = originInPixels;
+            currentAnimation = new Animation { ID = -1 };
 
             // Load textures
             foreach (string assetName in assetNames)
@@ -59,7 +62,8 @@ namespace NGJ2012
         {
             int index = animations.Count;
             animationIDs.Add(name, index);
-            animations.Add(new Animation { StartFrame = startFrame, NumOfFrames = numOfFrames, MsPerFrame = msPerFrame, Loop = loop });
+            animations.Add(new Animation { ID = index, StartFrame = startFrame, NumOfFrames = numOfFrames,
+                                           MsPerFrame = msPerFrame, Loop = loop });
             if (index == 0) SetAnimation(0);
             return index;
         }
@@ -73,10 +77,13 @@ namespace NGJ2012
 
         public void SetAnimation(int index)
         {
-            currentAnimation = animations[index];
-            currentFrame = currentAnimation.StartFrame;
-            currentMsec = 0;
-            currentTexture = textures[currentFrame];
+            if (currentAnimation.ID != index)
+            {
+                currentAnimation = animations[index];
+                currentFrame = currentAnimation.StartFrame;
+                currentMsec = 0;
+                currentTexture = textures[currentFrame];
+            }
         }
 
         public void Update(int msec)
