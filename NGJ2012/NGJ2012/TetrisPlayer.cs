@@ -32,13 +32,13 @@ namespace NGJ2012
 
         List<TetrisPiece> pieces = new List<TetrisPiece>();
         private TetrisPiece currentPiece;
+        float currentPieceMaxLen;
         FixedAngleJoint currentPieceRotation;
         OnCollisionEventHandler currentPieceCollide;
         TetrisPieceBatch drawer;
 
         // Absolute position in world coordinate system where new pieces are spawned
-        public Vector2 SpawnPosition = new Vector2(12, -12);
-        public Vector2 MinMaxX = new Vector2(10, 14);
+        public GameViewport viewportToSpawnIn;
 
         public TetrisPlayer(Game game, World world) : base(game)
         {
@@ -68,7 +68,8 @@ namespace NGJ2012
         private void Spawn(Utility.Timer timer)
         {
             int shape = (new Random()).Next(tetrisShapes.Count);
-            currentPiece = new TetrisPiece(_world, tetrisTextures[shape], tetrisShapes[shape], SpawnPosition);
+            currentPieceMaxLen = Math.Max(tetrisShapes[shape].GetLength(0), tetrisShapes[shape].GetLength(1));
+            currentPiece = new TetrisPiece(_world, tetrisTextures[shape], tetrisShapes[shape], viewportToSpawnIn.cameraPosition + new Vector2(0,-viewportToSpawnIn.screenHeightInGAME/2.0f + 1.0f));
             currentPieceCollide = new OnCollisionEventHandler(currentPieceCollision);
             currentPiece.body.OnCollision += currentPieceCollide;
             currentPieceRotation = JointFactory.CreateFixedAngleJoint(_world, currentPiece.body);
@@ -137,9 +138,15 @@ namespace NGJ2012
 
             if (currentPiece != null)
             {
-                if (currentPiece.body.Position.X < MinMaxX.X && moveDir.X < 0) moveDir.X = 0;
-                if (MinMaxX.Y < currentPiece.body.Position.X && moveDir.X > 0) moveDir.X = 0;
+                float spawnWidth = viewportToSpawnIn.screenWidthInGAME / 2.0f;
+                float spawnL = viewportToSpawnIn.cameraPosition.X - spawnWidth + currentPieceMaxLen / 2.0f;
+                float spawnR = viewportToSpawnIn.cameraPosition.X + spawnWidth - currentPieceMaxLen / 2.0f;
+                Vector2 currentPieceCenter = currentPiece.body.GetWorldPoint(currentPiece.body.LocalCenter);
+                if (currentPieceCenter.X < spawnL && moveDir.X < 0) moveDir.X = 0;
+                if (spawnR < currentPieceCenter.X && moveDir.X > 0) moveDir.X = 0;
                 currentPiece.body.LinearVelocity = moveDir * movementSpeed;
+
+                if (currentPieceCenter.X < spawnL) currentPiece.body.LinearVelocity = new Vector2(currentPiece.body.LinearVelocity.X + (spawnL-currentPieceCenter.X)*10,currentPiece.body.LinearVelocity.Y);
 
                 if (state.IsKeyDown(Keys.Down))
                 {
