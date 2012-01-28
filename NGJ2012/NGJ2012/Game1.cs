@@ -47,6 +47,7 @@ namespace NGJ2012
 
         // Other level components
         public WaterLayer WaterLayer;
+        public SavePlatform SavePlatform;
 
         // GUI components
         public GameStatusLayer StatusLayer { get; protected set; }
@@ -94,13 +95,16 @@ namespace NGJ2012
             jumpAndRunPlayer = new jumpAndRunPlayerFigure(this, world, this.spriteBatch);
             Components.Add(platform = new PlatformPlayer(this, world));
             this.Components.Add(jumpAndRunPlayer);
+
             // Create other level components
             WaterLayer = new WaterLayer(this);
             Components.Add(WaterLayer);
+            //SavePlatform = new WaterLayer(this);
+            //Components.Add(SavePlatform);
 
             // Add GUI components
             StatusLayer = new GameStatusLayer(this);
-            Components.Add(StatusLayer);
+            //Components.Add(StatusLayer);
         }
 
         /// <summary>
