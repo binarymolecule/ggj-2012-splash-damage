@@ -88,7 +88,7 @@ namespace NGJ2012
         protected override void LoadContent()
         {
             // Create animations for power ups
-            string[] animationNames = new string[] { "PowerUp_Jump", "PowerUp_Life", "PowerUp_Star" };
+            List<String> animationNames = new List<String> { "PowerUp_Jump", "PowerUp_Life", "PowerUp_Star" };
             animation = new AnimatedSprite(game, "", animationNames, new Vector2(20, 30));
             animation.AddAnimation("jump", 0, 0, 125, true);
             animation.AddAnimation("life", 1, 1, 125, true);

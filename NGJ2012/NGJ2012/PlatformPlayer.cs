@@ -31,6 +31,7 @@ namespace NGJ2012
         private const float maxRunSpeed = 8.0f;
 
         Game1 parent;
+        const float ScalePlayerSprite = 0.25f;
 
         World world;
         public Body playerCollider;
@@ -122,12 +123,17 @@ namespace NGJ2012
         protected override void LoadContent()
         {
             // Create player animation
-            string[] playerTextureNames = new string[] { "jumpAndRunPlayer" };
-            playerAnimation = new AnimatedSprite(parent, "", playerTextureNames, new Vector2(36, 32));
+            List<String> playerTextureNames = new List<String>();
+            for (int i = 0; i < 9; i++)
+                playerTextureNames.Add(String.Format("run_start/run_start_1_{0:0000}", i));
+            for (int i = 9; i < 29; i++)
+                playerTextureNames.Add(String.Format("run_loop_02/run_loop_02_{0:0000}", i));
+            
+            playerAnimation = new AnimatedSprite(parent, "char", playerTextureNames, new Vector2(256, 256));
             animID_Stand = playerAnimation.AddAnimation("stand", 0, 0, 125, true);
-            animID_Walk = playerAnimation.AddAnimation("walk", 0, 0, 125, true);
+            animID_Walk = playerAnimation.AddAnimation("walk", 0, 29, 50, 9);
             animID_Idle = playerAnimation.AddAnimation("idle", 0, 0, 125, true);
-            animID_Jump = playerAnimation.AddAnimation("jump", 0, 0, 125, true);
+            animID_Jump = playerAnimation.AddAnimation("jump", 0, 9, 60, false);
             animID_Fall = playerAnimation.AddAnimation("fall", 0, 0, 125, true);
             animID_Hit = playerAnimation.AddAnimation("hit", 0, 0, 125, true);
             playerAnimation.SetAnimation(animID_Stand);
@@ -172,9 +178,21 @@ namespace NGJ2012
             KeyboardState state = Keyboard.GetState();
             GamePadState gstate = GamePad.GetState(PlayerIndex.One);
             float move = 0;
-            if (state.IsKeyDown(Keys.A)) move = -acceleration;
-            if (state.IsKeyDown(Keys.D)) move = acceleration;
-            if (gstate.IsConnected) move = gstate.ThumbSticks.Left.X * Math.Abs(gstate.ThumbSticks.Left.X) * acceleration;
+            if (state.IsKeyDown(Keys.A))
+            {
+                move = -acceleration;
+                playerAnimation.Flipped = true;
+            }
+            if (state.IsKeyDown(Keys.D))
+            {
+                move = acceleration;
+                playerAnimation.Flipped = false;
+            }
+            if (gstate.IsConnected)
+            {
+                move = gstate.ThumbSticks.Left.X * Math.Abs(gstate.ThumbSticks.Left.X) * acceleration;
+                playerAnimation.Flipped = move < 0;
+            }
 
             currentRunSpeed *= Math.Max(0.0f, 1.0f - deacceleration*(float)gameTime.ElapsedGameTime.TotalSeconds);
             currentRunSpeed += move * (float)gameTime.ElapsedGameTime.TotalSeconds;
@@ -195,17 +213,17 @@ namespace NGJ2012
 
             playerCollider.LinearVelocity = new Vector2(currentRunSpeed, playerCollider.LinearVelocity.Y);
 
-            // Switch to walking animation
-            bool isFloating = Math.Abs(playerCollider.LinearVelocity.Y) > 0.001f;
-            if (isFloating)
-            {
-                if (playerCollider.LinearVelocity.Y > 0)
-                    playerAnimation.SetAnimation(animID_Fall);
-            }
-            else if (isRunning)
-                playerAnimation.SetAnimation(animID_Walk);
+            if (playerCollider.LinearVelocity.Y > 0)
+                didFallSinceLastJump = true;
 
-            if (playerCollider.LinearVelocity.Y > 0) didFallSinceLastJump = true;
+            canJump = canJumpBecauseOf.Count > 0;
+            if (canJump && didFallSinceLastJump)
+            {
+                if (isRunning)
+                    playerAnimation.SetAnimation(animID_Walk);
+                else
+                    playerAnimation.SetAnimation(animID_Stand);
+            }
 
             if (state.IsKeyDown(Keys.W) || gstate.IsButtonDown(Buttons.A))
             {
@@ -213,7 +231,6 @@ namespace NGJ2012
                 {
                     //canJump = false;
                     //world.RayCast(new RayCastCallback(RayCastCallbackJump), playerCollider.Position, playerCollider.Position + new Vector2(0, 1.0f));
-                    canJump = canJumpBecauseOf.Count > 0;
                     if (canJump)
                     {
                         jump();
@@ -296,8 +313,9 @@ namespace NGJ2012
         {
             // Draw animation
             Vector2 screenPos = Vector2.Transform(playerCollider.Position, camera);
-            parent.SpriteBatch.Begin();
-            playerAnimation.Draw(parent.SpriteBatch, screenPos, platformMode ? Game1.ScalePlatformSprites : Game1.ScaleTetrisSprites);
+            parent.SpriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
+            playerAnimation.Draw(parent.SpriteBatch, screenPos,
+                                 ScalePlayerSprite * (platformMode ? Game1.ScalePlatformSprites : Game1.ScaleTetrisSprites));
             parent.SpriteBatch.End();
 
 #if DEBUG
