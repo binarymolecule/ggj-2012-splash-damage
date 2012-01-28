@@ -68,6 +68,10 @@ namespace NGJ2012
 
         public void DrawBodyTextured(Body bod, Texture2D texture)
         {
+            DrawBodyTextured(bod, texture, 1.0f / 4.0f);
+        }
+        public void DrawBodyTextured(Body bod, Texture2D texture, float textureScale)
+        {
             Matrix mat = Matrix.CreateRotationZ(bod.Rotation) * Matrix.CreateTranslation(new Vector3(bod.Position, 0.0f)) * cameraMatrix;
 
             GraphicsDevice.SamplerStates[0] = SamplerState.AnisotropicClamp;
@@ -81,7 +85,7 @@ namespace NGJ2012
 
             foreach (Fixture fix in bod.FixtureList)
             {
-                DrawQuadShape(fix.Shape, Color.White);
+                DrawQuadShape(fix.Shape, Color.White, textureScale);
             }
 
             Flush();
@@ -104,9 +108,8 @@ namespace NGJ2012
             }
         }
 
-        private void DrawQuadShape(Shape shape, Color color)
+        private void DrawQuadShape(Shape shape, Color color, float textureScale)
         {
-            const float textureScale = 1.0f / 4.0f;
             if (shape.ShapeType == ShapeType.Polygon)
             {
                 PolygonShape loop = (PolygonShape)shape;
