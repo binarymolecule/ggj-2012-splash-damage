@@ -81,7 +81,19 @@ namespace NGJ2012
 
         protected override void LoadContent()
         {
-            this.texture = game.Content.Load<Texture2D>("Star");
+            switch (this.powerUpType)
+            {
+                case EPowerUpType.MegaJump:
+                    this.texture = game.Content.Load<Texture2D>("PowerUp_Jump");
+                    break;
+                case EPowerUpType.ExtraLive:
+                    this.texture = game.Content.Load<Texture2D>("PowerUp_Life");
+                    break;
+                default:
+                    this.texture = game.Content.Load<Texture2D>("PowerUp_Star");
+                    break;
+            }
+            
             
             base.LoadContent();
         }
