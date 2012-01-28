@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -62,67 +61,6 @@ namespace NGJ2012
             staticWorldR.BodyType = BodyType.Static;
             staticWorldGround.Friction = float.MaxValue;
             staticWorldL.Friction = float.MaxValue;
-=======
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Audio;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.GamerServices;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Media;
-using FarseerPhysics;
-using FarseerPhysics.Dynamics;
-using FarseerPhysics.Factories;
-using FarseerPhysics.Collision;
-
-namespace NGJ2012
-{
-    /// <summary>
-    /// This is the main type for your game
-    /// </summary>
-    public class Game1 : Microsoft.Xna.Framework.Game
-    {
-        GraphicsDeviceManager graphics;
-        SpriteBatch spriteBatch;
-        World world;
-        TetrisPlayer tetris;
-        jumpAndRunPlayerFigure jumpAndRunPlayer;
-        TetrisPieceBatch tetrisBatch;
-
-        float gameBlockSize = 32.0f;
-        int worldWidthInBlocks = 32;
-        int worldHeightInBlocks = 20;
-        Body staticWorldGround;
-        Body staticWorldL;
-        Body staticWorldR;
-
-        // Other level components
-        public WaterLayer WaterLayer;
-
-        // GUI components
-        public GameStatusLayer StatusLayer { get; protected set; }
-        public SpriteBatch SpriteBatch { get { return spriteBatch; } } 
-
-        public Game1()
-        {
-            graphics = new GraphicsDeviceManager(this);
-            graphics.PreferredBackBufferWidth = 1280;
-            graphics.PreferredBackBufferHeight = 720;
-            Content.RootDirectory = "Content";
-            world = new World(new Vector2(0, 9.81f));
-
-            staticWorldGround = BodyFactory.CreateRectangle(world, worldWidthInBlocks, 1, 1.0f, new Vector2(worldWidthInBlocks / 2.0f, worldHeightInBlocks));
-            staticWorldL = BodyFactory.CreateRectangle(world, 1, worldHeightInBlocks, 1.0f, new Vector2(0, worldHeightInBlocks / 2.0f));
-            staticWorldR = BodyFactory.CreateRectangle(world, 1, worldHeightInBlocks, 1.0f, new Vector2(worldWidthInBlocks, worldHeightInBlocks / 2.0f));
-            staticWorldGround.BodyType = BodyType.Static;
-            staticWorldL.BodyType = BodyType.Static;
-            staticWorldR.BodyType = BodyType.Static;
-            staticWorldGround.Friction = float.MaxValue;
-            staticWorldL.Friction = float.MaxValue;
->>>>>>> c7bce0343f830f0053fddfbc6f230739ab114ea0
             staticWorldR.Friction = float.MaxValue;
             staticWorldGround.CollisionCategories = Category.Cat3;
             staticWorldL.CollisionCategories = Category.Cat3;
