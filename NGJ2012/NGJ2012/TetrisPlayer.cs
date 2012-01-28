@@ -51,11 +51,18 @@ namespace NGJ2012
 
         bool currentPieceCollision(Fixture fixtureA, Fixture fixtureB, FarseerPhysics.Dynamics.Contacts.Contact contact)
         {
+            dropCurrentPiece();
+            return true;
+        }
+
+        private void dropCurrentPiece()
+        {
+            currentPiece.body.LinearVelocity = Vector2.Zero;
+            currentPiece.body.OnCollision -= currentPieceCollide;
+            currentPieceCollide = null;
             currentPiece = null;
             _world.RemoveJoint(currentPieceRotation);
             currentPieceRotation = null;
-            currentPiece.body.OnCollision 
-            return true;
         }
 
         /// <summary>
@@ -74,7 +81,8 @@ namespace NGJ2012
             base.LoadContent();
         }
 
-        bool spaceDown = false;
+        bool upDown = false;
+        bool downDown = false;
         /// <summary>
         /// Allows the game component to update itself.
         /// </summary>
@@ -96,20 +104,33 @@ namespace NGJ2012
             if (state.IsKeyDown(Keys.Left)) moveDir.X = -1;
             else if (state.IsKeyDown(Keys.Right)) moveDir.X = +1;
             else moveDir.X = 0;
-            if (state.IsKeyDown(Keys.Up)) moveDir.Y = -1;
-            else if (state.IsKeyDown(Keys.Down)) moveDir.Y = +1;
-            else moveDir.Y = 0;
+
+            if (state.IsKeyDown(Keys.Space)) moveDir.Y = 3;
+            else moveDir.Y = 0.25f;
+
+
             currentPiece.body.LinearVelocity = moveDir * movementSpeed;
 
-            if (state.IsKeyDown(Keys.Space))
+            if (state.IsKeyDown(Keys.Down))
             {
-                if (!spaceDown)
+                if (!downDown)
                 {
                     currentPieceRotation.TargetAngle += (float)Math.PI / 2;
-                    spaceDown = true;
+                    downDown = true;
                 }
-            } 
-            else spaceDown = false;
+            }
+            else downDown = false;
+
+            if (state.IsKeyDown(Keys.Up))
+            {
+                if (!upDown)
+                {
+                    currentPieceRotation.TargetAngle -= (float)Math.PI / 2;
+                    upDown = true;
+                }
+            }
+            else upDown = false;
+
 
             base.Update(gameTime);
         }
