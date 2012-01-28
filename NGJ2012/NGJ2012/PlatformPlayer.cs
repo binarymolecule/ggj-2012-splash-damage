@@ -42,7 +42,7 @@ namespace NGJ2012
         {
             get { return numberOfLifes; }
         }
-        private int jumpCooldownTime = 0;
+        private bool didFallSinceLastJump = true;
         private float jumpForce = 0.5f;
         private PowerUp currentlySelectedPowerUp;
 
@@ -79,7 +79,8 @@ namespace NGJ2012
 
         void PlaterSeperatesFromWorld(Fixture fixtureA, Fixture fixtureB)
         {
-            canJumpBecauseOf.Remove(fixtureB);
+            while(canJumpBecauseOf.Contains(fixtureB))
+               canJumpBecauseOf.Remove(fixtureB);
         }
         bool PlayerCollidesWithWorld(Fixture fixtureA, Fixture fixtureB, FarseerPhysics.Dynamics.Contacts.Contact contact)
         {
@@ -91,7 +92,7 @@ namespace NGJ2012
             Debug.Print("Point1:" + points[0].X + "," + points[0].Y);
             Debug.Print("Point2:" + points[1].X + "," + points[1].Y);
 
-            if (normal.Y < 0 && playerCollider.LinearVelocity.Y > -0.01f)
+            if (normal.Y < 0)
             {
                 canJumpBecauseOf.Add(fixtureB);
             }
@@ -136,9 +137,21 @@ namespace NGJ2012
         {
             if (fixture.Body == playerCollider)
                 return -1;
-            if ((fixture.CollisionCategories & Game1.COLLISION_GROUP_LEVEL_SEPARATOR) != 0) 
+            if ((fixture.CollisionCategories & Game1.COLLISION_GROUP_LEVEL_SEPARATOR) != 0)
                 return 1;
             walkModifier = fraction;
+            return 0;
+        }
+        bool canJump = false;
+        float RayCastCallbackJump(Fixture fixture, Vector2 point, Vector2 normal, float fraction)
+        {
+            if (fixture.Body == playerCollider)
+                return -1;
+            if ((fixture.CollisionCategories & (Game1.COLLISION_GROUP_TETRIS_BLOCKS|Game1.COLLISION_GROUP_STATIC_OBJECTS)) == 0)
+                return 1;
+            if (normal.Y > 0.01) 
+                return 1;
+            canJump = true;
             return 0;
         }
         
@@ -152,9 +165,11 @@ namespace NGJ2012
             int msec = gameTime.ElapsedGameTime.Milliseconds;
 
             KeyboardState state = Keyboard.GetState();
-            float move = 0;            
+            GamePadState gstate = GamePad.GetState(PlayerIndex.One);
+            float move = 0;
             if (state.IsKeyDown(Keys.A)) move = -acceleration;
             if (state.IsKeyDown(Keys.D)) move = acceleration;
+            if (gstate.IsConnected) move = gstate.ThumbSticks.Left.X * Math.Abs(gstate.ThumbSticks.Left.X) * acceleration;
 
             currentRunSpeed *= Math.Max(0.0f, 1.0f - deacceleration*(float)gameTime.ElapsedGameTime.TotalSeconds);
             currentRunSpeed += move * (float)gameTime.ElapsedGameTime.TotalSeconds;
@@ -166,7 +181,7 @@ namespace NGJ2012
             {
                 float dir = Math.Sign(currentRunSpeed);
                 walkModifier = 1.0f;
-                world.RayCast(new RayCastCallback(RayCastCallback), playerCollider.Position + dir * new Vector2(0.2f, 0), playerCollider.Position + dir * new Vector2(0.4f, 0));
+                world.RayCast(new RayCastCallback(RayCastCallback), playerCollider.Position + dir * new Vector2(0.2f, 0), playerCollider.Position + dir * new Vector2(1.0f, 0));
                 currentRunSpeed *= walkModifier;
                 isRunning = true;
             }
@@ -184,14 +199,20 @@ namespace NGJ2012
             else if (isRunning)
                 playerAnimation.SetAnimation(animID_Walk);
 
-            if (jumpCooldownTime > 0)
-                jumpCooldownTime -= msec;
-            if (state.IsKeyDown(Keys.W))
+            if (playerCollider.LinearVelocity.Y > 0) didFallSinceLastJump = true;
+
+            if (state.IsKeyDown(Keys.W) || gstate.IsButtonDown(Buttons.A))
             {
-                if (canJumpBecauseOf.Count > 0 && jumpCooldownTime <= 0)
+                if (didFallSinceLastJump)
                 {
-                    jump();
-                    jumpCooldownTime = 150; // wait 150 msec for next jump
+                    //canJump = false;
+                    //world.RayCast(new RayCastCallback(RayCastCallbackJump), playerCollider.Position, playerCollider.Position + new Vector2(0, 1.0f));
+                    canJump = canJumpBecauseOf.Count > 0;
+                    if (canJump)
+                    {
+                        jump();
+                        didFallSinceLastJump = false;
+                    }
                 } 
             }
 
@@ -209,7 +230,7 @@ namespace NGJ2012
 
             cameraPosition = 0.5f * cameraPosition + 0.5f * playerCollider.Position;
 
-            if (state.IsKeyDown(Keys.Enter) || state.IsKeyDown(Keys.E)) usePowerUp();
+            if (state.IsKeyDown(Keys.Enter) || state.IsKeyDown(Keys.E) || gstate.IsButtonDown(Buttons.B)) usePowerUp();
 
             // Update player animation
             playerAnimation.Update(gameTime.ElapsedGameTime.Milliseconds);
