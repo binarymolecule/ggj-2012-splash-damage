@@ -32,7 +32,7 @@ namespace NGJ2012
 
         List<TetrisPiece> pieces = new List<TetrisPiece>();
         List<TetrisPiece> activePieces = new List<TetrisPiece>();
-        private TetrisPiece currentPiece;
+        private TetrisPiece currentPiece, currentCheat;
         float currentPieceMaxLen;
         private TetrisPiece nextPiece;
 
@@ -86,6 +86,14 @@ namespace NGJ2012
             pieces.Add(currentPiece);
             activePieces.Add(currentPiece);
 
+            currentCheat = new TetrisPiece(_world, tetrisTextures[2], tetrisShapes[2], currentPiece.body.WorldCenter + new Vector2(1, -2));
+            currentCheat.body.FixedRotation = true;
+            currentCheat.body.Rotation = (float)Math.PI / 2;
+            currentCheat.body.OnCollision += currentPieceCollide;
+            JointFactory.CreateRevoluteJoint(_world, currentCheat.body, currentPiece.body, currentPiece.body.LocalCenter);
+            pieces.Add(currentCheat);
+            activePieces.Add(currentCheat);
+
             nextPiece = getRandomTetrisPiece();
 
             Debug.Print("Spawn new tetris piece at: {0}, {1}", currentPiece.body.Position.X, currentPiece.body.Position.Y);
@@ -102,6 +110,7 @@ namespace NGJ2012
             currentPiece.body.LinearVelocity = Vector2.Zero;
             currentPiece.body.ResetDynamics();
             currentPiece.body.OnCollision -= currentPieceCollide;
+            currentCheat.body.OnCollision -= currentPieceCollide;
             currentPieceCollide = null;
             currentPiece = null;
             _world.RemoveJoint(currentPieceRotation);
