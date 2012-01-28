@@ -26,6 +26,8 @@ namespace NGJ2012
         // Physical objects
         //Body waterBody;
         Vector2 pos;
+        public Vector2 Position { get { return pos; } }
+        public float Height { get { return pos.Y; } }
 
         // Assets
         Texture2D waterTexture;
@@ -33,7 +35,7 @@ namespace NGJ2012
         public WaterLayer(Game game) : base(game)
         {
             parent = (Game1)game;
-            screenRect = new Rectangle(0, 0, 1280, 128);
+            screenRect = new Rectangle(0, 0, parent.WorldWidthInBlocks * 64, 512);
 
             // Create physical objects
             /*
@@ -61,6 +63,9 @@ namespace NGJ2012
 
         public override void Update(GameTime gameTime)
         {
+            // Move water layer upwards
+            pos.Y -= 0.00001f * gameTime.ElapsedGameTime.Milliseconds;
+
             base.Update(gameTime);
         }
 

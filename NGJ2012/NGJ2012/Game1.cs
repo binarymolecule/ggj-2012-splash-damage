@@ -29,11 +29,11 @@ namespace NGJ2012
 
         public PlatformPlayer PlatformPlayer
         {
+        public const int worldWidthInBlocks = 24;
+        public const int worldHeightInBlocks = 20;
             get { return platform; }
         }
 
-        int worldWidthInBlocks = 24;
-        int worldHeightInBlocks = 20;
         Body staticWorldGround;
         Body staticWorldL;
         Body staticWorldR;
@@ -41,6 +41,7 @@ namespace NGJ2012
         public const Category COLLISION_GROUP_DEFAULT = Category.Cat1;
         public const Category COLLISION_GROUP_TETRIS_BLOCKS = Category.Cat2;
         public const Category COLLISION_GROUP_STATIC_OBJECTS = Category.Cat3;
+        public const Category COLLISION_GROUP_LEVEL_SEPARATOR = Category.Cat4;
 
         public readonly static Utility.TimerCollection Timers = new Utility.TimerCollection();
 
@@ -60,7 +61,6 @@ namespace NGJ2012
         public GameStatusLayer StatusLayer { get; protected set; }
         public SpriteBatch SpriteBatch { get { return spriteBatch; } }
 
-        public Vector2 cameraPosition = Vector2.Zero;
 
         public const float gameBlockSizePlatform = 96.0f;
         public const float gameBlockSizeTetris = 32.0f;
@@ -93,8 +93,8 @@ namespace NGJ2012
             staticWorldL.Friction = 100.0f;
             staticWorldR.Friction = 100.0f;
             staticWorldGround.CollisionCategories = COLLISION_GROUP_STATIC_OBJECTS;
-            staticWorldL.CollisionCategories = COLLISION_GROUP_STATIC_OBJECTS;
-            staticWorldR.CollisionCategories = COLLISION_GROUP_STATIC_OBJECTS;
+            staticWorldL.CollisionCategories = COLLISION_GROUP_LEVEL_SEPARATOR;
+            staticWorldR.CollisionCategories = COLLISION_GROUP_LEVEL_SEPARATOR;
 
             tetris = new TetrisPlayer(this, world);
             Components.Add(tetris);
@@ -104,7 +104,7 @@ namespace NGJ2012
             // Create other level components
             WaterLayer = new WaterLayer(this);
             Components.Add(WaterLayer);
-            //SavePlatform = new WaterLayer(this);
+            //SavePlatform = new SavePlatform(this);
             //Components.Add(SavePlatform);
 
             //TODO: Create PowerUps dynamically
@@ -170,7 +170,8 @@ namespace NGJ2012
                 this.Exit();
 
             // TODO: Add your update logic here
-            cameraPosition = 0.9f * cameraPosition + 0.1f * platform.playerCollider.Position;
+
+
             world.Step((float)gameTime.ElapsedGameTime.TotalSeconds);
 
             Timers.Update(gameTime);
@@ -186,8 +187,8 @@ namespace NGJ2012
             double platformSplitLine = -1;
             double gameWorldStartInPX = gameBlockSizePlatform * 0;
             double gameWorldEndInPX = gameBlockSizePlatform * worldWidthInBlocks;
-            double cameraLeftInPX = cameraPosition.X * gameBlockSizePlatform - platformModeWidth / 2.0f;
-            double cameraRightInPX = cameraPosition.X * gameBlockSizePlatform + platformModeWidth / 2.0f;
+            double cameraLeftInPX = platform.cameraPosition.X * gameBlockSizePlatform - platformModeWidth / 2.0f;
+            double cameraRightInPX = platform.cameraPosition.X * gameBlockSizePlatform + platformModeWidth / 2.0f;
             if (cameraLeftInPX < gameWorldStartInPX)
             {
                 platformSplitLine = gameWorldStartInPX - cameraLeftInPX;
@@ -213,8 +214,8 @@ namespace NGJ2012
             double tetrisSplitLine = -1;
             gameWorldStartInPX = gameBlockSizeTetris * 0;
             gameWorldEndInPX = gameBlockSizeTetris * worldWidthInBlocks;
-            cameraLeftInPX = cameraPosition.X * gameBlockSizeTetris - tetrisModeWidth / 2.0f;
-            cameraRightInPX = cameraPosition.X * gameBlockSizeTetris + tetrisModeWidth / 2.0f;
+            cameraLeftInPX = platform.cameraPosition.X * gameBlockSizeTetris - tetrisModeWidth / 2.0f;
+            cameraRightInPX = platform.cameraPosition.X * gameBlockSizeTetris + tetrisModeWidth / 2.0f;
             if (cameraLeftInPX < gameWorldStartInPX)
             {
                 tetrisSplitLine = gameWorldStartInPX - cameraLeftInPX;
@@ -259,7 +260,7 @@ namespace NGJ2012
 
         public void DrawGameWorldOnce(bool platformMode, int wrapAround)
         {
-            Matrix camera = Matrix.CreateTranslation(-new Vector3(cameraPosition, 0.0f));
+            Matrix camera = Matrix.CreateTranslation(-new Vector3(platform.cameraPosition, 0.0f));
             camera *= Matrix.CreateTranslation(new Vector3(wrapAround*worldWidthInBlocks,0,0));
             camera *= Matrix.CreateScale(platformMode ? Game1.gameBlockSizePlatform : Game1.gameBlockSizeTetris);
             camera *= Matrix.CreateTranslation(new Vector3(platformMode ? platformModeWidth : tetrisModeWidth, 720, 0.0f) / 2.0f);
