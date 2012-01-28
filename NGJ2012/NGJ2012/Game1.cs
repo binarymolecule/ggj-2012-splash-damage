@@ -99,7 +99,7 @@ namespace NGJ2012
             // Create other level components
             WaterLayer = new WaterLayer(this);
             Components.Add(WaterLayer);
-            //SavePlatform = new WaterLayer(this);
+            //SavePlatform = new SavePlatform(this);
             //Components.Add(SavePlatform);
 
             //TODO: Create PowerUps dynamically
