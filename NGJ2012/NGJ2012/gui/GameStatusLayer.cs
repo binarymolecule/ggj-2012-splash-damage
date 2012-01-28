@@ -43,7 +43,6 @@ namespace NGJ2012
             float offset = 4.0f;
             textPositionP1 = new Vector2(offset, 2.0f);
             textPositionP2 = new Vector2(Game1.platformModeWidth + offset, 2.0f);
-            positionPowerUp = new Vector2(Game1.platformModeWidth - 64, 2.0f);
         }
 
         protected override void LoadContent()
@@ -89,15 +88,16 @@ namespace NGJ2012
 
             //Texts p1:
             Vector2 widthHeight = font.MeasureString(p1Text);
-            //Vector2 pos2 = new Vector2(textPositionP1.X, textPositionP1.Y + widthHeight.Y);
-            Vector2 pos2 = new Vector2(16, 16);
-
+            Vector2 posPowerupTxt = new Vector2(textPositionP1.X, textPositionP1.Y + widthHeight.Y);
+            
             parent.SpriteBatch.DrawString(font, p1Text, textPositionP1, Color.White);
-            //parent.SpriteBatch.DrawString(font, textPowerup, pos2, Color.White);
-
+            
             widthHeight = font.MeasureString(p1Text);
-            if (texturePowerUp != null) 
-                parent.SpriteBatch.Draw(texturePowerUp, positionPowerUp, Color.White);
+            if (texturePowerUp != null)
+            {
+                parent.SpriteBatch.DrawString(font, textPowerup, posPowerupTxt, Color.White);
+                parent.SpriteBatch.Draw(texturePowerUp, posPowerupTxt + new Vector2(font.MeasureString(textPowerup).X, 0.0f), Color.White);
+            }
 
             //Texts p2:
             parent.SpriteBatch.DrawString(font, p2Text, textPositionP2, Color.White);
