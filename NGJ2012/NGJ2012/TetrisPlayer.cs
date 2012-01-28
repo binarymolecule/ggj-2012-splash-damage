@@ -21,10 +21,9 @@ namespace NGJ2012
     /// <summary>
     /// This is a game component that implements IUpdateable.
     /// </summary>
-    public class TetrisPlayer : Microsoft.Xna.Framework.DrawableGameComponent
+    public class TetrisPlayer : DrawableGameComponentExtended
     {
         private World _world;
-        private float gameBlockSize;
         const float movementSpeed = 8.0f;
 
         List<bool[,]> tetrisShapes = new List<bool[,]>();
@@ -36,11 +35,10 @@ namespace NGJ2012
         OnCollisionEventHandler currentPieceCollide;
         TetrisPieceBatch drawer;
 
-        public TetrisPlayer(Game game, World world, float igameBlockSize)
+        public TetrisPlayer(Game game, World world)
             : base(game)
         {
             _world = world;
-            gameBlockSize = igameBlockSize;
 
             tetrisShapes.Add(new bool[,] { { true, false }, { true, false }, { true, true } });
             tetrisShapes.Add(new bool[,] { { false, true }, { false, true }, { true, true } });
@@ -54,6 +52,10 @@ namespace NGJ2012
 
         bool currentPieceCollision(Fixture fixtureA, Fixture fixtureB, FarseerPhysics.Dynamics.Contacts.Contact contact)
         {
+            // ignore collisions with Cat30
+            if ((fixtureA.CollisionCategories & Game1.COLLISION_GROUP_DEFAULT) != 0) return false;
+            if ((fixtureB.CollisionCategories & Game1.COLLISION_GROUP_DEFAULT) != 0) return false;
+
             dropCurrentPiece();
             return true;
         }
@@ -79,7 +81,7 @@ namespace NGJ2012
 
         protected override void LoadContent()
         {
-            drawer = new TetrisPieceBatch(GraphicsDevice, Matrix.CreateScale(gameBlockSize));
+            drawer = new TetrisPieceBatch(GraphicsDevice);
 
             base.LoadContent();
         }
@@ -143,9 +145,9 @@ namespace NGJ2012
             base.Update(gameTime);
         }
 
-        public override void Draw(GameTime gameTime)
+        public override void DrawGameWorldOnce(Matrix camera, bool platformMode)
         {
-
+            drawer.cameraMatrix = camera;
             foreach (TetrisPiece cur in pieces)
             {
                 drawer.DrawBody(cur.body);
