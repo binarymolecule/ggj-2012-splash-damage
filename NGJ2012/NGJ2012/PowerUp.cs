@@ -31,7 +31,7 @@ namespace NGJ2012
 
         public enum EPowerUpType
         {
-            MegaJump
+            MegaJump, ExtraLive
         }
 
         public PowerUp(Game1 game, World world, EPowerUpType powerUpType)
@@ -42,7 +42,7 @@ namespace NGJ2012
             this.powerUpType = powerUpType;
 
             collisionBody = BodyFactory.CreateCapsule(world, 1.0f, 0.2f, 1.0f);
-            collisionBody.Position = new Vector2(200, 20);
+            collisionBody.Position = new Vector2(200, 550);
             collisionBody.OnCollision += new OnCollisionEventHandler(onPlayerCollision);
             collisionBody.Friction = 0.0f;
             collisionBody.Restitution = 0.0f;
@@ -57,7 +57,8 @@ namespace NGJ2012
             {
                 case EPowerUpType.MegaJump:
                     break;
-                default:
+                case EPowerUpType.ExtraLive:
+                    break;
             }
             return true;
         }            
