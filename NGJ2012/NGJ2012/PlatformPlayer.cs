@@ -231,7 +231,10 @@ namespace NGJ2012
 
         private void bite()
         {
-            world.RayCast(new RayCastCallback(biteRayCastCallback), playerCollider.Position + viewDirection * new Vector2(0.2f, 0), playerCollider.Position + viewDirection * new Vector2(0.6f, 0));
+            Vector2 start = playerCollider.Position + viewDirection * new Vector2(0.2f, 0);
+            //Check for objects slightly above or below to get also objects that are not directly on the height of your head:
+            world.RayCast(new RayCastCallback(biteRayCastCallback), start, playerCollider.Position + viewDirection * new Vector2(0.6f, -0.5f));
+            world.RayCast(new RayCastCallback(biteRayCastCallback), start, playerCollider.Position + viewDirection * new Vector2(0.6f, +0.5f));
         }
 
         float biteRayCastCallback(Fixture fixture, Vector2 point, Vector2 normal, float fraction)
