@@ -35,12 +35,7 @@ namespace NGJ2012
         private Body collisionBody;
         private EPowerUpType powerUpType;
         private bool usageTimerRunning = false;
-        private double actionEnabledTimeSecs = 3;
-
-        public EPowerUpType PowerUpType
-        {
-            get { return powerUpType; }
-        }
+        private double remainingPowerUpTimeInSecs = 3;
 
         public enum EPowerUpType
         {
@@ -120,10 +115,10 @@ namespace NGJ2012
         public override void Update(GameTime gameTime)
         {
             if (usageTimerRunning) {
-                this.actionEnabledTimeSecs -= gameTime.ElapsedGameTime.TotalSeconds;
+                this.remainingPowerUpTimeInSecs -= gameTime.ElapsedGameTime.TotalSeconds;
             }
 
-            if (actionEnabledTimeSecs <= 0) this.onPowerUpExhausted();
+            if (remainingPowerUpTimeInSecs <= 0) this.onPowerUpExhausted();
 
             base.Update(gameTime);
         }
@@ -175,6 +170,20 @@ namespace NGJ2012
             game.Components.Remove(this);
         }
 
+        public bool UsageTimerRunning
+        {
+            get { return usageTimerRunning; }
+        }
+
+        public String getRemainingPowerUpTimeInSecsFixedPoint()
+        {
+            return string.Format("{0:f}", remainingPowerUpTimeInSecs);
+        }
+
+        public EPowerUpType PowerUpType
+        {
+            get { return powerUpType; }
+        }
         
     }
 }
