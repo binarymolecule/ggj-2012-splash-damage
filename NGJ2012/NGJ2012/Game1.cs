@@ -60,10 +60,10 @@ namespace NGJ2012
         public GameStatusLayer StatusLayer { get; protected set; }
         public SpriteBatch SpriteBatch { get { return spriteBatch; } }
 
-        public const float gameBlockSizePlatform = 96.0f;
+        public const float gameBlockSizePlatform = 64.0f;
         public const float gameBlockSizeTetris = 32.0f;
 
-        public const int platformModeWidth = 1000;
+        public const int platformModeWidth = 850;
         public const int tetrisModeWidth = 1280 - platformModeWidth;
 
         RenderTarget2D platformModeLeft;
@@ -73,7 +73,7 @@ namespace NGJ2012
         RenderTarget2D tetrisModeRight;
 
         float gameProgress = 0;
-        float gameProgressSpeed = 2;
+        float gameProgressSpeed = 1;
         float tetrisProgressAdd = 10;
         private GameViewport tetrisViewport;
         private GameViewport platformViewport;
@@ -119,14 +119,14 @@ namespace NGJ2012
             SavePlatform = new SavePlatform(this);
             Components.Add(SavePlatform);
 
-            tetrisViewport = new GameViewport(this, 32)
+            tetrisViewport = new GameViewport(this, gameBlockSizeTetris)
             {
                 platformMode = false
             };
             tetrisViewport.resize(tetrisModeWidth, 720);
             tetris.viewportToSpawnIn = tetrisViewport;
 
-            platformViewport = new GameViewport(this, 96);
+            platformViewport = new GameViewport(this, gameBlockSizePlatform);
             platformViewport.resize(platformModeWidth, 720);
 
             Components.Add(platformViewport);
@@ -203,12 +203,27 @@ namespace NGJ2012
                 manualPosition.Y += 1.0f;
 #endif
 
+            // update game progress
             gameProgress += gameProgressSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
             if (gameProgress > Game1.worldWidthInBlocks) gameProgress -= Game1.worldWidthInBlocks;
-            platformViewport.cameraPosition = new Vector2(gameProgress, platform.cameraPosition.Y);
+            
+            platformViewport.cameraPosition = new Vector2(gameProgress, 0);
+
+            var camDiff = MathStuff.WorldDistance(platform.playerCollider.Position.X, platformViewport.cameraPosition.X, worldWidthInBlocks);
+            if (camDiff > 0 && camDiff < 10)
+            {
+                platformViewport.cameraPosition.X -= MathHelper.Clamp(camDiff, 0, 3);
+
+                //if (platformViewport.cameraPosition.X > worldWidthInBlocks)
+                //    platformViewport.cameraPosition.X -= worldWidthInBlocks;
+
+                //if (platformViewport.cameraPosition.X < worldWidthInBlocks)
+                //    platformViewport.cameraPosition.X += worldWidthInBlocks;
+            }
+
             float tetrisPro = gameProgress + tetrisProgressAdd;
             if (tetrisPro > Game1.worldWidthInBlocks) tetrisPro -= Game1.worldWidthInBlocks;
-            tetrisViewport.cameraPosition = new Vector2(tetrisPro, WaterLayer.Position.Y - 6);
+            tetrisViewport.cameraPosition = new Vector2(tetrisPro, WaterLayer.Position.Y - 4);
 
             world.Step((float)gameTime.ElapsedGameTime.TotalSeconds);
 

@@ -26,8 +26,11 @@ namespace NGJ2012
     public class PlatformPlayer : DrawableGameComponentExtended
     {
         private const int INITIAL_NUMBER_OF_LIFES = 3;
-        private const float acceleration = 128.0f;
+        private const float acceleration = 512.0f;
+        private const float deacceleration = 256.0f;
         private const float maxRunSpeed = 8.0f;
+
+        Game1 parent;
 
         World world;
         public Body playerCollider;
@@ -48,11 +51,12 @@ namespace NGJ2012
             set { currentlySelectedPowerUp = value; }
         }
 
-        Texture2D playerTexture;
+        AnimatedSprite playerAnimation;
 
         public PlatformPlayer(Game game, World world) : base(game)
         {
             this.world = world;
+            parent = (Game1)game;
 
             playerCollider = BodyFactory.CreateCapsule(world, 1.0f, 0.2f, 0.001f);
             playerCollider.Position = new Vector2(2, -2);
@@ -77,6 +81,8 @@ namespace NGJ2012
         }
         bool PlayerCollidesWithWorld(Fixture fixtureA, Fixture fixtureB, FarseerPhysics.Dynamics.Contacts.Contact contact)
         {
+            if ((fixtureB.CollisionCategories & (Game1.COLLISION_GROUP_TETRIS_BLOCKS | Game1.COLLISION_GROUP_STATIC_OBJECTS)) == 0) return true;
+
             Vector2 normal;
             FixedArray2<Vector2> points;
             contact.GetWorldManifold(out normal, out points);
@@ -106,7 +112,13 @@ namespace NGJ2012
         protected override void LoadContent()
         {
             drawer = new TetrisPieceBatch(GraphicsDevice, Game.Content);
-            playerTexture = Game.Content.Load<Texture2D>("jumpAndRunPlayer");
+
+            // Create player animation
+            string[] playerTextureNames = new string[] { "jumpAndRunPlayer" };
+            playerAnimation = new AnimatedSprite(parent, "", playerTextureNames, new Vector2(36, 32));
+            playerAnimation.AddAnimation("walk", 0, 0, 125, true);
+            playerAnimation.SetAnimation("walk");
+            
             base.LoadContent();
         }
 
@@ -123,21 +135,21 @@ namespace NGJ2012
             return 0;
         }
 
-        bool pressedJump = false;
+        int jumpCooldown = -1;
         /// <summary>
         /// Allows the game component to update itself.
         /// </summary>
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         public override void Update(GameTime gameTime)
         {
-            // TODO: Add your update code here
-            
+            // Process user input
+
             KeyboardState state = Keyboard.GetState();
             float move = 0;
             if (state.IsKeyDown(Keys.A)) move = -acceleration;
             if (state.IsKeyDown(Keys.D)) move = acceleration;
 
-            currentRunSpeed *= (float)Math.Pow(0.001, gameTime.ElapsedGameTime.TotalSeconds);
+            currentRunSpeed *= Math.Max(0.0f, 1.0f - deacceleration*(float)gameTime.ElapsedGameTime.TotalSeconds);
             currentRunSpeed += move * (float)gameTime.ElapsedGameTime.TotalSeconds;
             if (Math.Abs(currentRunSpeed) > maxRunSpeed) currentRunSpeed *= maxRunSpeed / Math.Abs(currentRunSpeed);
 
@@ -150,15 +162,15 @@ namespace NGJ2012
             }
             playerCollider.LinearVelocity = new Vector2(currentRunSpeed,playerCollider.LinearVelocity.Y);
 
+            jumpCooldown--;
             if (state.IsKeyDown(Keys.W))
             {
-                if (canJumpBecauseOf.Count > 0 && !pressedJump)
+                if (canJumpBecauseOf.Count > 0 && jumpCooldown<=0)
                 {
                     jump();
-                    pressedJump = true;
-                }
+                    jumpCooldown = 3;
+                } 
             }
-            else pressedJump = false;
 
             if (playerCollider.Position.X < 0)
             {
@@ -174,8 +186,10 @@ namespace NGJ2012
 
             cameraPosition = 0.9f * cameraPosition + 0.1f * playerCollider.Position;
 
-            if (state.IsKeyDown(Keys.Enter)) usePowerUp();
+            if (state.IsKeyDown(Keys.Enter) || state.IsKeyDown(Keys.E)) usePowerUp();
 
+            // Update player animation
+            playerAnimation.Update(gameTime.ElapsedGameTime.Milliseconds);
 
             base.Update(gameTime);
         }
@@ -203,8 +217,12 @@ namespace NGJ2012
 
         public override void DrawGameWorldOnce(Matrix camera, bool platformMode)
         {
+            // Draw animation
             Vector2 screenPos = Vector2.Transform(playerCollider.Position, camera);
-            Rectangle screenRect = new Rectangle((int)screenPos.X, (int)screenPos.Y, 64, 64);
+            parent.SpriteBatch.Begin();
+            playerAnimation.Draw(parent.SpriteBatch, screenPos, platformMode ? 1.0f : 0.25f);
+            parent.SpriteBatch.End();
+
 #if DEBUG
             drawer.cameraMatrix = camera;
             drawer.DrawBody(playerCollider);
