@@ -34,6 +34,13 @@ namespace NGJ2012
         Body staticWorldL;
         Body staticWorldR;
 
+        // Other level components
+        public WaterLayer WaterLayer;
+
+        // GUI components
+        public GameStatusLayer StatusLayer { get; protected set; }
+        public SpriteBatch SpriteBatch { get { return spriteBatch; } } 
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -58,6 +65,13 @@ namespace NGJ2012
             jumpAndRunPlayer = new jumpAndRunPlayerFigure(this, world, this.spriteBatch);
             Components.Add(new PlatformPlayer(this, world));
             this.Components.Add(jumpAndRunPlayer);
+            // Create other level components
+            WaterLayer = new WaterLayer(this);
+            Components.Add(WaterLayer);
+
+            // Add GUI components
+            StatusLayer = new GameStatusLayer(this);
+            Components.Add(StatusLayer);
         }
 
         /// <summary>
