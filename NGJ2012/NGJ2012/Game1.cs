@@ -20,9 +20,6 @@ namespace NGJ2012
     /// </summary>
     public class Game1 : Microsoft.Xna.Framework.Game
     {
-        // Global constants
-        public const int ScreenWidth = 1280, ScreenHeight = 720;
-
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         World world;
@@ -31,28 +28,19 @@ namespace NGJ2012
 
         float gameBlockSize = 32.0f;
         int worldWidthInBlocks = 24;
-        int worldHeightInBlocks = 16;
+        int worldHeightInBlocks = 20;
         Body staticWorldGround;
         Body staticWorldL;
         Body staticWorldR;
 
-        // Game components
-        public GameStatusLayer StatusLayer;
-        public SpriteBatch SpriteBatch { get { return spriteBatch; } }
-
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
-            graphics.PreferredBackBufferWidth = ScreenWidth;
-            graphics.PreferredBackBufferHeight = ScreenHeight;
+            graphics.PreferredBackBufferWidth = 1280;
+            graphics.PreferredBackBufferHeight = 720;
             Content.RootDirectory = "Content";
             world = new World(new Vector2(0, 9.81f));
 
-            // Add game components
-            StatusLayer = new GameStatusLayer(this);
-            Components.Add(StatusLayer);
-
-			// Create world
             staticWorldGround = BodyFactory.CreateRectangle(world, worldWidthInBlocks, 1, 1.0f, new Vector2(worldWidthInBlocks / 2.0f, worldHeightInBlocks));
             staticWorldL = BodyFactory.CreateRectangle(world, 1, worldHeightInBlocks, 1.0f, new Vector2(0, worldHeightInBlocks / 2.0f));
             staticWorldR = BodyFactory.CreateRectangle(world, 1, worldHeightInBlocks, 1.0f, new Vector2(worldWidthInBlocks, worldHeightInBlocks / 2.0f));
