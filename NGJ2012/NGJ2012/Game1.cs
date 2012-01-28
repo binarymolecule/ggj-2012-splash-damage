@@ -66,8 +66,7 @@ namespace NGJ2012
         Texture2D background;
         public float gameProgress = 0;
 
-        float gameProgressSpeed = 1;
-        float tetrisProgressAdd = 10;
+        float gameProgressSpeed = 2;
         private GameViewport tetrisViewport;
 
         //Power-Ups:
@@ -196,7 +195,7 @@ namespace NGJ2012
                 SavePlatform.StartRising(5000);
             }
 
-            tetrisViewport.cameraPosition = new Vector2(platform.cameraPosition.X + tetrisViewport.screenWidthInGAME / 3.0f, WaterLayer.Position.Y - 4);
+            tetrisViewport.cameraPosition = new Vector2(gameProgress, WaterLayer.Position.Y - 10);
 
 
             world.Step((float)gameTime.ElapsedGameTime.TotalSeconds);
