@@ -38,7 +38,7 @@ namespace NGJ2012
         public Color Color;
         Rectangle screenRect;
 
-        public AnimatedSprite(Game1 parentGame, String[] assetNames, Vector2 originInPixels)
+        public AnimatedSprite(Game1 parentGame, String path, String[] assetNames, Vector2 originInPixels)
         {
             game = parentGame;
             textures = new List<Texture2D>(assetNames.Length);
@@ -48,7 +48,7 @@ namespace NGJ2012
 
             // Load textures
             foreach (string assetName in assetNames)
-                textures.Add(game.Content.Load<Texture2D>(assetName));
+                textures.Add(game.Content.Load<Texture2D>(Path.Combine(path, assetName)));
 
             Color = Color.White;
             screenRect = new Rectangle(0, 0, 0, 0);
@@ -59,6 +59,7 @@ namespace NGJ2012
             int index = animations.Count;
             animationIDs.Add(name, index);
             animations.Add(new Animation { StartFrame = startFrame, NumOfFrames = numOfFrames, MsPerFrame = msPerFrame, Loop = loop });
+            if (index == 0) SetAnimation(0);
             return index;
         }
 
@@ -66,7 +67,7 @@ namespace NGJ2012
         {
             int index;
             if (animationIDs.TryGetValue(name, out index))
-                currentAnimation = animations[index];
+                SetAnimation(index);
         }
 
         public void SetAnimation(int index)

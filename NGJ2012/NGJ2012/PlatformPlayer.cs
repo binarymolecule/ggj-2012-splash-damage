@@ -115,9 +115,9 @@ namespace NGJ2012
 
             // Create player animation
             string[] playerTextureNames = new string[] { "jumpAndRunPlayer" };
-            playerAnimation = new AnimatedSprite(parent, playerTextureNames, new Vector2(36, 32));
-            playerAnimation.AddAnimation("run", 0, 0, 125, true);
-            playerAnimation.SetAnimation(0);
+            playerAnimation = new AnimatedSprite(parent, "", playerTextureNames, new Vector2(36, 32));
+            playerAnimation.AddAnimation("walk", 0, 0, 125, true);
+            playerAnimation.SetAnimation("walk");
             
             base.LoadContent();
         }
