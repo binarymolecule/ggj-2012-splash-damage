@@ -50,10 +50,6 @@ namespace NGJ2012
 
             tetris = new TetrisPlayer(this, world, gameBlockSize);
             Components.Add(tetris);
-
-            tetrisBatch = new TetrisPieceBatch();
-            tetrisBatch.GraphicsDevice = GraphicsDevice;
-            tetrisBatch.cameraMatrix = Matrix.CreateScale(gameBlockSize);
         }
 
         /// <summary>
@@ -78,6 +74,8 @@ namespace NGJ2012
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
+
+            tetrisBatch = new TetrisPieceBatch(GraphicsDevice, Matrix.CreateScale(gameBlockSize));
             // TODO: use this.Content to load your game content here
         }
 

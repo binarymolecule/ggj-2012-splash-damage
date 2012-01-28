@@ -53,15 +53,13 @@ namespace NGJ2012
         /// </summary>
         public override void Initialize()
         {
-            drawer = new TetrisPieceBatch();
-            drawer.GraphicsDevice = GraphicsDevice;
-            drawer.cameraMatrix = Matrix.CreateScale(gameBlockSize);
-
             base.Initialize();
         }
 
         protected override void LoadContent()
         {
+            drawer = new TetrisPieceBatch(GraphicsDevice, Matrix.CreateScale(gameBlockSize));
+
             base.LoadContent();
         }
 
@@ -80,7 +78,7 @@ namespace NGJ2012
             if (state.IsKeyDown(Keys.Up)) moveDir.Y = -1;
             else if (state.IsKeyDown(Keys.Down)) moveDir.Y = +1;
             else moveDir.Y = 0;
-            //cursorPosition += (float)gameTime.ElapsedGameTime.TotalSeconds * moveDir * movementSpeed;
+            currentPiece.body.Position += (float)gameTime.ElapsedGameTime.TotalSeconds * moveDir * movementSpeed;
 
             base.Update(gameTime);
         }
