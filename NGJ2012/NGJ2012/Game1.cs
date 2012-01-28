@@ -33,6 +33,9 @@ namespace NGJ2012
         Body staticWorldL;
         Body staticWorldR;
 
+        // Player related components
+        jumpAndRunPlayerFigure jumpAndRunPlayer;
+
         // Public access to world
         public World World { get { return world; } }
         public int WorldWidthInBlocks { get { return worldWidthInBlocks; } }

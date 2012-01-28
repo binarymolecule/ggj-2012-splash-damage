@@ -49,7 +49,6 @@ namespace NGJ2012
 
         protected override void LoadContent()
         {
-            this.spriteBatch = new SpriteBatch(game.GraphicsDevice);
             this.texture = game.Content.Load<Texture2D>("Star");
 
             base.LoadContent();
