@@ -16,38 +16,34 @@ using FarseerPhysics.Collision;
 namespace NGJ2012
 {
     /// <summary>
-    /// Implement animated water layer.
+    /// Implement save/target platform.
     /// </summary>
-    public class WaterLayer : Microsoft.Xna.Framework.DrawableGameComponent
+    public class SavePlatform : Microsoft.Xna.Framework.DrawableGameComponent
     {
         Game1 parent;
         Rectangle screenRect;
 
         // Physical objects
-        //Body waterBody;
-        float height;
+        Body platformBody;
 
         // Assets
-        Texture2D waterTexture;
+        Texture2D platformTexture;
 
-        public WaterLayer(Game game) : base(game)
+        public SavePlatform(Game game) : base(game)
         {
             parent = (Game1)game;
-            screenRect = new Rectangle(0, 600, 1280, 128);
+            screenRect = new Rectangle(0, 0, 0, 0);
 
             // Create physical objects
-            /*
-            waterBody = BodyFactory.CreateRectangle(parent.World, parent.WorldWidthInBlocks, 1, 1.0f,
-                                                    new Vector2(parent.WorldWidthInBlocks / 2.0f, parent.WorldHeightInBlocks));
-            waterBody.BodyType = BodyType.Static;
-            waterBody.Friction = float.MaxValue;
-            */
-            height = 0;
+            platformBody = BodyFactory.CreateRectangle(parent.World, 10, 1, 1.0f, new Vector2(0, 1));
+            platformBody.BodyType = BodyType.Static;
+            platformBody.Friction = float.MaxValue;
+            platformBody.CollisionCategories = Category.Cat3;
         }
 
         protected override void LoadContent()
         {
-            waterTexture = parent.Content.Load<Texture2D>("graphics/level/water");
+            platformTexture = parent.Content.Load<Texture2D>("graphics/level/platform");
         }
 
         protected override void UnloadContent()
@@ -62,14 +58,16 @@ namespace NGJ2012
         public override void Update(GameTime gameTime)
         {
             // TODO Compute screen rect from position!
-
+            screenRect.X = (int)(platformBody.GetWorldPoint(Vector2.Zero).X * 64);
+            screenRect.Y = (int)(platformBody.GetWorldPoint(Vector2.Zero).Y * 64);
+            
             base.Update(gameTime);
         }
 
         public override void Draw(GameTime gameTime)
         {
             parent.SpriteBatch.Begin();
-            parent.SpriteBatch.Draw(waterTexture, screenRect, Color.White * 0.5f);
+            parent.SpriteBatch.Draw(platformTexture, screenRect, Color.White);
             parent.SpriteBatch.End();
         }
     }
