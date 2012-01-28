@@ -47,7 +47,8 @@ namespace NGJ2012
             tetrisShapes.Add(new bool[,] { { true }, { true }, { true }, { true } });
             tetrisShapes.Add(new bool[,] { { false, true, true }, { true, true, false } });
             tetrisShapes.Add(new bool[,] { { true, true, false }, { false, true, true } });
-            currentPiece = null;
+
+            Game1.Timers.Create(1.0f, false, Spawn);
         }
 
         bool currentPieceCollision(Fixture fixtureA, Fixture fixtureB, FarseerPhysics.Dynamics.Contacts.Contact contact)
@@ -60,6 +61,15 @@ namespace NGJ2012
             return true;
         }
 
+        private void Spawn(Utility.Timer timer)
+        {
+            currentPiece = new TetrisPiece(_world, null, tetrisShapes[(new Random()).Next(tetrisShapes.Count)], new Vector2(2, 2));
+            currentPieceCollide = new OnCollisionEventHandler(currentPieceCollision);
+            currentPiece.body.OnCollision += currentPieceCollide;
+            currentPieceRotation = JointFactory.CreateFixedAngleJoint(_world, currentPiece.body);
+            pieces.Add(currentPiece);
+        }
+
         private void dropCurrentPiece()
         {
             currentPiece.body.LinearVelocity = Vector2.Zero;
@@ -68,6 +78,8 @@ namespace NGJ2012
             currentPiece = null;
             _world.RemoveJoint(currentPieceRotation);
             currentPieceRotation = null;
+
+            Game1.Timers.Create(1.0f, false, Spawn);
         }
 
         /// <summary>
@@ -97,15 +109,6 @@ namespace NGJ2012
         {
             if (paused) return;
 
-            if (currentPiece == null)
-            {
-                currentPiece = new TetrisPiece(_world, null, tetrisShapes[(new Random()).Next(tetrisShapes.Count)], new Vector2(2, 2));
-                currentPieceCollide = new OnCollisionEventHandler(currentPieceCollision);
-                currentPiece.body.OnCollision += currentPieceCollide;
-                currentPieceRotation = JointFactory.CreateFixedAngleJoint(_world, currentPiece.body);
-                pieces.Add(currentPiece);
-            }
-
             // TODO: Add your update code here
             Vector2 moveDir = new Vector2();
             KeyboardState state = Keyboard.GetState();
@@ -118,28 +121,32 @@ namespace NGJ2012
 
             if (state.IsKeyDown(Keys.M)) paused = true;
 
-
-            currentPiece.body.LinearVelocity = moveDir * movementSpeed;
-
-            if (state.IsKeyDown(Keys.Down))
+            if (currentPiece != null)
             {
-                if (!downDown)
-                {
-                    currentPieceRotation.TargetAngle += (float)Math.PI / 2;
-                    downDown = true;
-                }
-            }
-            else downDown = false;
 
-            if (state.IsKeyDown(Keys.Up))
-            {
-                if (!upDown)
+                currentPiece.body.LinearVelocity = moveDir * movementSpeed;
+
+                if (state.IsKeyDown(Keys.Down))
                 {
-                    currentPieceRotation.TargetAngle -= (float)Math.PI / 2;
-                    upDown = true;
+                    if (!downDown)
+                    {
+                        currentPieceRotation.TargetAngle += (float)Math.PI / 2;
+                        downDown = true;
+                    }
                 }
+                else downDown = false;
+
+                if (state.IsKeyDown(Keys.Up))
+                {
+                    if (!upDown)
+                    {
+                        currentPieceRotation.TargetAngle -= (float)Math.PI / 2;
+                        upDown = true;
+                    }
+                }
+                else upDown = false;
+
             }
-            else upDown = false;
 
 
             base.Update(gameTime);
@@ -154,6 +161,6 @@ namespace NGJ2012
             }
         }
 
-    
+
     }
 }
