@@ -70,6 +70,9 @@ namespace NGJ2012
         RenderTarget2D tetrisModeLeft;
         RenderTarget2D tetrisModeRight;
 
+#if DEBUG
+        Vector2 manualPosition = Vector2.Zero;
+#endif
 
         public Game1()
         {
@@ -170,7 +173,13 @@ namespace NGJ2012
                 this.Exit();
             }
 
-            // TODO: Add your update logic here
+            // Move camera manually
+#if DEBUG
+            if (keyboardState.IsKeyDown(Keys.PageUp) && prevKeyboardState.IsKeyUp(Keys.PageUp))
+                manualPosition.Y -= 1.0f;
+            else if (keyboardState.IsKeyDown(Keys.PageDown) && prevKeyboardState.IsKeyUp(Keys.PageDown))
+                manualPosition.Y += 1.0f;
+#endif
 
             world.Step((float)gameTime.ElapsedGameTime.TotalSeconds);
 
@@ -268,6 +277,9 @@ namespace NGJ2012
         public void DrawGameWorldOnce(bool platformMode, int wrapAround)
         {
             Matrix camera = Matrix.CreateTranslation(-new Vector3(platform.cameraPosition, 0.0f));
+#if DEBUG
+            camera *= Matrix.CreateTranslation(-new Vector3(manualPosition, 0.0f));
+#endif
             camera *= Matrix.CreateTranslation(new Vector3(wrapAround*worldWidthInBlocks,0,0));
             camera *= Matrix.CreateScale(platformMode ? Game1.gameBlockSizePlatform : Game1.gameBlockSizeTetris);
             camera *= Matrix.CreateTranslation(new Vector3(platformMode ? platformModeWidth : tetrisModeWidth, 720, 0.0f) / 2.0f);
