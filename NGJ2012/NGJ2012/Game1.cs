@@ -29,14 +29,14 @@ namespace NGJ2012
 
         public PlatformPlayer PlatformPlayer
         {
-        public const int worldWidthInBlocks = 24;
-        public const int worldHeightInBlocks = 20;
             get { return platform; }
         }
 
         Body staticWorldGround;
         Body staticWorldL;
         Body staticWorldR;
+        public const int worldWidthInBlocks = 24;
+        public const int worldHeightInBlocks = 20;
 
         public const Category COLLISION_GROUP_DEFAULT = Category.Cat1;
         public const Category COLLISION_GROUP_TETRIS_BLOCKS = Category.Cat2;
