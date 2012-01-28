@@ -29,11 +29,11 @@ namespace NGJ2012
             body = BodyFactory.CreateBody(world, position);
 
             fixtures = new List<Fixture>();
-            for (int y = 0; y < shape.GetLength(1); y++)
+            for (int y = 0; y < shape.GetLength(0); y++)
             {
-                for (int x = 0; x < shape.GetLength(0); x++)
+                for (int x = 0; x < shape.GetLength(1); x++)
                 {
-                    if (!shape[x, y]) continue;
+                    if (!shape[y, x]) continue;
                     Vertices v = new Vertices(new Vector2[] { new Vector2(x+0, y+0), new Vector2(x+1, y+0), new Vector2(x+1,y+1), new Vector2(x+0, y+1) });
                     fixtures.Add(FixtureFactory.AttachPolygon(v, 1.0f, body));
                 }
@@ -44,6 +44,9 @@ namespace NGJ2012
             body.Friction = 1.0f;
             body.CollisionCategories = Game1.COLLISION_GROUP_TETRIS_BLOCKS;
             body.CollidesWith = Game1.COLLISION_GROUP_STATIC_OBJECTS | Game1.COLLISION_GROUP_TETRIS_BLOCKS | Game1.COLLISION_GROUP_DEFAULT | Game1.COLLISION_GROUP_LEVEL_SEPARATOR;
+
+            this.texture = texture;
         }
     }
 }
+

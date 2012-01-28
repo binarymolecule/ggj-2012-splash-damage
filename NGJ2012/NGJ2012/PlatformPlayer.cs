@@ -48,9 +48,9 @@ namespace NGJ2012
             set { currentlySelectedPowerUp = value; }
         }
 
+        Texture2D playerTexture;
 
-        public PlatformPlayer(Game game, World world)
-            : base(game)
+        public PlatformPlayer(Game game, World world) : base(game)
         {
             this.world = world;
 
@@ -105,7 +105,8 @@ namespace NGJ2012
         TetrisPieceBatch drawer;
         protected override void LoadContent()
         {
-            drawer = new TetrisPieceBatch(GraphicsDevice);
+            drawer = new TetrisPieceBatch(GraphicsDevice, Game.Content);
+            playerTexture = Game.Content.Load<Texture2D>("jumpAndRunPlayer");
             base.LoadContent();
         }
 
@@ -200,8 +201,12 @@ namespace NGJ2012
 
         public override void DrawGameWorldOnce(Matrix camera, bool platformMode)
         {
+            Vector2 screenPos = Vector2.Transform(playerCollider.Position, camera);
+            Rectangle screenRect = new Rectangle((int)screenPos.X, (int)screenPos.Y, 64, 64);
+#if DEBUG
             drawer.cameraMatrix = camera;
             drawer.DrawBody(playerCollider);
+#endif
         }
 
         public void addPowerUp(PowerUp powerup)
