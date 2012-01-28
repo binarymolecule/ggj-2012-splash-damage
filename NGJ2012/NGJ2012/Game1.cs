@@ -50,6 +50,7 @@ namespace NGJ2012
 
         // Other level components
         public WaterLayer WaterLayer;
+        public SavePlatform SavePlatform;
 
         // GUI components
         public GameStatusLayer StatusLayer { get; protected set; }
@@ -94,9 +95,12 @@ namespace NGJ2012
             Components.Add(tetris);
 
             Components.Add(platform = new PlatformPlayer(this, world));
+
             // Create other level components
             WaterLayer = new WaterLayer(this);
             Components.Add(WaterLayer);
+            //SavePlatform = new WaterLayer(this);
+            //Components.Add(SavePlatform);
 
             //TODO: Create PowerUps dynamically
             Components.Add(new PowerUp(this, world, PowerUp.EPowerUpType.MegaJump, new Vector2(10, 17)));
@@ -104,7 +108,7 @@ namespace NGJ2012
 
             // Add GUI components
             StatusLayer = new GameStatusLayer(this);
-            Components.Add(StatusLayer);
+            //Components.Add(StatusLayer);
         }
 
         /// <summary>

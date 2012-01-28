@@ -18,7 +18,7 @@ namespace NGJ2012
     /// <summary>
     /// Implement save/target platform.
     /// </summary>
-    public class SavePlatform : Microsoft.Xna.Framework.DrawableGameComponent
+    public class SavePlatform : DrawableGameComponentExtended
     {
         Game1 parent;
         Rectangle screenRect;
@@ -65,6 +65,10 @@ namespace NGJ2012
         }
 
         public override void Draw(GameTime gameTime)
+        {
+        }
+
+        public override void DrawGameWorldOnce(Matrix camera, bool platformMode)
         {
             parent.SpriteBatch.Begin();
             parent.SpriteBatch.Draw(platformTexture, screenRect, Color.White);
