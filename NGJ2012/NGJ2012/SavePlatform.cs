@@ -37,7 +37,7 @@ namespace NGJ2012
             // Create physical objects
             platformBody = BodyFactory.CreateRectangle(parent.World, 10, 1, 1.0f, new Vector2(0, 1));
             platformBody.BodyType = BodyType.Static;
-            platformBody.Friction = float.MaxValue;
+            platformBody.Friction = 100.0f;
             platformBody.CollisionCategories = Category.Cat3;
         }
 
