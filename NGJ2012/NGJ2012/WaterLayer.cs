@@ -52,7 +52,7 @@ namespace NGJ2012
             waterBody.BodyType = BodyType.Static;
             waterBody.Friction = float.MaxValue;
             */
-            pos = new Vector2(0, 0);
+            pos = new Vector2(0, -1);
         }
 
         protected override void LoadContent()
@@ -94,9 +94,9 @@ namespace NGJ2012
 
         public void StartRising(int msec)
         {
-            // Start rising one block
+            // Start rising 3 blocks
             riseTime = msec;
-            riseSpeed = 1.0f / (0.001f * msec);
+            riseSpeed = 3.0f / (0.001f * msec);
         }
 
         public override void Update(GameTime gameTime)

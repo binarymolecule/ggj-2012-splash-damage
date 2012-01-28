@@ -25,9 +25,13 @@ namespace NGJ2012
 
         // Physical objects
         Body platformBody;
-        Vector2 offsetToWater;
+        Vector2 offsetToWater = new Vector2(2, 0);
         float riseSpeed = 0;
         int riseTime = 0;
+
+        bool canBeTriggered = false; // determines if save platform can be triggered by player
+        public void AllowTriggering() { canBeTriggered = true; }
+        public Body Body { get { return platformBody; } }
 
         // Assets
         Texture2D platformTexture;
@@ -39,7 +43,6 @@ namespace NGJ2012
             screenRect = new Rectangle(0, 0, 640, 64);
 
             // Create physical objects
-            offsetToWater = new Vector2(2, 0);
             platformBody = BodyFactory.CreateRectangle(parent.World, 4, 1, 1.0f, parent.WaterLayer.Position + offsetToWater);
             platformBody.BodyType = BodyType.Kinematic;
             platformBody.Friction = 100.0f;
@@ -62,11 +65,21 @@ namespace NGJ2012
             base.Initialize();
         }
 
-        public void StartRising(int msec)
+        public void Trigger()
         {
-            // Start rising one block
+            if (canBeTriggered)
+            {
+                canBeTriggered = false;
+                StartRising(3000);
+            }
+        }
+
+        protected void StartRising(int msec)
+        {
+            // Start rising 3 blocks
             riseTime = msec;
-            riseSpeed = 1.0f / (0.001f * msec);
+            riseSpeed = 3.0f / (0.001f * msec);
+            parent.WaterLayer.StartRising(msec);
         }
 
         public override void Update(GameTime gameTime)
@@ -80,6 +93,7 @@ namespace NGJ2012
                 if (riseTime <= 0)
                 {
                     riseTime = 0; // stop rising
+                    platformBody.SetTransform(parent.WaterLayer.Position + offsetToWater, 0.0f);
                     platformBody.LinearVelocity = Vector2.Zero;
                 }
             }

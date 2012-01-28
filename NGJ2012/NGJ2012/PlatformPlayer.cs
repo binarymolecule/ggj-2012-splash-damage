@@ -91,6 +91,13 @@ namespace NGJ2012
 
         bool PlayerCollidesWithWorld(Fixture fixtureA, Fixture fixtureB, FarseerPhysics.Dynamics.Contacts.Contact contact)
         {
+            // Try to trigger save platform if player collides with it
+            if (fixtureB.CollisionCategories == Game1.COLLISION_GROUP_STATIC_OBJECTS &&
+                fixtureB.Body == parent.SavePlatform.Body)
+            {
+                parent.SavePlatform.Trigger();
+                return true;
+            }
             if ((fixtureB.CollisionCategories & (Game1.COLLISION_GROUP_TETRIS_BLOCKS | Game1.COLLISION_GROUP_STATIC_OBJECTS)) == 0) return true;
             /*
             Vector2 normal;

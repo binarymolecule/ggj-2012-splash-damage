@@ -215,8 +215,7 @@ namespace NGJ2012
             {
                 // Finished round
                 gameProgress -= Game1.worldWidthInBlocks;
-                WaterLayer.StartRising(5000);
-                SavePlatform.StartRising(5000);
+                SavePlatform.AllowTriggering();
             }
             
             platformViewport.cameraPosition = new Vector2(gameProgress, platform.playerCollider.Position.Y);
