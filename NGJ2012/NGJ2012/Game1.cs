@@ -26,10 +26,15 @@ namespace NGJ2012
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         World world;
+        TetrisPlayer tetris;
+        TetrisPieceBatch tetrisBatch;
 
-        List<bool[,]> tetrisShapes = new List<bool[,]>();
-
-        float gameBlockSize = 96.0f;
+        float gameBlockSize = 32.0f;
+        int worldWidthInBlocks = 24;
+        int worldHeightInBlocks = 16;
+        Body staticWorldGround;
+        Body staticWorldL;
+        Body staticWorldR;
 
         // Game components
         public GameStatusLayer StatusLayer;
@@ -42,11 +47,21 @@ namespace NGJ2012
             graphics.PreferredBackBufferHeight = ScreenHeight;
             Content.RootDirectory = "Content";
             world = new World(new Vector2(0, 9.81f));
-            tetrisShapes.Add(new bool[,] { { true, false }, { true, false }, { true, true } });
 
             // Add game components
             StatusLayer = new GameStatusLayer(this);
             Components.Add(StatusLayer);
+
+			// Create world
+            staticWorldGround = BodyFactory.CreateRectangle(world, worldWidthInBlocks, 1, 1.0f, new Vector2(worldWidthInBlocks / 2.0f, worldHeightInBlocks));
+            staticWorldL = BodyFactory.CreateRectangle(world, 1, worldHeightInBlocks, 1.0f, new Vector2(0, worldHeightInBlocks / 2.0f));
+            staticWorldR = BodyFactory.CreateRectangle(world, 1, worldHeightInBlocks, 1.0f, new Vector2(worldWidthInBlocks, worldHeightInBlocks / 2.0f));
+            staticWorldGround.BodyType = BodyType.Static;
+            staticWorldL.BodyType = BodyType.Static;
+            staticWorldR.BodyType = BodyType.Static;
+
+            tetris = new TetrisPlayer(this, world, gameBlockSize);
+            Components.Add(tetris);
         }
 
         /// <summary>
@@ -71,6 +86,8 @@ namespace NGJ2012
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
+
+            tetrisBatch = new TetrisPieceBatch(GraphicsDevice, Matrix.CreateScale(gameBlockSize));
             // TODO: use this.Content to load your game content here
         }
 
@@ -95,6 +112,7 @@ namespace NGJ2012
                 this.Exit();
 
             // TODO: Add your update logic here
+            world.Step((float)gameTime.ElapsedGameTime.TotalSeconds);
 
             base.Update(gameTime);
         }
@@ -108,6 +126,9 @@ namespace NGJ2012
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
+            tetrisBatch.DrawBody(staticWorldGround);
+            tetrisBatch.DrawBody(staticWorldL);
+            tetrisBatch.DrawBody(staticWorldR);
 
             base.Draw(gameTime);
         }
