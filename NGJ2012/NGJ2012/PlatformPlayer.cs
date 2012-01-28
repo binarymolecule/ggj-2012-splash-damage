@@ -42,8 +42,8 @@ namespace NGJ2012
             playerCollider.BodyType = BodyType.Dynamic;
             playerCollider.FixedRotation = true;
             playerCollider.Rotation = 0.0f;
-            playerCollider.CollisionCategories = Category.Cat1;
-            playerCollider.CollidesWith = Category.Cat2 | Category.Cat3;
+            playerCollider.CollisionCategories = Game1.COLLISION_GROUP_DEFAULT;
+            playerCollider.CollidesWith = Game1.COLLISION_GROUP_STATIC_OBJECTS | Game1.COLLISION_GROUP_TETRIS_BLOCKS;
         }
 
         List<Fixture> canJumpBecauseOf = new List<Fixture>();
