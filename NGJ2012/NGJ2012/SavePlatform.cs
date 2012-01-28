@@ -26,7 +26,7 @@ namespace NGJ2012
         // Physical objects
         Body platformBody;
         Vector2 offsetToWater;
-        float riseSpeed = 0.1f; // rise speed in blocks per second
+        float riseSpeed = 0;
         int riseTime = 0;
 
         // Assets
@@ -64,7 +64,9 @@ namespace NGJ2012
 
         public void StartRising(int msec)
         {
+            // Start rising one block
             riseTime = msec;
+            riseSpeed = 1.0f / (0.001f * msec);
         }
 
         public override void Update(GameTime gameTime)
@@ -72,10 +74,14 @@ namespace NGJ2012
             // Update position of platform
             if (riseTime > 0)
             {
+                int msec = gameTime.ElapsedGameTime.Milliseconds;
                 platformBody.LinearVelocity = new Vector2(0, -riseSpeed);
-                riseTime -= gameTime.ElapsedGameTime.Milliseconds;
+                riseTime -= msec;
                 if (riseTime <= 0)
+                {
                     riseTime = 0; // stop rising
+                    platformBody.LinearVelocity = Vector2.Zero;
+                }
             }
 
             base.Update(gameTime);
@@ -97,7 +103,7 @@ namespace NGJ2012
             */
 
             drawer.cameraMatrix = camera;
-            drawer.DrawBodyTextured(platformBody, platformTexture,1.0f/8.0f);
+            drawer.DrawBodyTextured(platformBody, platformTexture, 1.0f/8.0f);
         }
     }
 }
