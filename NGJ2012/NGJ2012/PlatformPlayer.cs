@@ -109,10 +109,6 @@ namespace NGJ2012
         /// </summary>
         public override void Initialize()
         {
-            // TODO: Add your initialization code here
-
-        public override void Initialize()
-        {
             base.Initialize();
         }
 
@@ -182,9 +178,8 @@ namespace NGJ2012
             if (Math.Abs(currentRunSpeed) > 0.001f)
             {
                 viewDirection = Math.Sign(currentRunSpeed);
-                float dir = Math.Sign(currentRunSpeed);
                 walkModifier = 1.0f;
-                world.RayCast(new RayCastCallback(RayCastCallback), playerCollider.Position + dir * new Vector2(0.2f, 0), playerCollider.Position + dir * new Vector2(1.0f, 0));
+                world.RayCast(new RayCastCallback(RayCastCallback), playerCollider.Position + viewDirection * new Vector2(0.2f, 0), playerCollider.Position + viewDirection * new Vector2(1.0f, 0));
                 currentRunSpeed *= walkModifier;
                 isRunning = true;
             }
