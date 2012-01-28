@@ -24,12 +24,14 @@ namespace NGJ2012
     {
         private World _world;
         private float gameBlockSize;
+        private Vector2 cursorPosition;
 
         public TetrisPlayer(Game game, World world, float igameBlockSize)
             : base(game)
         {
             _world = world;
             gameBlockSize = igameBlockSize;
+            cursorPosition = new Vector2(3, 3);
         }
 
         /// <summary>

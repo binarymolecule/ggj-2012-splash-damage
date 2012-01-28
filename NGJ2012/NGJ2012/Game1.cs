@@ -27,9 +27,9 @@ namespace NGJ2012
 
         List<bool[,]> tetrisShapes = new List<bool[,]>();
 
-        float gameBlockSize = 96.0f;
-        int worldWidthInBlocks = 80;
-        int worldHeightInBlocks = 6;
+        float gameBlockSize = 32.0f;
+        int worldWidthInBlocks = 24;
+        int worldHeightInBlocks = 16;
         Body staticWorldGround;
         Body staticWorldL;
         Body staticWorldR;
