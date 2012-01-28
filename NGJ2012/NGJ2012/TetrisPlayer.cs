@@ -90,9 +90,7 @@ namespace NGJ2012
                 for (int i = 0; i < loop.Vertices.Count; ++i)
                 {
                     if (_lineVertsCount >= _lineVertices.Length)
-                    {
                         Flush();
-                    }
                     _lineVertices[_lineVertsCount].Position = new Vector3(loop.Vertices[i], 0f);
                     _lineVertices[_lineVertsCount + 1].Position = new Vector3(loop.Vertices.NextVertex(i), 0f);
                     _lineVertices[_lineVertsCount].Color = _lineVertices[_lineVertsCount + 1].Color = color;
@@ -105,13 +103,9 @@ namespace NGJ2012
 
         private void Flush()
         {
-            if (_lineVertsCount >= 2)
-            {
-                int primitiveCount = _lineVertsCount / 2;
-                // submit the draw call to the graphics card
-                Game.GraphicsDevice.DrawUserPrimitives(PrimitiveType.LineList, _lineVertices, 0, primitiveCount);
-                _lineVertsCount -= primitiveCount * 2;
-            }
+            if (_lineVertsCount < 2) return;
+            Game.GraphicsDevice.DrawUserPrimitives(PrimitiveType.LineList, _lineVertices, 0, _lineVertsCount / 2);
+            _lineVertsCount = 0;
         }
     }
 }
