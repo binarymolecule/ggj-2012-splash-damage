@@ -27,6 +27,7 @@ namespace NGJ2012
     {
         World world;
         public Body playerCollider;
+        public Vector2 cameraPosition = Vector2.Zero;
 
         /**
          * Maps the powerup type to the number of collected powerups of this type.
@@ -99,6 +100,8 @@ namespace NGJ2012
         {
             if (fixture.Body == playerCollider)
                 return -1;
+            if ((fixture.CollisionCategories & Game1.COLLISION_GROUP_LEVEL_SEPARATOR) != 0) 
+                return 1;
             walkModifier = fraction;
             return 0;
         }
@@ -139,6 +142,18 @@ namespace NGJ2012
                 }
             }
             else pressedJump = false;
+
+            if (playerCollider.Position.X < 0)
+            {
+                playerCollider.Position = new Vector2(playerCollider.Position.X + (float)Game1.worldWidthInBlocks, playerCollider.Position.Y);
+                cameraPosition.X += Game1.worldWidthInBlocks;
+            }
+            if (playerCollider.Position.X > Game1.worldWidthInBlocks)
+            {
+                playerCollider.Position = new Vector2(playerCollider.Position.X - (float)Game1.worldWidthInBlocks, playerCollider.Position.Y);
+                cameraPosition.X -= Game1.worldWidthInBlocks;
+            }
+            cameraPosition = 0.9f * cameraPosition + 0.1f * playerCollider.Position;
 
 
             base.Update(gameTime);
