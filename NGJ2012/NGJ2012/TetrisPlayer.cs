@@ -37,7 +37,8 @@ namespace NGJ2012
         TetrisPieceBatch drawer;
 
         // Absolute position in world coordinate system where new pieces are spawned
-        public Vector2 SpawnPosition = new Vector2(12, -25);
+        public Vector2 SpawnPosition = new Vector2(12, -12);
+        public Vector2 MinMaxX = new Vector2(10, 14);
 
         public TetrisPlayer(Game game, World world) : base(game)
         {
@@ -136,7 +137,8 @@ namespace NGJ2012
 
             if (currentPiece != null)
             {
-
+                if (currentPiece.body.Position.X < MinMaxX.X && moveDir.X < 0) moveDir.X = 0;
+                if (MinMaxX.Y < currentPiece.body.Position.X && moveDir.X > 0) moveDir.X = 0;
                 currentPiece.body.LinearVelocity = moveDir * movementSpeed;
 
                 if (state.IsKeyDown(Keys.Down))
