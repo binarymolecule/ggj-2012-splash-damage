@@ -107,6 +107,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="PlatformPlayer.cs" />
     <Compile Include="TetrisPieceBatch.cs" />
     <Compile Include="TetrisPiece.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

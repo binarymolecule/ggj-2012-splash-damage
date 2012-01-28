@@ -47,9 +47,14 @@ namespace NGJ2012
             staticWorldGround.BodyType = BodyType.Static;
             staticWorldL.BodyType = BodyType.Static;
             staticWorldR.BodyType = BodyType.Static;
+            staticWorldGround.Friction = float.MaxValue;
+            staticWorldL.Friction = float.MaxValue;
+            staticWorldR.Friction = float.MaxValue;
 
             tetris = new TetrisPlayer(this, world, gameBlockSize);
             Components.Add(tetris);
+
+            Components.Add(new PlatformPlayer(this, world));
         }
 
         /// <summary>
