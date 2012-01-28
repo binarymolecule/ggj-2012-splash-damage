@@ -107,6 +107,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DrawableGameComponentExtended.cs" />
     <Compile Include="jumpAndRunPlayerFigure.cs" />
     <Compile Include="PlatformPlayer.cs" />
     <Compile Include="gui\GameStatusLayer.cs" />

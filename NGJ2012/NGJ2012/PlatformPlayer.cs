@@ -23,10 +23,10 @@ namespace NGJ2012
     /// <summary>
     /// This is a game component that implements IUpdateable.
     /// </summary>
-    public class PlatformPlayer : Microsoft.Xna.Framework.DrawableGameComponent
+    public class PlatformPlayer : DrawableGameComponentExtended
     {
         World world;
-        Body playerCollider;
+        public Body playerCollider;
 
 
         public PlatformPlayer(Game game, World world)
@@ -82,7 +82,7 @@ namespace NGJ2012
         TetrisPieceBatch drawer;
         protected override void LoadContent()
         {
-            drawer = new TetrisPieceBatch(GraphicsDevice, Matrix.CreateScale(32.0f));
+            drawer = new TetrisPieceBatch(GraphicsDevice);
             base.LoadContent();
         }
 
@@ -139,10 +139,10 @@ namespace NGJ2012
             base.Update(gameTime);
         }
 
-        public override void Draw(GameTime gameTime)
+        public override void DrawGameWorldOnce(Matrix camera, bool platformMode)
         {
+            drawer.cameraMatrix = camera;
             drawer.DrawBody(playerCollider);
-            base.Draw(gameTime);
         }
     }
 }
