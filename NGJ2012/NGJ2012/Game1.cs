@@ -22,17 +22,15 @@ namespace NGJ2012
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+
+        KeyboardState prevKeyboardState;
+        GamePadState prevGamepadState;
+
         World world;
         TetrisPlayer tetris;
         TetrisPieceBatch tetrisBatch;
         PlatformPlayer platform;
-
-
-        public PlatformPlayer PlatformPlayer
-        {
-        
-            get { return platform; }
-        }
+        public PlatformPlayer PlatformPlayer { get { return platform; } }
 
         Body staticWorldGround;
         Body staticWorldL;
@@ -164,15 +162,23 @@ namespace NGJ2012
         protected override void Update(GameTime gameTime)
         {
             // Allows the game to exit
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
+            KeyboardState keyboardState = Keyboard.GetState();
+            GamePadState gamepadState = GamePad.GetState(PlayerIndex.One);
+            if (gamepadState.Buttons.Back == ButtonState.Pressed ||
+                keyboardState.IsKeyDown(Keys.Escape))
+            {
                 this.Exit();
+            }
 
             // TODO: Add your update logic here
-
 
             world.Step((float)gameTime.ElapsedGameTime.TotalSeconds);
 
             Timers.Update(gameTime);
+
+            prevKeyboardState = keyboardState;
+            prevGamepadState = gamepadState;
+
             base.Update(gameTime);
         }
 
