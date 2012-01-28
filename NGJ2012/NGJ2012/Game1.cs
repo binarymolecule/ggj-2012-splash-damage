@@ -41,7 +41,7 @@ namespace NGJ2012
         public const int worldHeightInBlocks = 20;
 
         public const float ScalePlatformSprites = 1.0f;
-        public const float ScaleTetrisSprites = 0.25f;
+        public const float ScaleTetrisSprites = 0.25f * ScalePlatformSprites;
 
         public const Category COLLISION_GROUP_DEFAULT = Category.Cat1;
         public const Category COLLISION_GROUP_TETRIS_BLOCKS = Category.Cat2;

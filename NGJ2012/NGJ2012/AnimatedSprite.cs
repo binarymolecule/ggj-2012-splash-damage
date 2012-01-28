@@ -22,7 +22,7 @@ namespace NGJ2012
             public int StartFrame;
             public int NumOfFrames;
             public int MsPerFrame;
-            public bool Loop;
+            public int LoopFromFrame;
         }
 
         Game1 game;
@@ -39,12 +39,13 @@ namespace NGJ2012
         int currentFrame;
 
         public Color Color;
+        public bool Flipped;
         Rectangle screenRect;
 
-        public AnimatedSprite(Game1 parentGame, String path, String[] assetNames, Vector2 originInPixels)
+        public AnimatedSprite(Game1 parentGame, String path, List<String> assetNames, Vector2 originInPixels)
         {
             game = parentGame;
-            textures = new List<Texture2D>(assetNames.Length);
+            textures = new List<Texture2D>(assetNames.Count);
             animationIDs = new Dictionary<string, int>();
             animations = new List<Animation>();
             textureOrigin = originInPixels;
@@ -55,15 +56,30 @@ namespace NGJ2012
                 textures.Add(game.Content.Load<Texture2D>(Path.Combine(path, assetName)));
 
             Color = Color.White;
+            Flipped = false;
             screenRect = new Rectangle(0, 0, 0, 0);
         }
 
         public int AddAnimation(string name, int startFrame, int numOfFrames, int msPerFrame, bool loop)
         {
+            if (loop)
+                return AddAnimation(name, startFrame, numOfFrames, msPerFrame, startFrame);
+            else
+                return AddAnimation(name, startFrame, numOfFrames, msPerFrame, -1);
+        }
+
+        public int AddAnimation(string name, int startFrame, int numOfFrames, int msPerFrame, int loopFrom)
+        {
             int index = animations.Count;
             animationIDs.Add(name, index);
-            animations.Add(new Animation { ID = index, StartFrame = startFrame, NumOfFrames = numOfFrames,
-                                           MsPerFrame = msPerFrame, Loop = loop });
+            animations.Add(new Animation
+            {
+                ID = index,
+                StartFrame = startFrame,
+                NumOfFrames = numOfFrames,
+                MsPerFrame = msPerFrame,
+                LoopFromFrame = loopFrom
+            });
             if (index == 0) SetAnimation(0);
             return index;
         }
@@ -97,9 +113,9 @@ namespace NGJ2012
                     currentFrame++;
                     currentTexture = textures[currentFrame];
                 }
-                else if (currentAnimation.Loop)
+                else if (currentAnimation.LoopFromFrame >= currentAnimation.StartFrame)
                 {
-                    currentFrame = currentAnimation.StartFrame;
+                    currentFrame = currentAnimation.LoopFromFrame;
                     currentTexture = textures[currentFrame];
                 }
             }
@@ -107,7 +123,8 @@ namespace NGJ2012
 
         public void Draw(SpriteBatch spriteBatch, Vector2 position, float scale)
         {
-            spriteBatch.Draw(currentTexture, position, null, Color, 0.0f, textureOrigin, scale, SpriteEffects.None, 1.0f);
+            spriteBatch.Draw(currentTexture, position, null, Color, 0.0f, textureOrigin, scale,
+                             Flipped ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 1.0f);
         }
     }
 }
