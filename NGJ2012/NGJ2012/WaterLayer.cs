@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
@@ -12,15 +12,14 @@ using Microsoft.Xna.Framework.Media;
 namespace NGJ2012
 {
     /// <summary>
-    /// Implements layer for GUI and status information elements.
+    /// Implement animated water layer.
     /// </summary>
-    public class GameStatusLayer : Microsoft.Xna.Framework.DrawableGameComponent
+    public class WaterLayer : Microsoft.Xna.Framework.DrawableGameComponent
     {
         Game1 parent;
         Vector2 pos;
-        SpriteFont font;
 
-        public GameStatusLayer(Game game) : base(game)
+        public WaterLayer(Game game) : base(game)
         {
             parent = (Game1)game;
             pos = Vector2.Zero;
@@ -28,7 +27,6 @@ namespace NGJ2012
 
         protected override void LoadContent()
         {
-            font = parent.Content.Load<SpriteFont>("fonts/guifont");
         }
 
         protected override void UnloadContent()
@@ -47,9 +45,8 @@ namespace NGJ2012
 
         public override void Draw(GameTime gameTime)
         {
-            parent.SpriteBatch.Begin();
-            parent.SpriteBatch.DrawString(font, "Test", pos, Color.White);
-            parent.SpriteBatch.End();
+            //parent.SpriteBatch.Begin();
+            //parent.SpriteBatch.End();
         }
     }
 }
