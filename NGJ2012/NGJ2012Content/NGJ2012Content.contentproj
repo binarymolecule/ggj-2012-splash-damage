@@ -88,7 +88,10 @@
       <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="graphics\player\" />
+    <Folder Include="graphics\powerups\" />
+  </ItemGroup>
   <ItemGroup>
     <Compile Include="graphics\gui\gui.png">
       <Name>gui</Name>
