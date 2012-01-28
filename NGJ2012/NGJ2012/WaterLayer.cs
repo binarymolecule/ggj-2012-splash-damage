@@ -18,14 +18,14 @@ namespace NGJ2012
     /// <summary>
     /// Implement animated water layer.
     /// </summary>
-    public class WaterLayer : Microsoft.Xna.Framework.DrawableGameComponent
+    public class WaterLayer : DrawableGameComponentExtended
     {
         Game1 parent;
         Rectangle screenRect;
 
         // Physical objects
         //Body waterBody;
-        float height;
+        Vector2 pos;
 
         // Assets
         Texture2D waterTexture;
@@ -33,7 +33,7 @@ namespace NGJ2012
         public WaterLayer(Game game) : base(game)
         {
             parent = (Game1)game;
-            screenRect = new Rectangle(0, 600, 1280, 128);
+            screenRect = new Rectangle(0, 0, 1280, 128);
 
             // Create physical objects
             /*
@@ -42,7 +42,7 @@ namespace NGJ2012
             waterBody.BodyType = BodyType.Static;
             waterBody.Friction = float.MaxValue;
             */
-            height = 0;
+            pos = new Vector2(0, parent.WorldHeightInBlocks);
         }
 
         protected override void LoadContent()
@@ -61,13 +61,19 @@ namespace NGJ2012
 
         public override void Update(GameTime gameTime)
         {
-            // TODO Compute screen rect from position!
-
             base.Update(gameTime);
         }
 
         public override void Draw(GameTime gameTime)
         {
+        }
+
+        public override void DrawGameWorldOnce(Matrix camera, bool platformMode)
+        {
+            Vector2 screenPos = Vector2.Transform(pos, camera);
+            screenRect.X = (int)screenPos.X;
+            screenRect.Y = (int)screenPos.Y;
+            
             parent.SpriteBatch.Begin();
             parent.SpriteBatch.Draw(waterTexture, screenRect, Color.White * 0.5f);
             parent.SpriteBatch.End();
