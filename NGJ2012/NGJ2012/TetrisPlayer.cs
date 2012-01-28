@@ -66,7 +66,7 @@ namespace NGJ2012
         private void Spawn(Utility.Timer timer)
         {
             int shape = (new Random()).Next(tetrisShapes.Count);
-            currentPiece = new TetrisPiece(_world, tetrisTextures[shape], tetrisShapes[shape], new Vector2(2, 2));
+            currentPiece = new TetrisPiece(_world, tetrisTextures[shape], tetrisShapes[shape], SpawnPosition);
             currentPieceCollide = new OnCollisionEventHandler(currentPieceCollision);
             currentPiece.body.OnCollision += currentPieceCollide;
             currentPieceRotation = JointFactory.CreateFixedAngleJoint(_world, currentPiece.body);
