@@ -33,6 +33,10 @@ namespace NGJ2012
         Body staticWorldL;
         Body staticWorldR;
 
+        public const Category COLLISION_GROUP_DEFAULT = Category.Cat1;
+        public const Category COLLISION_GROUP_TETRIS_BLOCKS = Category.Cat2;
+        public const Category COLLISION_GROUP_STATIC_OBJECTS = Category.Cat3;
+
         // Player related components
         jumpAndRunPlayerFigure jumpAndRunPlayer;
 
@@ -65,9 +69,9 @@ namespace NGJ2012
             staticWorldGround.Friction = 100.0f;
             staticWorldL.Friction = 100.0f;
             staticWorldR.Friction = 100.0f;
-            staticWorldGround.CollisionCategories = Category.Cat3;
-            staticWorldL.CollisionCategories = Category.Cat3;
-            staticWorldR.CollisionCategories = Category.Cat3;
+            staticWorldGround.CollisionCategories = COLLISION_GROUP_STATIC_OBJECTS;
+            staticWorldL.CollisionCategories = COLLISION_GROUP_STATIC_OBJECTS;
+            staticWorldR.CollisionCategories = COLLISION_GROUP_STATIC_OBJECTS;
 
             tetris = new TetrisPlayer(this, world, gameBlockSize);
             Components.Add(tetris);

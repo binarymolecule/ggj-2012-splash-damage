@@ -42,8 +42,8 @@ namespace NGJ2012
             body.BodyType = BodyType.Dynamic;
             body.Restitution = 0.1f;
             body.Friction = 1.0f;
-            body.CollisionCategories = Category.Cat2;
-            body.CollidesWith = Category.Cat1 | Category.Cat2 | Category.Cat3;
+            body.CollisionCategories = Game1.COLLISION_GROUP_TETRIS_BLOCKS;
+            body.CollidesWith = Game1.COLLISION_GROUP_STATIC_OBJECTS | Game1.COLLISION_GROUP_TETRIS_BLOCKS | Game1.COLLISION_GROUP_DEFAULT;
         }
     }
 }
