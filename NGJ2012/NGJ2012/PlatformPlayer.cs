@@ -214,7 +214,7 @@ namespace NGJ2012
             this.currentlySelectedPowerUp = powerup;
         }
 
-        internal void increaseLives()
+        internal void increaseLifes()
         {
             this.numberOfLifes++;
         }

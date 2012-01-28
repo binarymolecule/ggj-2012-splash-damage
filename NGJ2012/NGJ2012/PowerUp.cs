@@ -29,10 +29,8 @@ namespace NGJ2012
 
         private Texture2D texture;
 
-        public Texture2D Texture
-        {
-            get { return texture; }
-        }
+        public Texture2D Texture { get { return texture; } }
+
         private Body collisionBody;
         private EPowerUpType powerUpType;
         private bool usageTimerRunning = false;
@@ -45,7 +43,7 @@ namespace NGJ2012
 
         public enum EPowerUpType
         {
-            MegaJump, ExtraLive
+            MegaJump, ExtraLife
         }
 
         public PowerUp(Game1 game, World world, EPowerUpType powerUpType, Vector2 position)
@@ -73,7 +71,7 @@ namespace NGJ2012
                     case EPowerUpType.MegaJump:
                         game.PlatformPlayer.addPowerUp(this);
                         break;
-                    case EPowerUpType.ExtraLive:
+                    case EPowerUpType.ExtraLife:
                         this.use();
                         break;
                 }
@@ -91,7 +89,7 @@ namespace NGJ2012
                 case EPowerUpType.MegaJump:
                     this.texture = game.Content.Load<Texture2D>("PowerUp_Jump");
                     break;
-                case EPowerUpType.ExtraLive:
+                case EPowerUpType.ExtraLife:
                     this.texture = game.Content.Load<Texture2D>("PowerUp_Life");
                     break;
                 default:
@@ -136,8 +134,9 @@ namespace NGJ2012
                         game.PlatformPlayer.increaseJumpPower(JUMP_INCREASE);
                         break;
 
-                    case EPowerUpType.ExtraLive:
-                        game.PlatformPlayer.increaseLives();
+                    case EPowerUpType.ExtraLife:
+                        game.PlatformPlayer.increaseLifes();
+                        onPowerUpExhausted();
                         break;
                 }
             }
@@ -150,7 +149,7 @@ namespace NGJ2012
                 case EPowerUpType.MegaJump:
                     game.PlatformPlayer.increaseJumpPower(-JUMP_INCREASE);
                     break;
-                case EPowerUpType.ExtraLive:
+                case EPowerUpType.ExtraLife:
                     //Nothing TODO.
                     break;
             }
