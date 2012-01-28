@@ -26,7 +26,8 @@ namespace NGJ2012
     public class PlatformPlayer : DrawableGameComponentExtended
     {
         private const int INITIAL_NUMBER_OF_LIFES = 3;
-        private const float acceleration = 128.0f;
+        private const float acceleration = 512.0f;
+        private const float deacceleration = 256.0f;
         private const float maxRunSpeed = 8.0f;
 
         Game1 parent;
@@ -134,7 +135,7 @@ namespace NGJ2012
             return 0;
         }
 
-        bool pressedJump = false;
+        int jumpCooldown = -1;
         /// <summary>
         /// Allows the game component to update itself.
         /// </summary>
@@ -148,7 +149,7 @@ namespace NGJ2012
             if (state.IsKeyDown(Keys.A)) move = -acceleration;
             if (state.IsKeyDown(Keys.D)) move = acceleration;
 
-            currentRunSpeed *= (float)Math.Pow(0.001, gameTime.ElapsedGameTime.TotalSeconds);
+            currentRunSpeed *= Math.Max(0.0f, 1.0f - deacceleration*(float)gameTime.ElapsedGameTime.TotalSeconds);
             currentRunSpeed += move * (float)gameTime.ElapsedGameTime.TotalSeconds;
             if (Math.Abs(currentRunSpeed) > maxRunSpeed) currentRunSpeed *= maxRunSpeed / Math.Abs(currentRunSpeed);
 
@@ -161,15 +162,15 @@ namespace NGJ2012
             }
             playerCollider.LinearVelocity = new Vector2(currentRunSpeed,playerCollider.LinearVelocity.Y);
 
+            jumpCooldown--;
             if (state.IsKeyDown(Keys.W))
             {
-                if (canJumpBecauseOf.Count > 0 && !pressedJump)
+                if (canJumpBecauseOf.Count > 0 && jumpCooldown<=0)
                 {
                     jump();
-                    pressedJump = true;
-                }
+                    jumpCooldown = 3;
+                } 
             }
-            else pressedJump = false;
 
             if (playerCollider.Position.X < 0)
             {
