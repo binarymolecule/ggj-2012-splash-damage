@@ -31,10 +31,11 @@ namespace NGJ2012
         private const float maxRunSpeed = 8.0f;
 
         Game1 parent;
+        const float ScalePlayerSprite = 0.25f;
 
         World world;
         public Body playerCollider;
-        public Vector2 cameraPosition = Vector2.Zero;
+        public Vector2 cameraPosition;
         
         private int numberOfLifes;
 
@@ -44,7 +45,7 @@ namespace NGJ2012
         }
         private bool didFallSinceLastJump = true;
         private float jumpForce = 0.5f;
-        private const float BYTE_FORCE = 500.0f;
+        private const float BYTE_FORCE = 300.0f;
         private PowerUp currentlySelectedPowerUp;
 
         public PowerUp CurrentlySelectedPowerUp
@@ -64,7 +65,6 @@ namespace NGJ2012
             parent = (Game1)game;
 
             playerCollider = BodyFactory.CreateCapsule(world, 1.0f, 0.2f, 0.001f);
-            playerCollider.Position = new Vector2(2, -2);
             playerCollider.OnCollision += new OnCollisionEventHandler(PlayerCollidesWithWorld);
             playerCollider.OnSeparation += new OnSeparationEventHandler(PlayerSeparatesFromWorld);
             playerCollider.Friction = 0.0f;
@@ -75,7 +75,15 @@ namespace NGJ2012
             playerCollider.CollisionCategories = Game1.COLLISION_GROUP_DEFAULT;
             playerCollider.CollidesWith = Game1.COLLISION_GROUP_DEFAULT | Game1.COLLISION_GROUP_STATIC_OBJECTS | Game1.COLLISION_GROUP_TETRIS_BLOCKS;
 
+            resetPlayer();
+
             numberOfLifes = INITIAL_NUMBER_OF_LIFES;
+        }
+
+        private void resetPlayer()
+        {
+            playerCollider.Position = new Vector2(2, -2);
+            cameraPosition = Vector2.Zero;
         }
 
         List<Fixture> canJumpBecauseOf = new List<Fixture>();
@@ -87,6 +95,13 @@ namespace NGJ2012
         }
         bool PlayerCollidesWithWorld(Fixture fixtureA, Fixture fixtureB, FarseerPhysics.Dynamics.Contacts.Contact contact)
         {
+            // Try to trigger save platform if player collides with it
+            if (fixtureB.CollisionCategories == Game1.COLLISION_GROUP_STATIC_OBJECTS &&
+                fixtureB.Body == parent.SavePlatform.Body)
+            {
+                parent.SavePlatform.Trigger();
+                return true;
+            }
             if ((fixtureB.CollisionCategories & (Game1.COLLISION_GROUP_TETRIS_BLOCKS | Game1.COLLISION_GROUP_STATIC_OBJECTS)) == 0) return true;
 
             Vector2 normal;
@@ -115,12 +130,17 @@ namespace NGJ2012
         protected override void LoadContent()
         {
             // Create player animation
-            string[] playerTextureNames = new string[] { "jumpAndRunPlayer" };
-            playerAnimation = new AnimatedSprite(parent, "", playerTextureNames, new Vector2(36, 32));
+            List<String> playerTextureNames = new List<String>();
+            for (int i = 0; i < 9; i++)
+                playerTextureNames.Add(String.Format("run_start/run_start_1_{0:0000}", i));
+            for (int i = 9; i < 29; i++)
+                playerTextureNames.Add(String.Format("run_loop_02/run_loop_02_{0:0000}", i));
+            
+            playerAnimation = new AnimatedSprite(parent, "char", playerTextureNames, new Vector2(256, 256));
             animID_Stand = playerAnimation.AddAnimation("stand", 0, 0, 125, true);
-            animID_Walk = playerAnimation.AddAnimation("walk", 0, 0, 125, true);
+            animID_Walk = playerAnimation.AddAnimation("walk", 0, 29, 50, 9);
             animID_Idle = playerAnimation.AddAnimation("idle", 0, 0, 125, true);
-            animID_Jump = playerAnimation.AddAnimation("jump", 0, 0, 125, true);
+            animID_Jump = playerAnimation.AddAnimation("jump", 0, 9, 60, false);
             animID_Fall = playerAnimation.AddAnimation("fall", 0, 0, 125, true);
             animID_Hit = playerAnimation.AddAnimation("hit", 0, 0, 125, true);
             playerAnimation.SetAnimation(animID_Stand);
@@ -162,12 +182,39 @@ namespace NGJ2012
             // Process user input
             int msec = gameTime.ElapsedGameTime.Milliseconds;
 
+            if (this.playerCollider.Position.Y > parent.WaterLayer.Height)
+            {
+                this.numberOfLifes--;
+
+                if (this.numberOfLifes == 0)
+                {
+                    //TODO: Gameover
+                }
+                else
+                {
+                    resetPlayer();
+                    //TODO Switch players:
+                }
+            }
+
             KeyboardState state = Keyboard.GetState();
             GamePadState gstate = GamePad.GetState(PlayerIndex.One);
             float move = 0;
-            if (state.IsKeyDown(Keys.A)) move = -acceleration;
-            if (state.IsKeyDown(Keys.D)) move = acceleration;
-            if (gstate.IsConnected) move = gstate.ThumbSticks.Left.X * Math.Abs(gstate.ThumbSticks.Left.X) * acceleration;
+            if (state.IsKeyDown(Keys.A))
+            {
+                move = -acceleration;
+                playerAnimation.Flipped = true;
+            }
+            if (state.IsKeyDown(Keys.D))
+            {
+                move = acceleration;
+                playerAnimation.Flipped = false;
+            }
+            if (gstate.IsConnected)
+            {
+                move = gstate.ThumbSticks.Left.X * Math.Abs(gstate.ThumbSticks.Left.X) * acceleration;
+                playerAnimation.Flipped = move < 0;
+            }
 
             currentRunSpeed *= Math.Max(0.0f, 1.0f - deacceleration*(float)gameTime.ElapsedGameTime.TotalSeconds);
             currentRunSpeed += move * (float)gameTime.ElapsedGameTime.TotalSeconds;
@@ -186,17 +233,17 @@ namespace NGJ2012
             float runSpeedScaleDueToVertical = 1.0f;// (float)Math.Sqrt(Math.Max(0, maxRunSpeed * maxRunSpeed - playerCollider.LinearVelocity.Y * playerCollider.LinearVelocity.Y);
             playerCollider.LinearVelocity = new Vector2(currentRunSpeed * runSpeedScaleDueToVertical, playerCollider.LinearVelocity.Y);
 
-            // Switch to walking animation
-            bool isFloating = Math.Abs(playerCollider.LinearVelocity.Y) > 0.001f;
-            if (isFloating)
-            {
-                if (playerCollider.LinearVelocity.Y > 0)
-                    playerAnimation.SetAnimation(animID_Fall);
-            }
-            else if (isRunning)
-                playerAnimation.SetAnimation(animID_Walk);
+            if (playerCollider.LinearVelocity.Y > 0)
+                didFallSinceLastJump = true;
 
-            if (playerCollider.LinearVelocity.Y > 0) didFallSinceLastJump = true;
+            canJump = canJumpBecauseOf.Count > 0;
+            if (canJump && didFallSinceLastJump)
+            {
+                if (isRunning)
+                    playerAnimation.SetAnimation(animID_Walk);
+                else
+                    playerAnimation.SetAnimation(animID_Stand);
+            }
 
             if (state.IsKeyDown(Keys.W) || gstate.IsButtonDown(Buttons.A))
             {
@@ -239,23 +286,22 @@ namespace NGJ2012
 
         private void bite()
         {
-            Vector2 start = playerCollider.Position + viewDirection * new Vector2(0.2f, 0);
             //Check for objects slightly above or below to get also objects that are not directly on the height of your head:
-            world.RayCast(new RayCastCallback(biteRayCastCallback), start, playerCollider.Position + viewDirection * new Vector2(0.6f, -0.5f));
-            world.RayCast(new RayCastCallback(biteRayCastCallback), start, playerCollider.Position + viewDirection * new Vector2(0.6f, +0.5f));
+            world.RayCast(new RayCastCallback(biteRayCastCallback), playerCollider.Position, playerCollider.Position + new Vector2(0.6f * viewDirection, -0.5f));
+            world.RayCast(new RayCastCallback(biteRayCastCallback), playerCollider.Position, playerCollider.Position + new Vector2(0.6f * viewDirection, 0.0f));
+            world.RayCast(new RayCastCallback(biteRayCastCallback), playerCollider.Position, playerCollider.Position + new Vector2(0.6f * viewDirection, +0.5f));
         }
 
         float biteRayCastCallback(Fixture fixture, Vector2 point, Vector2 normal, float fraction)
         {
             if (fixture.CollisionCategories == Game1.COLLISION_GROUP_TETRIS_BLOCKS)
             {
+                parent.TetrisPlayer.reactiveAllPieces();
                 fixture.Body.ApplyForce(new Vector2(-this.viewDirection * BYTE_FORCE, -BYTE_FORCE));
-
+              
                 //Stop raytracing
                 return 0;
-            }
-            else
-            {
+            } else {
                 //Continue raytracing:
                 return -1;
             }
@@ -287,7 +333,7 @@ namespace NGJ2012
         {
             // Draw animation
             Vector2 screenPos = Vector2.Transform(playerCollider.Position, camera);
-            parent.SpriteBatch.Begin();
+            parent.SpriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
             playerAnimation.Draw(parent.SpriteBatch, screenPos, 1.0f);
             parent.SpriteBatch.End();
 

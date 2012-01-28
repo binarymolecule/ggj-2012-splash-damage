@@ -191,6 +191,7 @@ namespace NGJ2012
             {
                 // Finished round
                 gameProgress -= Game1.worldWidthInBlocks;
+                SavePlatform.AllowTriggering();
                 WaterLayer.StartRising(5000);
                 SavePlatform.StartRising(5000);
             }
