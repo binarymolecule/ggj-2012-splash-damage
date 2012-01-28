@@ -35,6 +35,7 @@ namespace NGJ2012
         private TetrisPiece currentPiece, currentCheat;
         float currentPieceMaxLen;
         private TetrisPiece nextPiece;
+        int countdownToCheat = 5;
 
         internal TetrisPiece nextTetrixPiece { get { return nextPiece; } }
         FixedAngleJoint currentPieceRotation;
@@ -86,13 +87,19 @@ namespace NGJ2012
             pieces.Add(currentPiece);
             activePieces.Add(currentPiece);
 
-            currentCheat = new TetrisPiece(_world, tetrisTextures[2], tetrisShapes[2], currentPiece.body.WorldCenter + new Vector2(1, -2));
-            currentCheat.body.FixedRotation = true;
-            currentCheat.body.Rotation = (float)Math.PI / 2;
-            currentCheat.body.OnCollision += currentPieceCollide;
-            JointFactory.CreateRevoluteJoint(_world, currentCheat.body, currentPiece.body, currentPiece.body.LocalCenter);
-            pieces.Add(currentCheat);
-            activePieces.Add(currentCheat);
+            currentCheat = null;
+            --countdownToCheat;
+            if (countdownToCheat < 0)
+            {
+                currentCheat = new TetrisPiece(_world, tetrisTextures[2], tetrisShapes[2], currentPiece.body.WorldCenter + new Vector2(1, -2));
+                currentCheat.body.FixedRotation = true;
+                currentCheat.body.Rotation = (float)Math.PI / 2;
+                currentCheat.body.OnCollision += currentPieceCollide;
+                JointFactory.CreateRevoluteJoint(_world, currentCheat.body, currentPiece.body, currentPiece.body.LocalCenter);
+                pieces.Add(currentCheat);
+                activePieces.Add(currentCheat);
+                countdownToCheat = 5;
+            }
 
             nextPiece = getRandomTetrisPiece();
 
@@ -110,7 +117,8 @@ namespace NGJ2012
             currentPiece.body.LinearVelocity = Vector2.Zero;
             currentPiece.body.ResetDynamics();
             currentPiece.body.OnCollision -= currentPieceCollide;
-            currentCheat.body.OnCollision -= currentPieceCollide;
+            if(currentCheat!=null)
+                currentCheat.body.OnCollision -= currentPieceCollide;
             currentPieceCollide = null;
             currentPiece = null;
             _world.RemoveJoint(currentPieceRotation);
