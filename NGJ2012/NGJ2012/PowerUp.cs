@@ -22,17 +22,24 @@ namespace NGJ2012
 {
     class PowerUp : Microsoft.Xna.Framework.DrawableGameComponent
     {
-        Game game;
+        Game1 game;
         World world;
 
         private Texture2D texture;
         private Body collisionBody;
+        private EPowerUpType powerUpType;
 
+        public enum EPowerUpType
+        {
+            MegaJump
+        }
 
-        public PowerUp(Game game, World world) : base(game)
+        public PowerUp(Game1 game, World world, EPowerUpType powerUpType)
+            : base(game)
         {
             this.game = game;
             this.world = world;
+            this.powerUpType = powerUpType;
 
             collisionBody = BodyFactory.CreateCapsule(world, 1.0f, 0.2f, 1.0f);
             collisionBody.Position = new Vector2(20, 20);
@@ -49,9 +56,8 @@ namespace NGJ2012
 
         protected override void LoadContent()
         {
-            this.spriteBatch = new SpriteBatch(game.GraphicsDevice);
             this.texture = game.Content.Load<Texture2D>("Star");
-
+            
             base.LoadContent();
         }
 
@@ -62,6 +68,10 @@ namespace NGJ2012
 
         public override void Draw(GameTime gameTime)
         {
+            this.game.SpriteBatch.Begin();
+            this.game.SpriteBatch.Draw(texture, collisionBody.Position, Color.White);
+            this.game.SpriteBatch.End();
+
             base.Draw(gameTime);
         }
 

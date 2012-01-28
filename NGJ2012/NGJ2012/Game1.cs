@@ -72,6 +72,9 @@ namespace NGJ2012
             WaterLayer = new WaterLayer(this);
             Components.Add(WaterLayer);
 
+            //TODO: Create PowerUps dynamically
+            Components.Add(new PowerUp(this, world, PowerUp.EPowerUpType.MegaJump));
+
             // Add GUI components
             StatusLayer = new GameStatusLayer(this);
             Components.Add(StatusLayer);
