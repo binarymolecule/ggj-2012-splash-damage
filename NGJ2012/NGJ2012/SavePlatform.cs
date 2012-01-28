@@ -85,7 +85,8 @@ namespace NGJ2012
             */
 
             drawer.cameraMatrix = camera;
-            drawer.DrawBodyTextured(platformBody, platformTexture,1.0f/8.0f);
+            drawer.DrawAlignedQuad(platformBody.WorldCenter+new Vector2(0.8f,-0.7f), new Vector2(7, 7), platformTexture);
+            drawer.DrawBody(platformBody);
         }
     }
 }
