@@ -29,6 +29,7 @@ namespace NGJ2012
 
         // Assets
         Texture2D platformTexture;
+        TetrisPieceBatch drawer;
 
         public SavePlatform(Game game) : base(game)
         {
@@ -36,7 +37,7 @@ namespace NGJ2012
             screenRect = new Rectangle(0, 0, 640, 64);
 
             // Create physical objects
-            offsetToWater = new Vector2(0, -1);
+            offsetToWater = new Vector2(6, -3);
             platformBody = BodyFactory.CreateRectangle(parent.World, 10, 1, 1.0f, parent.WaterLayer.Position + offsetToWater);
             platformBody.BodyType = BodyType.Static;
             platformBody.Friction = float.MaxValue;
@@ -46,6 +47,7 @@ namespace NGJ2012
         protected override void LoadContent()
         {
             platformTexture = parent.Content.Load<Texture2D>("graphics/level/platform");
+            drawer = new TetrisPieceBatch(GraphicsDevice);
         }
 
         protected override void UnloadContent()
@@ -71,14 +73,17 @@ namespace NGJ2012
 
         public override void DrawGameWorldOnce(Matrix camera, bool platformMode)
         {
-            Vector2 pos = platformBody.GetWorldPoint(Vector2.Zero);
-            Vector2 screenPos = Vector2.Transform(pos, camera);
+            /*
+            Vector2 screenPos = Vector2.Transform(platformBody.Position, camera);
             screenRect.X = (int)screenPos.X;
             screenRect.Y = (int)screenPos.Y;
-
             parent.SpriteBatch.Begin();
             parent.SpriteBatch.Draw(platformTexture, screenRect, Color.White);
             parent.SpriteBatch.End();
+            */
+
+            drawer.cameraMatrix = camera;
+            drawer.DrawBody(platformBody);
         }
     }
 }
