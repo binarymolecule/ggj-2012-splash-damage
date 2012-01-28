@@ -40,7 +40,7 @@ namespace NGJ2012
             this.world = world;
             this.spriteBatch = spriteBatch;
 
-            playerBody = BodyFactory.CreateCapsule(world, 1, 45, 10);
+            playerBody = BodyFactory.CreateCapsule(world, 1, 0.45f, 10);
             playerBody.BodyType = BodyType.Kinematic;
             playerBody.Position = new Vector2(0.0f, 0.0f);
 
