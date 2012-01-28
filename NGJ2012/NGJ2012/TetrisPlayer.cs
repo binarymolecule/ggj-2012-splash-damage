@@ -104,7 +104,7 @@ namespace NGJ2012
             _world.RemoveJoint(currentPieceRotation);
             currentPieceRotation = null;
 
-            Game1.Timers.Create(1.0f, false, Spawn);
+            Game1.Timers.Create(2.0f, false, Spawn);
         }
 
         /// <summary>

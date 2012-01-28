@@ -60,10 +60,10 @@ namespace NGJ2012
         public GameStatusLayer StatusLayer { get; protected set; }
         public SpriteBatch SpriteBatch { get { return spriteBatch; } }
 
-        public const float gameBlockSizePlatform = 96.0f;
+        public const float gameBlockSizePlatform = 64.0f;
         public const float gameBlockSizeTetris = 32.0f;
 
-        public const int platformModeWidth = 1000;
+        public const int platformModeWidth = 850;
         public const int tetrisModeWidth = 1280 - platformModeWidth;
 
         RenderTarget2D platformModeLeft;
@@ -119,14 +119,14 @@ namespace NGJ2012
             SavePlatform = new SavePlatform(this);
             Components.Add(SavePlatform);
 
-            tetrisViewport = new GameViewport(this, 32)
+            tetrisViewport = new GameViewport(this, gameBlockSizeTetris)
             {
                 platformMode = false
             };
             tetrisViewport.resize(tetrisModeWidth, 720);
             tetris.viewportToSpawnIn = tetrisViewport;
 
-            platformViewport = new GameViewport(this, 96);
+            platformViewport = new GameViewport(this, gameBlockSizePlatform);
             platformViewport.resize(platformModeWidth, 720);
 
             Components.Add(platformViewport);
@@ -208,7 +208,7 @@ namespace NGJ2012
             platformViewport.cameraPosition = new Vector2(gameProgress, platform.cameraPosition.Y);
             float tetrisPro = gameProgress + tetrisProgressAdd;
             if (tetrisPro > Game1.worldWidthInBlocks) tetrisPro -= Game1.worldWidthInBlocks;
-            tetrisViewport.cameraPosition = new Vector2(tetrisPro, WaterLayer.Position.Y - 6);
+            tetrisViewport.cameraPosition = new Vector2(tetrisPro, WaterLayer.Position.Y - 4);
 
             world.Step((float)gameTime.ElapsedGameTime.TotalSeconds);
 
