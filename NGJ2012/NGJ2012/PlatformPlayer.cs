@@ -178,15 +178,13 @@ namespace NGJ2012
             if (Math.Abs(currentRunSpeed) > 0.001f)
             {
                 viewDirection = Math.Sign(currentRunSpeed);
-                walkModifier = 1.0f;
-                world.RayCast(new RayCastCallback(RayCastCallback), playerCollider.Position + viewDirection * new Vector2(0.2f, 0), playerCollider.Position + viewDirection * new Vector2(1.0f, 0));
-                currentRunSpeed *= walkModifier;
                 isRunning = true;
             }
             else
                 currentRunSpeed = 0;
 
-            playerCollider.LinearVelocity = new Vector2(currentRunSpeed, playerCollider.LinearVelocity.Y);
+            float runSpeedScaleDueToVertical = 1.0f;// (float)Math.Sqrt(Math.Max(0, maxRunSpeed * maxRunSpeed - playerCollider.LinearVelocity.Y * playerCollider.LinearVelocity.Y);
+            playerCollider.LinearVelocity = new Vector2(currentRunSpeed * runSpeedScaleDueToVertical, playerCollider.LinearVelocity.Y);
 
             // Switch to walking animation
             bool isFloating = Math.Abs(playerCollider.LinearVelocity.Y) > 0.001f;
@@ -206,7 +204,7 @@ namespace NGJ2012
                 {
                     //canJump = false;
                     //world.RayCast(new RayCastCallback(RayCastCallbackJump), playerCollider.Position, playerCollider.Position + new Vector2(0, 1.0f));
-                    canJump = canJumpBecauseOf.Count > 0;
+                    canJump = canJumpBecauseOf.Count > 0 || Math.Abs(playerCollider.LinearVelocity.Y) < 0.01;
                     if (canJump)
                     {
                         jump();

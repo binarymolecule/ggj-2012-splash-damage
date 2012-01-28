@@ -37,7 +37,7 @@ namespace NGJ2012
         Body staticWorldGround;
         Body staticWorldL;
         Body staticWorldR;
-        public const int worldWidthInBlocks = 80;
+        public const int worldWidthInBlocks = 30;
         public const int worldHeightInBlocks = 40;
 
         public const Category COLLISION_GROUP_DEFAULT = Category.Cat1;
@@ -60,13 +60,13 @@ namespace NGJ2012
         public GameStatusLayer StatusLayer { get; protected set; }
         public SpriteBatch SpriteBatch { get { return spriteBatch; } }
 
-        public const float gameBlockSizeTetris = 32.0f;
+        public const float gameBlockSizeTetris = 48;
 
 
         Texture2D background;
         public float gameProgress = 0;
 
-        float gameProgressSpeed = 2;
+        float gameProgressSpeed = 3.5f;
         private GameViewport tetrisViewport;
 
         //Power-Ups:
@@ -195,7 +195,7 @@ namespace NGJ2012
                 SavePlatform.StartRising(5000);
             }
 
-            tetrisViewport.cameraPosition = new Vector2(gameProgress, WaterLayer.Position.Y - 10);
+            tetrisViewport.cameraPosition = new Vector2(gameProgress, WaterLayer.Position.Y - 4);
 
 
             world.Step((float)gameTime.ElapsedGameTime.TotalSeconds);
