@@ -8,8 +8,10 @@ using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
+using System.Diagnostics;
 using FarseerPhysics;
 using FarseerPhysics.Dynamics;
+using FarseerPhysics.Common;
 using FarseerPhysics.Factories;
 using FarseerPhysics.Collision;
 using FarseerPhysics.Collision.Shapes;
@@ -26,6 +28,7 @@ namespace NGJ2012
         World world;
         Body playerCollider;
 
+
         public PlatformPlayer(Game game, World world)
             : base(game)
         {
@@ -37,8 +40,10 @@ namespace NGJ2012
             playerCollider.Friction = 0.0f;
             playerCollider.Restitution = 0.0f;
             playerCollider.BodyType = BodyType.Kinematic;
+            playerCollider.IsSensor = true;
             playerCollider.FixedRotation = true;
             playerCollider.Rotation = 0.0f;
+            playerCollider.CollisionCategories = Category.Cat3;
         }
 
         bool wallL, wallR;
@@ -48,6 +53,11 @@ namespace NGJ2012
         }
         bool PlayerCollidesWithWorld(Fixture fixtureA, Fixture fixtureB, FarseerPhysics.Dynamics.Contacts.Contact contact)
         {
+            Vector2 normal;
+            FixedArray2<Vector2> points;
+            contact.GetWorldManifold(out normal, out points);
+            Debug.Print("Point1:" + points[0].X + "," + points[0].Y);
+            Debug.Print("Point2:" + points[1].X + "," + points[1].Y);
             return true;
         }
 

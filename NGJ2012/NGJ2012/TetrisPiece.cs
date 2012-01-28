@@ -41,7 +41,9 @@ namespace NGJ2012
 
             body.BodyType = BodyType.Dynamic;
             body.Restitution = 0.1f;
-            body.Friction = 1.0f; 
+            body.Friction = 1.0f;
+            body.CollisionCategories = Category.Cat2;
+            body.CollidesWith = Category.Cat2 | Category.Cat3;
         }
     }
 }
