@@ -216,12 +216,12 @@ namespace NGJ2012
             List<TetrisPiece> deactivateUs = new List<TetrisPiece>();
             foreach (TetrisPiece cur in activePieces)
             {
-                if (cur.body.Awake) cur.freezeCountdown = 50;
+                if (cur.body.Awake) cur.freezeCountdown = 10;
                 else {
                     Vector2 center = cur.body.GetWorldPoint(cur.body.LocalCenter);
                     if (center.Y < (Game as Game1).WaterLayer.Position.Y)
                     {
-                        --cur.freezeCountdown;
+                        cur.freezeCountdown -= gameTime.ElapsedGameTime.TotalSeconds;
                         if (cur.freezeCountdown < 0)
                         {
                             cur.body.BodyType = BodyType.Static;

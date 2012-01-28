@@ -20,7 +20,7 @@ namespace NGJ2012
 {
     public class TetrisPiece
     {
-        public int freezeCountdown = 10;
+        public double freezeCountdown = 1000;
         public Body body;
         public List<Fixture> fixtures;
         public Texture2D texture;
