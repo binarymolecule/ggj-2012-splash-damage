@@ -43,9 +43,12 @@ namespace NGJ2012
             gameBlockSize = igameBlockSize;
 
             tetrisShapes.Add(new bool[,] { { true, false }, { true, false }, { true, true } });
+            tetrisShapes.Add(new bool[,] { { false, true }, { false, true }, { true, true } });
             tetrisShapes.Add(new bool[,] { { true, true }, { true, true } });
             tetrisShapes.Add(new bool[,] { { false, true, false }, { true, true, true } });
             tetrisShapes.Add(new bool[,] { { true }, { true }, { true }, { true } });
+            tetrisShapes.Add(new bool[,] { { false, true, true }, { true, true, false } });
+            tetrisShapes.Add(new bool[,] { { true, true, false }, { false, true, true } });
             currentPiece = null;
         }
 
