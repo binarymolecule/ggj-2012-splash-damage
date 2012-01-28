@@ -22,7 +22,7 @@ namespace NGJ2012
         private String p1Text;
         private String textPowerup;
         private Texture2D powerUpTex;
-        private const Vector2 textPosition = new Vector2(20.0f, 20.0f);
+        private Vector2 textPosition = new Vector2(20.0f, 20.0f);
 
         // Assets
         SpriteFont font;
@@ -70,7 +70,7 @@ namespace NGJ2012
 
             //Texts:
             parent.SpriteBatch.DrawString(font, p1Text, textPosition, Color.White);
-            font.MeasureString(tex);
+            //font.MeasureString(tex);
             if (powerUpTex != null) parent.SpriteBatch.Draw(powerUpTex, textPosition, Color.White);
 
             parent.SpriteBatch.End();
