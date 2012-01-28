@@ -27,9 +27,10 @@ namespace NGJ2012
         Game1 game;
         World world;
 
-        private Texture2D texture;
+        private AnimatedSprite animation;
 
-        public Texture2D Texture { get { return texture; } }
+        // Public getter used for displaying items in GUI
+        public Texture2D Texture { get { return animation.CurrentTexture; } }
 
         private Body collisionBody;
         private EPowerUpType powerUpType;
@@ -87,16 +88,23 @@ namespace NGJ2012
 
         protected override void LoadContent()
         {
+            // Create animations for power ups
+            string[] animationNames = new string[] { "PowerUp_Jump", "PowerUp_Life", "PowerUp_Star" };
+            animation = new AnimatedSprite(game, "", animationNames, new Vector2(20, 30));
+            animation.AddAnimation("jump", 0, 0, 125, true);
+            animation.AddAnimation("life", 0, 0, 125, true);
+            animation.AddAnimation("star", 0, 0, 125, true);
+
             switch (this.powerUpType)
             {
                 case EPowerUpType.MegaJump:
-                    this.texture = game.Content.Load<Texture2D>("PowerUp_Jump");
+                    animation.SetAnimation("jump");
                     break;
                 case EPowerUpType.ExtraLife:
-                    this.texture = game.Content.Load<Texture2D>("PowerUp_Life");
+                    animation.SetAnimation("life");
                     break;
                 default:
-                    this.texture = game.Content.Load<Texture2D>("PowerUp_Star");
+                    animation.SetAnimation("star");
                     break;
             }
             
@@ -120,7 +128,8 @@ namespace NGJ2012
             if (this.Visible)
             {
                 this.game.SpriteBatch.Begin();
-                this.game.SpriteBatch.Draw(texture, Vector2.Transform(collisionBody.Position, camera), Color.White);
+                animation.Draw(this.game.SpriteBatch, Vector2.Transform(collisionBody.Position, camera),
+                               platformMode ? Game1.ScalePlatformSprites : Game1.ScaleTetrisSprites);
                 this.game.SpriteBatch.End();
             }
         }

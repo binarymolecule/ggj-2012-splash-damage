@@ -40,6 +40,8 @@ namespace NGJ2012
         OnCollisionEventHandler currentPieceCollide;
         TetrisPieceBatch drawer;
 
+        public float SPAWN_TIME = 1.0f;
+
         // Absolute position in world coordinate system where new pieces are spawned
         public GameViewport viewportToSpawnIn;
 
@@ -55,7 +57,7 @@ namespace NGJ2012
             tetrisShapes.Add(new bool[,] { { false, true, true }, { true, true, false } });
             tetrisShapes.Add(new bool[,] { { true, true, false }, { false, true, true } });
 
-            Game1.Timers.Create(1.0f, false, Spawn);
+            Game1.Timers.Create(SPAWN_TIME, false, Spawn);
         }
 
         bool currentPieceCollision(Fixture fixtureA, Fixture fixtureB, FarseerPhysics.Dynamics.Contacts.Contact contact)
@@ -104,7 +106,7 @@ namespace NGJ2012
             _world.RemoveJoint(currentPieceRotation);
             currentPieceRotation = null;
 
-            Game1.Timers.Create(2.0f, false, Spawn);
+            Game1.Timers.Create(SPAWN_TIME, false, Spawn);
         }
 
         /// <summary>
@@ -148,7 +150,7 @@ namespace NGJ2012
             else if (state.IsKeyDown(Keys.Right)) moveDir.X = +1;
             else moveDir.X = 0;
 
-            if (state.IsKeyDown(Keys.Space)) moveDir.Y = 3;
+            if (state.IsKeyDown(Keys.Down)) moveDir.Y = 3;
             else moveDir.Y = 0.25f;
 
             if (state.IsKeyDown(Keys.M)) paused = true;
@@ -165,7 +167,7 @@ namespace NGJ2012
 
                 if (currentPieceCenter.X < spawnL) currentPiece.body.LinearVelocity = new Vector2(currentPiece.body.LinearVelocity.X + (spawnL-currentPieceCenter.X)*10,currentPiece.body.LinearVelocity.Y);
 
-                if (state.IsKeyDown(Keys.Down))
+                if (state.IsKeyDown(Keys.PageDown))
                 {
                     if (!downDown)
                     {

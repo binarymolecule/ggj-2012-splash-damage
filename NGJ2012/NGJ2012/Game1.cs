@@ -40,6 +40,9 @@ namespace NGJ2012
         public const int worldWidthInBlocks = 24;
         public const int worldHeightInBlocks = 20;
 
+        public const float ScalePlatformSprites = 1.0f;
+        public const float ScaleTetrisSprites = 0.25f;
+
         public const Category COLLISION_GROUP_DEFAULT = Category.Cat1;
         public const Category COLLISION_GROUP_TETRIS_BLOCKS = Category.Cat2;
         public const Category COLLISION_GROUP_STATIC_OBJECTS = Category.Cat3;
@@ -207,18 +210,12 @@ namespace NGJ2012
             gameProgress += gameProgressSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
             if (gameProgress > Game1.worldWidthInBlocks) gameProgress -= Game1.worldWidthInBlocks;
             
-            platformViewport.cameraPosition = new Vector2(gameProgress, 0);
+            platformViewport.cameraPosition = new Vector2(gameProgress, platform.playerCollider.Position.Y);
 
             var camDiff = MathStuff.WorldDistance(platform.playerCollider.Position.X, platformViewport.cameraPosition.X, worldWidthInBlocks);
             if (camDiff > 0 && camDiff < 10)
             {
                 platformViewport.cameraPosition.X -= MathHelper.Clamp(camDiff, 0, 3);
-
-                //if (platformViewport.cameraPosition.X > worldWidthInBlocks)
-                //    platformViewport.cameraPosition.X -= worldWidthInBlocks;
-
-                //if (platformViewport.cameraPosition.X < worldWidthInBlocks)
-                //    platformViewport.cameraPosition.X += worldWidthInBlocks;
             }
 
             float tetrisPro = gameProgress + tetrisProgressAdd;
