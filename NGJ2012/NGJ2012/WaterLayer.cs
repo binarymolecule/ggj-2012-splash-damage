@@ -35,7 +35,7 @@ namespace NGJ2012
         public WaterLayer(Game game) : base(game)
         {
             parent = (Game1)game;
-            screenRect = new Rectangle(0, 0, parent.WorldWidthInBlocks * 64, 512);
+            screenRect = new Rectangle(0, 0, parent.WorldWidthInBlocks * 96, parent.WorldHeightInBlocks * 96);
 
             // Create physical objects
             /*
@@ -44,7 +44,7 @@ namespace NGJ2012
             waterBody.BodyType = BodyType.Static;
             waterBody.Friction = float.MaxValue;
             */
-            pos = new Vector2(0, parent.WorldHeightInBlocks);
+            pos = new Vector2(0, 2);
         }
 
         protected override void LoadContent()
