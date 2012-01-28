@@ -98,12 +98,8 @@ namespace NGJ2012
         TetrisPieceBatch drawer;
         protected override void LoadContent()
         {
-<<<<<<< HEAD
-            drawer = new TetrisPieceBatch(GraphicsDevice);
-            playerTexture = Game.Content.Load<Texture2D>("jumpAndRunPlayer");
-=======
             drawer = new TetrisPieceBatch(GraphicsDevice, Game.Content);
->>>>>>> 76adf8a8f6503a5d95475b2cf3acc091753d83cd
+            playerTexture = Game.Content.Load<Texture2D>("jumpAndRunPlayer");
             base.LoadContent();
         }
 
