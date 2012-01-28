@@ -75,7 +75,7 @@ namespace NGJ2012
         RenderTarget2D tetrisModeLeft;
         RenderTarget2D tetrisModeRight;
 
-        float gameProgress = 0;
+        public float gameProgress = 0;
         float gameProgressSpeed = 1;
         float tetrisProgressAdd = 10;
         private GameViewport tetrisViewport;
