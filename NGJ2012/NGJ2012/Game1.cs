@@ -58,6 +58,9 @@ namespace NGJ2012
             staticWorldGround.Friction = float.MaxValue;
             staticWorldL.Friction = float.MaxValue;
             staticWorldR.Friction = float.MaxValue;
+            staticWorldGround.CollisionCategories = Category.Cat3;
+            staticWorldL.CollisionCategories = Category.Cat3;
+            staticWorldR.CollisionCategories = Category.Cat3;
 
             tetris = new TetrisPlayer(this, world, gameBlockSize);
             Components.Add(tetris);
