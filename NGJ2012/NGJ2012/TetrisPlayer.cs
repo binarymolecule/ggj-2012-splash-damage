@@ -293,7 +293,7 @@ namespace NGJ2012
                 if (!activePieces.Contains(piece))
                 {
                     piece.body.BodyType = BodyType.Dynamic;
-                    activePieces.Remove(piece);
+                    activePieces.Add(piece);
                 }
             }
         }
