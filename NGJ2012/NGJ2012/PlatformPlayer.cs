@@ -28,6 +28,11 @@ namespace NGJ2012
         World world;
         public Body playerCollider;
 
+        /**
+         * Maps the powerup type to the number of collected powerups of this type.
+         */
+        Dictionary<PowerUp.EPowerUpType, int> collectedPowerUps;
+
 
         public PlatformPlayer(Game game, World world)
             : base(game)
@@ -43,7 +48,7 @@ namespace NGJ2012
             playerCollider.FixedRotation = true;
             playerCollider.Rotation = 0.0f;
             playerCollider.CollisionCategories = Game1.COLLISION_GROUP_DEFAULT;
-            playerCollider.CollidesWith = Game1.COLLISION_GROUP_STATIC_OBJECTS | Game1.COLLISION_GROUP_TETRIS_BLOCKS;
+            playerCollider.CollidesWith = Game1.COLLISION_GROUP_DEFAULT | Game1.COLLISION_GROUP_STATIC_OBJECTS | Game1.COLLISION_GROUP_TETRIS_BLOCKS;
         }
 
         List<Fixture> canJumpBecauseOf = new List<Fixture>();
@@ -143,6 +148,17 @@ namespace NGJ2012
         {
             drawer.cameraMatrix = camera;
             drawer.DrawBody(playerCollider);
+        }
+
+        public void addPowerUp(PowerUp.EPowerUpType type)
+        {
+            int amount;
+            if (this.collectedPowerUps.TryGetValue(type, out amount))
+            {
+                this.collectedPowerUps.Add(type, amount + 1);
+            } else {
+                this.collectedPowerUps.Add(type, 1);
+            }
         }
     }
 }

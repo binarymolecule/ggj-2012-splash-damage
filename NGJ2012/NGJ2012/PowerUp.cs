@@ -20,37 +20,54 @@ using FarseerPhysics.Dynamics.Contacts;
 
 namespace NGJ2012
 {
-    class PowerUp : Microsoft.Xna.Framework.DrawableGameComponent
+    public class PowerUp : DrawableGameComponentExtended
     {
-        Game game;
+        Game1 game;
         World world;
 
         private Texture2D texture;
         private Body collisionBody;
+        private EPowerUpType powerUpType;
 
+        public enum EPowerUpType
+        {
+            MegaJump, ExtraLive
+        }
 
-        public PowerUp(Game game, World world) : base(game)
+        public PowerUp(Game1 game, World world, EPowerUpType powerUpType, Vector2 position)
+            : base(game)
         {
             this.game = game;
             this.world = world;
+            this.powerUpType = powerUpType;
 
-            collisionBody = BodyFactory.CreateCapsule(world, 1.0f, 0.2f, 1.0f);
-            collisionBody.Position = new Vector2(20, 20);
+            collisionBody = BodyFactory.CreateCircle(world, 0.5f, 1.0f);
+            collisionBody.Position = position;
             collisionBody.OnCollision += new OnCollisionEventHandler(onPlayerCollision);
-            collisionBody.Friction = 0.0f;
-            collisionBody.Restitution = 0.0f;
-            collisionBody.BodyType = BodyType.Static;
+            collisionBody.BodyType = BodyType.Kinematic;
+            collisionBody.CollisionCategories = Category.Cat1;
+            collisionBody.CollidesWith = Category.Cat1;
         }
 
         bool onPlayerCollision(Fixture fixtureA, Fixture fixtureB, Contact contact)
         {
-            return true;
+            switch (this.powerUpType)
+            {
+                case EPowerUpType.MegaJump:
+                    break;
+                case EPowerUpType.ExtraLive:
+                    break;
+            }
+
+            game.Components.Remove(this);
+
+            return false;
         }            
 
         protected override void LoadContent()
         {
             this.texture = game.Content.Load<Texture2D>("Star");
-
+            
             base.LoadContent();
         }
 
@@ -59,9 +76,11 @@ namespace NGJ2012
             base.Update(gameTime);
         }
 
-        public override void Draw(GameTime gameTime)
+        public override void DrawGameWorldOnce(Matrix camera, bool platformMode)
         {
-            base.Draw(gameTime);
+            this.game.SpriteBatch.Begin();
+            this.game.SpriteBatch.Draw(texture, Vector2.Transform(collisionBody.Position, camera), Color.White);
+            this.game.SpriteBatch.End();
         }
 
         
