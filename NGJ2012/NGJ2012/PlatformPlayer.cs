@@ -28,6 +28,7 @@ namespace NGJ2012
         World world;
         Body playerCollider;
 
+
         public PlatformPlayer(Game game, World world)
             : base(game)
         {

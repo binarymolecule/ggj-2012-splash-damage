@@ -24,15 +24,22 @@ namespace NGJ2012
         SpriteBatch spriteBatch;
         World world;
         TetrisPlayer tetris;
-        jumpAndRunPlayerFigure jumpAndRunPlayer;
         TetrisPieceBatch tetrisBatch;
 
         float gameBlockSize = 32.0f;
-        int worldWidthInBlocks = 32;
+        int worldWidthInBlocks = 24;
         int worldHeightInBlocks = 20;
         Body staticWorldGround;
         Body staticWorldL;
         Body staticWorldR;
+
+        // Player related components
+        jumpAndRunPlayerFigure jumpAndRunPlayer;
+
+        // Public access to world
+        public World World { get { return world; } }
+        public int WorldWidthInBlocks { get { return worldWidthInBlocks; } }
+        public int WorldHeightInBlocks { get { return worldHeightInBlocks; } }
 
         // Other level components
         public WaterLayer WaterLayer;
