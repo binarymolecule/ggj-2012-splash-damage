@@ -29,7 +29,7 @@ namespace NGJ2012
         {
             GraphicsDevice = iGraphicsDevice;
             _lineVertices = new VertexPositionColor[1024];
-            _quadVertices = new VertexPositionColorTexture[1024];
+            _quadVertices = new VertexPositionTexture[1024];
 
             // set up a new basic effect, and enable vertex colors.
             _basicEffect = new BasicEffect(GraphicsDevice);
