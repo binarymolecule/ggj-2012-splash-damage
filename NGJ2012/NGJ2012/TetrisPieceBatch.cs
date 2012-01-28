@@ -29,6 +29,7 @@ namespace NGJ2012
         {
             GraphicsDevice = iGraphicsDevice;
             _lineVertices = new VertexPositionColor[1024];
+            _quadVertices = new VertexPositionColorTexture[1024];
 
             // set up a new basic effect, and enable vertex colors.
             _basicEffect = new BasicEffect(GraphicsDevice);
@@ -40,7 +41,8 @@ namespace NGJ2012
         private BasicEffect _basicEffect;
         private VertexPositionColor[] _lineVertices;
         private int _lineVertsCount;
-
+        private VertexPositionTexture[] _quadVertices;
+        private int _quadVertsCount;
 
         public void DrawBody(Body bod)
         {
@@ -77,11 +79,38 @@ namespace NGJ2012
             }
         }
 
+        private void DrawQuadShape(Shape shape, Color color)
+        {
+            const float textureScale = 1.0f / 4.0f;
+            if (shape.ShapeType == ShapeType.Polygon)
+            {
+                PolygonShape loop = (PolygonShape)shape;
+                for (int i = 0; i < loop.Vertices.Count-1; ++i)
+                {
+                    if (_quadVertsCount + 3 >= _quadVertices.Length)
+                        Flush();
+                    _quadVertices[_quadVertsCount].TextureCoordinate = loop.Vertices[0] * textureScale;
+                    _quadVertices[_quadVertsCount++].Position = new Vector3(loop.Vertices[0], 0f);
+                    _quadVertices[_quadVertsCount].TextureCoordinate = loop.Vertices[i] * textureScale;
+                    _quadVertices[_quadVertsCount++].Position = new Vector3(loop.Vertices[i], 0f);
+                    _quadVertices[_quadVertsCount].TextureCoordinate = loop.Vertices[i + 1] * textureScale;
+                    _quadVertices[_quadVertsCount++].Position = new Vector3(loop.Vertices[i + 1], 0f);
+                }
+            }
+        }
+
         private void Flush()
         {
-            if (_lineVertsCount < 2) return;
-            GraphicsDevice.DrawUserPrimitives(PrimitiveType.LineList, _lineVertices, 0, _lineVertsCount / 2);
-            _lineVertsCount = 0;
+            if (_lineVertsCount >= 2)
+            {
+                GraphicsDevice.DrawUserPrimitives(PrimitiveType.LineList, _lineVertices, 0, _lineVertsCount / 2);
+                _lineVertsCount = 0;
+            }
+            if (_quadVertsCount >= 2)
+            {
+                GraphicsDevice.DrawUserPrimitives(PrimitiveType.TriangleList, _quadVertices, 0, _quadVertsCount / 3);
+                _quadVertsCount = 0;
+            }
         }
     }
 }
