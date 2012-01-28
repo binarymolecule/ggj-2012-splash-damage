@@ -66,7 +66,7 @@ namespace NGJ2012
             playerCollider = BodyFactory.CreateCapsule(world, 1.0f, 0.2f, 0.001f);
             playerCollider.Position = new Vector2(2, -2);
             playerCollider.OnCollision += new OnCollisionEventHandler(PlayerCollidesWithWorld);
-            playerCollider.OnSeparation += new OnSeparationEventHandler(PlaterSeperatesFromWorld);
+            playerCollider.OnSeparation += new OnSeparationEventHandler(PlayerSeparatesFromWorld);
             playerCollider.Friction = 0.0f;
             playerCollider.Restitution = 0.0f;
             playerCollider.BodyType = BodyType.Dynamic;
