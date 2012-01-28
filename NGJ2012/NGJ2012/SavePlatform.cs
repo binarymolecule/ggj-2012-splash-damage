@@ -25,25 +25,31 @@ namespace NGJ2012
 
         // Physical objects
         Body platformBody;
+        Vector2 offsetToWater;
+        public float WaterSpeed = 0.1f; // rise speed in blocks per second
 
         // Assets
         Texture2D platformTexture;
+        TetrisPieceBatch drawer;
 
         public SavePlatform(Game game) : base(game)
         {
             parent = (Game1)game;
-            screenRect = new Rectangle(0, 0, 0, 0);
+            screenRect = new Rectangle(0, 0, 640, 64);
 
             // Create physical objects
-            platformBody = BodyFactory.CreateRectangle(parent.World, 10, 1, 1.0f, new Vector2(0, 1));
-            platformBody.BodyType = BodyType.Static;
-            platformBody.Friction = 100.0f;
-            platformBody.CollisionCategories = Category.Cat3;
+            offsetToWater = new Vector2(5, 0);
+            platformBody = BodyFactory.CreateRectangle(parent.World, 8, 1, 1.0f, parent.WaterLayer.Position + offsetToWater);
+            platformBody.BodyType = BodyType.Kinematic;
+            platformBody.Friction = float.MaxValue;
+            platformBody.CollisionCategories = Game1.COLLISION_GROUP_STATIC_OBJECTS;
+            platformBody.CollidesWith = Game1.COLLISION_GROUP_TETRIS_BLOCKS | Game1.COLLISION_GROUP_DEFAULT;
         }
 
         protected override void LoadContent()
         {
             platformTexture = parent.Content.Load<Texture2D>("graphics/level/platform");
+            drawer = new TetrisPieceBatch(GraphicsDevice);
         }
 
         protected override void UnloadContent()
@@ -57,10 +63,9 @@ namespace NGJ2012
 
         public override void Update(GameTime gameTime)
         {
-            // TODO Compute screen rect from position!
-            screenRect.X = (int)(platformBody.GetWorldPoint(Vector2.Zero).X * 64);
-            screenRect.Y = (int)(platformBody.GetWorldPoint(Vector2.Zero).Y * 64);
-            
+            // Update position of platform linked to water
+            platformBody.LinearVelocity = new Vector2(0, -WaterSpeed);
+
             base.Update(gameTime);
         }
 
@@ -70,9 +75,17 @@ namespace NGJ2012
 
         public override void DrawGameWorldOnce(Matrix camera, bool platformMode)
         {
+            /*
+            Vector2 screenPos = Vector2.Transform(platformBody.Position, camera);
+            screenRect.X = (int)screenPos.X;
+            screenRect.Y = (int)screenPos.Y;
             parent.SpriteBatch.Begin();
             parent.SpriteBatch.Draw(platformTexture, screenRect, Color.White);
             parent.SpriteBatch.End();
+            */
+
+            drawer.cameraMatrix = camera;
+            drawer.DrawBody(platformBody);
         }
     }
 }

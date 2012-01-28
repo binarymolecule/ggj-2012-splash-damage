@@ -17,20 +17,23 @@ namespace NGJ2012
     public class GameStatusLayer : Microsoft.Xna.Framework.DrawableGameComponent
     {
         Game1 parent;
-        Vector2 pos;
+        Rectangle screenRectangle, playerRectangle;
 
         // Assets
         SpriteFont font;
+        Texture2D tex;
 
         public GameStatusLayer(Game game) : base(game)
         {
             parent = (Game1)game;
-            pos = Vector2.Zero;
+            screenRectangle = new Rectangle(Game1.platformModeWidth - 8, 0, 16, 720);
+            playerRectangle = new Rectangle(screenRectangle.X - 8, 0, 32, 32);
         }
 
         protected override void LoadContent()
         {
             font = parent.Content.Load<SpriteFont>("fonts/guifont");
+            tex = parent.Content.Load<Texture2D>("graphics/gui/gui");
         }
 
         protected override void UnloadContent()
@@ -44,13 +47,17 @@ namespace NGJ2012
 
         public override void Update(GameTime gameTime)
         {
+            playerRectangle.Y = (int)(700 + (parent.PlatformPlayer.cameraPosition.Y / parent.WorldHeightInBlocks) * 680); 
+
             base.Update(gameTime);
         }
 
         public override void Draw(GameTime gameTime)
         {
             parent.SpriteBatch.Begin();
-            parent.SpriteBatch.DrawString(font, "Test", pos, Color.White);
+            //parent.SpriteBatch.DrawString(font, "Test", Vector2.Zero, Color.White);
+            parent.SpriteBatch.Draw(tex, screenRectangle, Color.White);
+            parent.SpriteBatch.Draw(tex, playerRectangle, Color.Red);
             parent.SpriteBatch.End();
         }
     }

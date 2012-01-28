@@ -63,8 +63,35 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Star.png">
-      <Name>Star</Name>
+    <Compile Include="PowerUp_Star.png">
+      <Name>PowerUp_Star</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="graphics\level\platform.png">
+      <Name>platform</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="PowerUp_Jump.png">
+      <Name>PowerUp_Jump</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="PowerUp_Life.png">
+      <Name>PowerUp_Life</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Compile Include="graphics\gui\gui.png">
+      <Name>gui</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>

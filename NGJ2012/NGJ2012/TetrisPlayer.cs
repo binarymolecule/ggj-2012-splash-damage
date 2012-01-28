@@ -35,8 +35,10 @@ namespace NGJ2012
         OnCollisionEventHandler currentPieceCollide;
         TetrisPieceBatch drawer;
 
-        public TetrisPlayer(Game game, World world)
-            : base(game)
+        // Absolute position in world coordinate system where new pieces are spawned
+        public Vector2 SpawnPosition = new Vector2(25, -25);
+
+        public TetrisPlayer(Game game, World world) : base(game)
         {
             _world = world;
 
