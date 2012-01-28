@@ -88,8 +88,6 @@ namespace NGJ2012
 
         public void Update(int msec)
         {
-            Debug.WriteLine("Current frame: {0}", currentFrame);
-
             currentMsec += msec;
             if (currentMsec >= currentAnimation.MsPerFrame)
             {
