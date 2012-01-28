@@ -13,6 +13,7 @@ using FarseerPhysics.Dynamics;
 using FarseerPhysics.Factories;
 using FarseerPhysics.Collision;
 using FarseerPhysics.Collision.Shapes;
+using FarseerPhysics.Common;
 
 
 namespace NGJ2012
@@ -91,6 +92,33 @@ namespace NGJ2012
             Flush();
         }
 
+        public void DrawTetrisPiece(TetrisPiece piece)
+        {
+            Matrix mat = Matrix.CreateRotationZ(piece.body.Rotation) * Matrix.CreateTranslation(new Vector3(piece.body.Position, 0.0f)) * cameraMatrix;
+
+            GraphicsDevice.SamplerStates[0] = SamplerState.AnisotropicClamp;
+            GraphicsDevice.BlendState = BlendState.AlphaBlend;
+
+            effect.Parameters["Projection"].SetValue(Matrix.CreateOrthographicOffCenter(0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height, 0, 0, 1));
+            effect.Parameters["View"].SetValue(mat);
+            effect.Parameters["World"].SetValue(Matrix.Identity);
+            effect.Parameters["BasicTexture"].SetValue(piece.texture);
+            effect.CurrentTechnique.Passes[0].Apply();
+
+            for (int y = 0; y < piece.shape.GetLength(0); y++)
+            {
+                for (int x = 0; x < piece.shape.GetLength(1); x++)
+                {
+                    if (!piece.shape[y, x]) continue;
+                    Vertices v = new Vertices(new Vector2[] { new Vector2(x + 0, y + 0), new Vector2(x + 1, y + 0), new Vector2(x + 1, y + 1), new Vector2(x + 0, y + 1) });
+                    DrawPolygon(Color.White, 1.0f / 4.0f, v);
+                }
+            }
+
+            Flush();
+        }
+
+
         private void DrawLineShape(Shape shape, Color color)
         {
             if (shape.ShapeType == ShapeType.Polygon)
@@ -113,21 +141,27 @@ namespace NGJ2012
             if (shape.ShapeType == ShapeType.Polygon)
             {
                 PolygonShape loop = (PolygonShape)shape;
-                for (int i = 0; i < loop.Vertices.Count-1; ++i)
-                {
-                    if (_quadVertsCount + 3 >= _quadVertices.Length)
-                        Flush();
-                    _quadVertices[_quadVertsCount].Color = color;
-                    _quadVertices[_quadVertsCount].TextureCoordinate = loop.Vertices[0] * textureScale;
-                    _quadVertices[_quadVertsCount++].Position = new Vector3(loop.Vertices[0], 0f);
-                    _quadVertices[_quadVertsCount].Color = color;
-                    _quadVertices[_quadVertsCount].TextureCoordinate = loop.Vertices[i] * textureScale;
-                    _quadVertices[_quadVertsCount++].Position = new Vector3(loop.Vertices[i], 0f);
-                    _quadVertices[_quadVertsCount].Color = color;
-                    _quadVertices[_quadVertsCount].TextureCoordinate = loop.Vertices[i + 1] * textureScale;
-                    _quadVertices[_quadVertsCount++].Position = new Vector3(loop.Vertices[i + 1], 0f);
-                }
+                color = DrawPolygon(color, textureScale, loop.Vertices);
             }
+        }
+
+        private Color DrawPolygon(Color color, float textureScale, Vertices vertices)
+        {
+            for (int i = 0; i < vertices.Count - 1; ++i)
+            {
+                if (_quadVertsCount + 3 >= _quadVertices.Length)
+                    Flush();
+                _quadVertices[_quadVertsCount].Color = color;
+                _quadVertices[_quadVertsCount].TextureCoordinate = vertices[0] * textureScale;
+                _quadVertices[_quadVertsCount++].Position = new Vector3(vertices[0], 0f);
+                _quadVertices[_quadVertsCount].Color = color;
+                _quadVertices[_quadVertsCount].TextureCoordinate = vertices[i] * textureScale;
+                _quadVertices[_quadVertsCount++].Position = new Vector3(vertices[i], 0f);
+                _quadVertices[_quadVertsCount].Color = color;
+                _quadVertices[_quadVertsCount].TextureCoordinate = vertices[i + 1] * textureScale;
+                _quadVertices[_quadVertsCount++].Position = new Vector3(vertices[i + 1], 0f);
+            }
+            return color;
         }
 
         private void Flush()
