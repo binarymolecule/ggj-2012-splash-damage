@@ -113,6 +113,7 @@
   <ItemGroup>
     <Compile Include="DrawableGameComponentExtended.cs" />
     <Compile Include="GameViewport.cs" />
+    <Compile Include="MathStuff.cs" />
     <Compile Include="PlatformPlayer.cs" />
     <Compile Include="gui\GameStatusLayer.cs" />
     <Compile Include="PowerUp.cs" />

@@ -203,12 +203,8 @@ namespace NGJ2012
 
         public override void DrawGameWorldOnce(Matrix camera, bool platformMode)
         {
-            Vector2 screenPos = Vector2.Transform(playerCollider.Position, camera);
-            Rectangle screenRect = new Rectangle((int)screenPos.X, (int)screenPos.Y, 64, 64);
-#if DEBUG
             drawer.cameraMatrix = camera;
             drawer.DrawBody(playerCollider);
-#endif
         }
 
         public void addPowerUp(PowerUp powerup)

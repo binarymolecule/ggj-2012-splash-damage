@@ -71,7 +71,7 @@ namespace NGJ2012
         RenderTarget2D tetrisModeRight;
 
         float gameProgress = 0;
-        float gameProgressSpeed = 2;
+        float gameProgressSpeed = 1;
         float tetrisProgressAdd = 10;
         private GameViewport tetrisViewport;
         private GameViewport platformViewport;
@@ -201,9 +201,24 @@ namespace NGJ2012
                 manualPosition.Y += 1.0f;
 #endif
 
+            // update game progress
             gameProgress += gameProgressSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
             if (gameProgress > Game1.worldWidthInBlocks) gameProgress -= Game1.worldWidthInBlocks;
-            platformViewport.cameraPosition = new Vector2(gameProgress, platform.cameraPosition.Y);
+            
+            platformViewport.cameraPosition = new Vector2(gameProgress, 0);
+
+            var camDiff = MathStuff.WorldDistance(platform.playerCollider.Position.X, platformViewport.cameraPosition.X, worldWidthInBlocks);
+            if (camDiff > 0 && camDiff < 10)
+            {
+                platformViewport.cameraPosition.X -= MathHelper.Clamp(camDiff, 0, 3);
+
+                //if (platformViewport.cameraPosition.X > worldWidthInBlocks)
+                //    platformViewport.cameraPosition.X -= worldWidthInBlocks;
+
+                //if (platformViewport.cameraPosition.X < worldWidthInBlocks)
+                //    platformViewport.cameraPosition.X += worldWidthInBlocks;
+            }
+
             float tetrisPro = gameProgress + tetrisProgressAdd;
             if (tetrisPro > Game1.worldWidthInBlocks) tetrisPro -= Game1.worldWidthInBlocks;
             tetrisViewport.cameraPosition = new Vector2(tetrisPro, platform.cameraPosition.Y);
