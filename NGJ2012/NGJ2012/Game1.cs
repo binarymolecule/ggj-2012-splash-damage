@@ -63,8 +63,8 @@ namespace NGJ2012
         public const float gameBlockSizePlatform = 96.0f;
         public const float gameBlockSizeTetris = 32.0f;
 
-        const int platformModeWidth = 1000;
-        const int tetrisModeWidth = 1280 - platformModeWidth;
+        public const int platformModeWidth = 1000;
+        public const int tetrisModeWidth = 1280 - platformModeWidth;
 
         RenderTarget2D platformModeLeft;
         RenderTarget2D platformModeRight;
@@ -111,7 +111,7 @@ namespace NGJ2012
 
             // Add GUI components
             StatusLayer = new GameStatusLayer(this);
-            //Components.Add(StatusLayer);
+            Components.Add(StatusLayer);
         }
 
         /// <summary>
