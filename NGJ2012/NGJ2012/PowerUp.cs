@@ -20,7 +20,7 @@ using FarseerPhysics.Dynamics.Contacts;
 
 namespace NGJ2012
 {
-    class PowerUp : Microsoft.Xna.Framework.DrawableGameComponent
+    public class PowerUp : Microsoft.Xna.Framework.DrawableGameComponent
     {
         Game1 game;
         World world;
@@ -42,15 +42,23 @@ namespace NGJ2012
             this.powerUpType = powerUpType;
 
             collisionBody = BodyFactory.CreateCapsule(world, 1.0f, 0.2f, 1.0f);
-            collisionBody.Position = new Vector2(20, 20);
+            collisionBody.Position = new Vector2(200, 20);
             collisionBody.OnCollision += new OnCollisionEventHandler(onPlayerCollision);
             collisionBody.Friction = 0.0f;
             collisionBody.Restitution = 0.0f;
             collisionBody.BodyType = BodyType.Static;
+            collisionBody.CollisionCategories = Category.Cat3;
         }
 
         bool onPlayerCollision(Fixture fixtureA, Fixture fixtureB, Contact contact)
         {
+            Debug.Print("Coll with PU");
+            switch (this.powerUpType)
+            {
+                case EPowerUpType.MegaJump:
+                    break;
+                default:
+            }
             return true;
         }            
 

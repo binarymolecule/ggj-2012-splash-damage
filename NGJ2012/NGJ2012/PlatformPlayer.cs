@@ -28,6 +28,11 @@ namespace NGJ2012
         World world;
         Body playerCollider;
 
+        /**
+         * Maps the powerup type to the number of collected powerups of this type.
+         */
+        Dictionary<PowerUp.EPowerUpType, int> collectedPowerUps;
+
 
         public PlatformPlayer(Game game, World world)
             : base(game)
@@ -102,6 +107,17 @@ namespace NGJ2012
         {
             drawer.DrawBody(playerCollider);
             base.Draw(gameTime);
+        }
+
+        public void addPowerUp(PowerUp.EPowerUpType type)
+        {
+            int amount;
+            if (this.collectedPowerUps.TryGetValue(type, out amount))
+            {
+                this.collectedPowerUps.Add(type, amount + 1);
+            } else {
+                this.collectedPowerUps.Add(type, 1);
+            }
         }
     }
 }

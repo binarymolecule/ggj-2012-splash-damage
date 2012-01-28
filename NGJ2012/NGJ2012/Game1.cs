@@ -69,12 +69,13 @@ namespace NGJ2012
             tetris = new TetrisPlayer(this, world, gameBlockSize);
             Components.Add(tetris);
 
-            jumpAndRunPlayer = new jumpAndRunPlayerFigure(this, world, this.spriteBatch);
             Components.Add(new PlatformPlayer(this, world));
-            this.Components.Add(jumpAndRunPlayer);
             // Create other level components
             WaterLayer = new WaterLayer(this);
             Components.Add(WaterLayer);
+
+            //TODO: Create PowerUps dynamically
+            Components.Add(new PowerUp(this, world, PowerUp.EPowerUpType.MegaJump));
 
             // Add GUI components
             StatusLayer = new GameStatusLayer(this);
