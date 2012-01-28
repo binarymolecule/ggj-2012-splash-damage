@@ -30,8 +30,6 @@ namespace NGJ2012
         private const float deacceleration = 256.0f;
         private const float maxRunSpeed = 8.0f;
 
-        private const int JUMP_COOLDOWN_TIME = 500;  // wait 500 msec until next jump
-
         Game1 parent;
 
         World world;
@@ -44,7 +42,7 @@ namespace NGJ2012
         {
             get { return numberOfLifes; }
         }
-        private int jumpCooldownTime = 0;
+        private bool didFallSinceLastJump = true;
         private float jumpForce = 0.5f;
         private const float BYTE_FORCE = 500.0f;
         private PowerUp currentlySelectedPowerUp;
@@ -68,7 +66,7 @@ namespace NGJ2012
             playerCollider = BodyFactory.CreateCapsule(world, 1.0f, 0.2f, 0.001f);
             playerCollider.Position = new Vector2(2, -2);
             playerCollider.OnCollision += new OnCollisionEventHandler(PlayerCollidesWithWorld);
-            //playerCollider.OnSeparation += new OnSeparationEventHandler(PlayerSeparatesFromWorld);
+            playerCollider.OnSeparation += new OnSeparationEventHandler(PlayerSeparatesFromWorld);
             playerCollider.Friction = 0.0f;
             playerCollider.Restitution = 0.0f;
             playerCollider.BodyType = BodyType.Dynamic;
@@ -80,39 +78,42 @@ namespace NGJ2012
             numberOfLifes = INITIAL_NUMBER_OF_LIFES;
         }
 
-        /*
         List<Fixture> canJumpBecauseOf = new List<Fixture>();
 
         void PlayerSeparatesFromWorld(Fixture fixtureA, Fixture fixtureB)
         {
-            canJumpBecauseOf.Remove(fixtureB);
+            while(canJumpBecauseOf.Contains(fixtureB))
+               canJumpBecauseOf.Remove(fixtureB);
         }
-        */
-
         bool PlayerCollidesWithWorld(Fixture fixtureA, Fixture fixtureB, FarseerPhysics.Dynamics.Contacts.Contact contact)
         {
+            // Try to trigger save platform if player collides with it
+            if (fixtureB.CollisionCategories == Game1.COLLISION_GROUP_STATIC_OBJECTS &&
+                fixtureB.Body == parent.SavePlatform.Body)
+            {
+                parent.SavePlatform.Trigger();
+                return true;
+            }
             if ((fixtureB.CollisionCategories & (Game1.COLLISION_GROUP_TETRIS_BLOCKS | Game1.COLLISION_GROUP_STATIC_OBJECTS)) == 0) return true;
-            /*
+
             Vector2 normal;
             FixedArray2<Vector2> points;
             contact.GetWorldManifold(out normal, out points);
             Debug.Print("Point1:" + points[0].X + "," + points[0].Y);
             Debug.Print("Point2:" + points[1].X + "," + points[1].Y);
 
-            if (normal.Y < 0 && playerCollider.LinearVelocity.Y > -0.01f)
+            if (normal.Y < 0)
             {
                 canJumpBecauseOf.Add(fixtureB);
             }
-            */
+
             return true;
         }
-        
-        protected bool canJump()
-        {
-            //Debug.WriteLine("Velocity: X={0} , Y={1}", playerCollider.LinearVelocity.X, playerCollider.LinearVelocity.Y);
-            return Math.Abs(playerCollider.LinearVelocity.Y) < 0.015f;
-        }
 
+        /// <summary>
+        /// Allows the game component to perform any initialization it needs to before starting
+        /// to run.  This is where it can query for any required services and load content.
+        /// </summary>
         public override void Initialize()
         {
             base.Initialize();
@@ -141,9 +142,21 @@ namespace NGJ2012
         {
             if (fixture.Body == playerCollider)
                 return -1;
-            if ((fixture.CollisionCategories & Game1.COLLISION_GROUP_LEVEL_SEPARATOR) != 0) 
+            if ((fixture.CollisionCategories & Game1.COLLISION_GROUP_LEVEL_SEPARATOR) != 0)
                 return 1;
             walkModifier = fraction;
+            return 0;
+        }
+        bool canJump = false;
+        float RayCastCallbackJump(Fixture fixture, Vector2 point, Vector2 normal, float fraction)
+        {
+            if (fixture.Body == playerCollider)
+                return -1;
+            if ((fixture.CollisionCategories & (Game1.COLLISION_GROUP_TETRIS_BLOCKS|Game1.COLLISION_GROUP_STATIC_OBJECTS)) == 0)
+                return 1;
+            if (normal.Y > 0.01) 
+                return 1;
+            canJump = true;
             return 0;
         }
         
@@ -157,9 +170,11 @@ namespace NGJ2012
             int msec = gameTime.ElapsedGameTime.Milliseconds;
 
             KeyboardState state = Keyboard.GetState();
-            float move = 0;            
+            GamePadState gstate = GamePad.GetState(PlayerIndex.One);
+            float move = 0;
             if (state.IsKeyDown(Keys.A)) move = -acceleration;
             if (state.IsKeyDown(Keys.D)) move = acceleration;
+            if (gstate.IsConnected) move = gstate.ThumbSticks.Left.X * Math.Abs(gstate.ThumbSticks.Left.X) * acceleration;
 
             currentRunSpeed *= Math.Max(0.0f, 1.0f - deacceleration*(float)gameTime.ElapsedGameTime.TotalSeconds);
             currentRunSpeed += move * (float)gameTime.ElapsedGameTime.TotalSeconds;
@@ -171,7 +186,7 @@ namespace NGJ2012
             {
                 viewDirection = Math.Sign(currentRunSpeed);
                 walkModifier = 1.0f;
-                world.RayCast(new RayCastCallback(RayCastCallback), playerCollider.Position + viewDirection * new Vector2(0.2f, 0), playerCollider.Position + viewDirection * new Vector2(0.4f, 0));
+                world.RayCast(new RayCastCallback(RayCastCallback), playerCollider.Position + viewDirection * new Vector2(0.2f, 0), playerCollider.Position + viewDirection * new Vector2(1.0f, 0));
                 currentRunSpeed *= walkModifier;
                 isRunning = true;
             }
@@ -181,7 +196,7 @@ namespace NGJ2012
             playerCollider.LinearVelocity = new Vector2(currentRunSpeed, playerCollider.LinearVelocity.Y);
 
             // Switch to walking animation
-            bool isFloating = !canJump();
+            bool isFloating = Math.Abs(playerCollider.LinearVelocity.Y) > 0.001f;
             if (isFloating)
             {
                 if (playerCollider.LinearVelocity.Y > 0)
@@ -190,14 +205,20 @@ namespace NGJ2012
             else if (isRunning)
                 playerAnimation.SetAnimation(animID_Walk);
 
-            if (jumpCooldownTime > 0)
-                jumpCooldownTime -= msec;
-            if (state.IsKeyDown(Keys.W))
+            if (playerCollider.LinearVelocity.Y > 0) didFallSinceLastJump = true;
+
+            if (state.IsKeyDown(Keys.W) || gstate.IsButtonDown(Buttons.A))
             {
-                if (jumpCooldownTime <= 0 && canJump())
+                if (didFallSinceLastJump)
                 {
-                    jump();
-                    jumpCooldownTime = JUMP_COOLDOWN_TIME; // wait some time until next jump
+                    //canJump = false;
+                    //world.RayCast(new RayCastCallback(RayCastCallbackJump), playerCollider.Position, playerCollider.Position + new Vector2(0, 1.0f));
+                    canJump = canJumpBecauseOf.Count > 0;
+                    if (canJump)
+                    {
+                        jump();
+                        didFallSinceLastJump = false;
+                    }
                 } 
             }
 
@@ -213,9 +234,9 @@ namespace NGJ2012
                 cameraPosition.X -= Game1.worldWidthInBlocks;
             }
 
-            cameraPosition = 0.9f * cameraPosition + 0.1f * playerCollider.Position;
+            cameraPosition = 0.5f * cameraPosition + 0.5f * playerCollider.Position;
 
-            if (state.IsKeyDown(Keys.Enter) || state.IsKeyDown(Keys.E)) usePowerUp();
+            if (state.IsKeyDown(Keys.Enter) || state.IsKeyDown(Keys.E) || gstate.IsButtonDown(Buttons.B)) usePowerUp();
 
             if (state.IsKeyDown(Keys.F)) bite();
 

@@ -51,7 +51,7 @@ namespace NGJ2012
         OnCollisionEventHandler currentPieceCollide;
         TetrisPieceBatch drawer;
 
-        public float SPAWN_TIME = 2.0f;
+        public float SPAWN_TIME = 1.5f;
 
         // Absolute position in world coordinate system where new pieces are spawned
         public GameViewport viewportToSpawnIn;

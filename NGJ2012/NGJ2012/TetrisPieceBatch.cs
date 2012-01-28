@@ -118,6 +118,43 @@ namespace NGJ2012
             Flush();
         }
 
+        public void DrawAlignedQuad(Vector2 center, Vector2 size, Texture2D texture)
+        {
+            Matrix mat = Matrix.CreateTranslation(new Vector3(center, 0.0f)) * cameraMatrix;
+
+            GraphicsDevice.SamplerStates[0] = SamplerState.AnisotropicClamp;
+            GraphicsDevice.BlendState = BlendState.AlphaBlend;
+
+            effect.Parameters["Projection"].SetValue(Matrix.CreateOrthographicOffCenter(0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height, 0, 0, 1));
+            effect.Parameters["View"].SetValue(mat);
+            effect.Parameters["World"].SetValue(Matrix.Identity);
+            effect.Parameters["BasicTexture"].SetValue(texture);
+            effect.CurrentTechnique.Passes[0].Apply();
+
+            Vertices vertices = new Vertices(new Vector2[] { new Vector2(-size.X / 2, -size.Y / 2), new Vector2(size.X / 2, -size.Y / 2), new Vector2(size.X / 2, size.Y / 2), new Vector2(-size.X / 2, size.Y / 2) });
+            _quadVertices[_quadVertsCount].Color = Color.White;
+            _quadVertices[_quadVertsCount].TextureCoordinate = new Vector2(0, 0);
+            _quadVertices[_quadVertsCount++].Position = new Vector3(-size.X / 2, -size.Y / 2, 0f);
+            _quadVertices[_quadVertsCount].Color = Color.White;
+            _quadVertices[_quadVertsCount].TextureCoordinate = new Vector2(1, 0);
+            _quadVertices[_quadVertsCount++].Position = new Vector3(size.X / 2, -size.Y / 2, 0f);
+            _quadVertices[_quadVertsCount].Color = Color.White;
+            _quadVertices[_quadVertsCount].TextureCoordinate = new Vector2(1, 1);
+            _quadVertices[_quadVertsCount++].Position = new Vector3(size.X / 2, size.Y / 2, 0f);
+
+            _quadVertices[_quadVertsCount].Color = Color.White;
+            _quadVertices[_quadVertsCount].TextureCoordinate = new Vector2(0, 0);
+            _quadVertices[_quadVertsCount++].Position = new Vector3(-size.X / 2, -size.Y / 2, 0f);
+            _quadVertices[_quadVertsCount].Color = Color.White;
+            _quadVertices[_quadVertsCount].TextureCoordinate = new Vector2(1, 1);
+            _quadVertices[_quadVertsCount++].Position = new Vector3(size.X / 2, size.Y / 2, 0f);
+            _quadVertices[_quadVertsCount].Color = Color.White;
+            _quadVertices[_quadVertsCount].TextureCoordinate = new Vector2(0, 1);
+            _quadVertices[_quadVertsCount++].Position = new Vector3(-size.X / 2, size.Y / 2, 0f);
+
+            Flush();
+        }
+
 
         private void DrawLineShape(Shape shape, Color color)
         {
