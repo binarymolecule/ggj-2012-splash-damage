@@ -24,6 +24,8 @@ namespace NGJ2012
         SpriteBatch spriteBatch;
         World world;
 
+        List<bool[,]> tetrisShapes = new List<bool[,]>();
+
         float gameBlockSize = 96.0f;
 
         public Game1()
@@ -33,6 +35,7 @@ namespace NGJ2012
             graphics.PreferredBackBufferHeight = 720;
             Content.RootDirectory = "Content";
             world = new World(new Vector2(0, 9.81f));
+            tetrisShapes.Add(new bool[,] { { true, false }, { true, false }, { true, true } });
         }
 
         /// <summary>
