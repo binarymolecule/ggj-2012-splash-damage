@@ -23,9 +23,11 @@ namespace NGJ2012
         public Body body;
         public List<Fixture> fixtures;
         public Texture2D texture;
+        public bool[,] shape;
 
         public TetrisPiece(World world, Texture2D texture, bool[,] shape, Vector2 position)
         {
+            this.shape = shape;
             body = BodyFactory.CreateBody(world, position);
 
             fixtures = new List<Fixture>();

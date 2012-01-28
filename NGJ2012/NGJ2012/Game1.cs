@@ -119,14 +119,13 @@ namespace NGJ2012
 
             tetrisViewport = new GameViewport(this, 32)
             {
-                screenWidth = tetrisModeWidth,
                 platformMode = false
             };
+            tetrisViewport.resize(tetrisModeWidth, 720);
+            tetris.viewportToSpawnIn = tetrisViewport;
 
-            platformViewport = new GameViewport(this, 96)
-            {
-                screenWidth = platformModeWidth
-            };
+            platformViewport = new GameViewport(this, 96);
+            platformViewport.resize(platformModeWidth, 720);
 
             Components.Add(platformViewport);
             Components.Add(tetrisViewport);
@@ -207,7 +206,7 @@ namespace NGJ2012
             platformViewport.cameraPosition = new Vector2(gameProgress, platform.cameraPosition.Y);
             float tetrisPro = gameProgress + tetrisProgressAdd;
             if (tetrisPro > Game1.worldWidthInBlocks) tetrisPro -= Game1.worldWidthInBlocks;
-            tetrisViewport.cameraPosition = new Vector2(tetrisPro, platform.cameraPosition.Y);
+            tetrisViewport.cameraPosition = new Vector2(tetrisPro, WaterLayer.Position.Y - 6);
 
             world.Step((float)gameTime.ElapsedGameTime.TotalSeconds);
 
