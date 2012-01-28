@@ -219,7 +219,7 @@ namespace NGJ2012
             // Draw animation
             Vector2 screenPos = Vector2.Transform(playerCollider.Position, camera);
             parent.SpriteBatch.Begin();
-            playerAnimation.Draw(parent.SpriteBatch, screenPos, platformMode ? 1.0f : 0.25f);
+            playerAnimation.Draw(parent.SpriteBatch, screenPos, platformMode ? Game1.ScalePlatformSprites : Game1.ScaleTetrisSprites);
             parent.SpriteBatch.End();
 
 #if DEBUG

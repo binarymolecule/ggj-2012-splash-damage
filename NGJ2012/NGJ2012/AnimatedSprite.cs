@@ -31,6 +31,7 @@ namespace NGJ2012
         Vector2 textureOrigin;
         Animation currentAnimation;
         Texture2D currentTexture;
+        public Texture2D CurrentTexture { get { return currentTexture; } }
 
         int currentMsec;
         int currentFrame;
