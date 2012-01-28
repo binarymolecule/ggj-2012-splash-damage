@@ -23,10 +23,16 @@ namespace NGJ2012
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         World world;
+        TetrisPlayer tetris;
 
         List<bool[,]> tetrisShapes = new List<bool[,]>();
 
         float gameBlockSize = 96.0f;
+        int worldWidthInBlocks = 80;
+        int worldHeightInBlocks = 6;
+        Body staticWorldGround;
+        Body staticWorldL;
+        Body staticWorldR;
 
         public Game1()
         {
@@ -35,7 +41,21 @@ namespace NGJ2012
             graphics.PreferredBackBufferHeight = 720;
             Content.RootDirectory = "Content";
             world = new World(new Vector2(0, 9.81f));
+
+            staticWorldGround = BodyFactory.CreateRectangle(world, worldWidthInBlocks, 1, 1.0f, new Vector2(worldWidthInBlocks / 2.0f, worldHeightInBlocks));
+            staticWorldL = BodyFactory.CreateRectangle(world, 1, worldHeightInBlocks, 1.0f, new Vector2(0, worldHeightInBlocks / 2.0f));
+            staticWorldR = BodyFactory.CreateRectangle(world, 1, worldHeightInBlocks, 1.0f, new Vector2(worldWidthInBlocks, worldHeightInBlocks / 2.0f));
+            staticWorldGround.BodyType = BodyType.Static;
+            staticWorldL.BodyType = BodyType.Static;
+            staticWorldR.BodyType = BodyType.Static;
+
             tetrisShapes.Add(new bool[,] { { true, false }, { true, false }, { true, true } });
+            tetrisShapes.Add(new bool[,] { { true, true }, { true, true } });
+            tetrisShapes.Add(new bool[,] { { false, true, false }, { true, true, true } });
+            tetrisShapes.Add(new bool[,] { { true }, { true }, { true }, { true } });
+
+            tetris = new TetrisPlayer(this, world, gameBlockSize);
+            Components.Add(tetris);
         }
 
         /// <summary>
@@ -97,6 +117,9 @@ namespace NGJ2012
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
+            tetris.DrawBody(staticWorldGround);
+            tetris.DrawBody(staticWorldL);
+            tetris.DrawBody(staticWorldR);
 
             base.Draw(gameTime);
         }
