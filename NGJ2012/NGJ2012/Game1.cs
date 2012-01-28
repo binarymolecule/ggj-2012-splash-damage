@@ -27,10 +27,12 @@ namespace NGJ2012
         TetrisPieceBatch tetrisBatch;
         PlatformPlayer platform;
 
-        public PlatformPlayer PlatformPlayer
-        {
         public const int worldWidthInBlocks = 24;
         public const int worldHeightInBlocks = 20;
+
+        public PlatformPlayer PlatformPlayer
+        {
+        
             get { return platform; }
         }
 
