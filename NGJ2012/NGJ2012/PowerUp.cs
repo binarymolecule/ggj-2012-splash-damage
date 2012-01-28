@@ -34,15 +34,15 @@ namespace NGJ2012
             MegaJump, ExtraLive
         }
 
-        public PowerUp(Game1 game, World world, EPowerUpType powerUpType)
+        public PowerUp(Game1 game, World world, EPowerUpType powerUpType, Vector2 position)
             : base(game)
         {
             this.game = game;
             this.world = world;
             this.powerUpType = powerUpType;
 
-            collisionBody = BodyFactory.CreateCircle(world, 1.0f, 1.0f);
-            collisionBody.Position = new Vector2(12, 17);
+            collisionBody = BodyFactory.CreateCircle(world, 0.5f, 1.0f);
+            collisionBody.Position = position;
             collisionBody.OnCollision += new OnCollisionEventHandler(onPlayerCollision);
             collisionBody.BodyType = BodyType.Kinematic;
             collisionBody.CollisionCategories = Category.Cat1;
