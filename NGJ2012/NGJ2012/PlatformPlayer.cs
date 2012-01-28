@@ -44,6 +44,7 @@ namespace NGJ2012
         }
         private bool didFallSinceLastJump = true;
         private float jumpForce = 0.5f;
+        private const float BYTE_FORCE = 500.0f;
         private PowerUp currentlySelectedPowerUp;
 
         public PowerUp CurrentlySelectedPowerUp
@@ -51,6 +52,8 @@ namespace NGJ2012
             get { return currentlySelectedPowerUp; }
             set { currentlySelectedPowerUp = value; }
         }
+
+        float viewDirection;
 
         AnimatedSprite playerAnimation;
         int animID_Stand, animID_Walk, animID_Idle, animID_Jump, animID_Fall, animID_Hit;
@@ -77,7 +80,7 @@ namespace NGJ2012
 
         List<Fixture> canJumpBecauseOf = new List<Fixture>();
 
-        void PlaterSeperatesFromWorld(Fixture fixtureA, Fixture fixtureB)
+        void PlayerSeparatesFromWorld(Fixture fixtureA, Fixture fixtureB)
         {
             while(canJumpBecauseOf.Contains(fixtureB))
                canJumpBecauseOf.Remove(fixtureB);
@@ -108,14 +111,13 @@ namespace NGJ2012
         {
             // TODO: Add your initialization code here
 
+        public override void Initialize()
+        {
             base.Initialize();
         }
 
-        TetrisPieceBatch drawer;
         protected override void LoadContent()
         {
-            drawer = new TetrisPieceBatch(GraphicsDevice, Game.Content);
-
             // Create player animation
             string[] playerTextureNames = new string[] { "jumpAndRunPlayer" };
             playerAnimation = new AnimatedSprite(parent, "", playerTextureNames, new Vector2(36, 32));
@@ -179,6 +181,7 @@ namespace NGJ2012
             bool isRunning = false;
             if (Math.Abs(currentRunSpeed) > 0.001f)
             {
+                viewDirection = Math.Sign(currentRunSpeed);
                 float dir = Math.Sign(currentRunSpeed);
                 walkModifier = 1.0f;
                 world.RayCast(new RayCastCallback(RayCastCallback), playerCollider.Position + dir * new Vector2(0.2f, 0), playerCollider.Position + dir * new Vector2(1.0f, 0));
@@ -187,6 +190,7 @@ namespace NGJ2012
             }
             else
                 currentRunSpeed = 0;
+
             playerCollider.LinearVelocity = new Vector2(currentRunSpeed, playerCollider.LinearVelocity.Y);
 
             // Switch to walking animation
@@ -232,10 +236,36 @@ namespace NGJ2012
 
             if (state.IsKeyDown(Keys.Enter) || state.IsKeyDown(Keys.E) || gstate.IsButtonDown(Buttons.B)) usePowerUp();
 
+            if (state.IsKeyDown(Keys.F)) bite();
+
             // Update player animation
             playerAnimation.Update(gameTime.ElapsedGameTime.Milliseconds);
 
             base.Update(gameTime);
+        }
+
+        private void bite()
+        {
+            Vector2 start = playerCollider.Position + viewDirection * new Vector2(0.2f, 0);
+            //Check for objects slightly above or below to get also objects that are not directly on the height of your head:
+            world.RayCast(new RayCastCallback(biteRayCastCallback), start, playerCollider.Position + viewDirection * new Vector2(0.6f, -0.5f));
+            world.RayCast(new RayCastCallback(biteRayCastCallback), start, playerCollider.Position + viewDirection * new Vector2(0.6f, +0.5f));
+        }
+
+        float biteRayCastCallback(Fixture fixture, Vector2 point, Vector2 normal, float fraction)
+        {
+            if (fixture.CollisionCategories == Game1.COLLISION_GROUP_TETRIS_BLOCKS)
+            {
+                fixture.Body.ApplyForce(new Vector2(-this.viewDirection * BYTE_FORCE, -BYTE_FORCE));
+
+                //Stop raytracing
+                return 0;
+            }
+            else
+            {
+                //Continue raytracing:
+                return -1;
+            }
         }
 
         private void usePowerUp()
@@ -269,8 +299,8 @@ namespace NGJ2012
             parent.SpriteBatch.End();
 
 #if DEBUG
-            drawer.cameraMatrix = camera;
-            drawer.DrawBody(playerCollider);
+            parent.DebugDrawer.cameraMatrix = camera;
+            parent.DebugDrawer.DrawBody(playerCollider);
 #endif
         }
 

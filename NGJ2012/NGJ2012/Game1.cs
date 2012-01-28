@@ -76,8 +76,8 @@ namespace NGJ2012
         RenderTarget2D tetrisModeRight;
 
         Texture2D background;
+        public float gameProgress = 0;
 
-        float gameProgress = 0;
         float gameProgressSpeed = 1;
         float tetrisProgressAdd = 10;
         private GameViewport tetrisViewport;
@@ -90,6 +90,7 @@ namespace NGJ2012
 
 #if DEBUG
         public Vector2 manualPosition = Vector2.Zero;
+        public TetrisPieceBatch DebugDrawer;
 #endif
 
         public Game1()
@@ -170,9 +171,11 @@ namespace NGJ2012
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
             background = Content.Load<Texture2D>("graphics/level/Background");
-
             tetrisBatch = new TetrisPieceBatch(GraphicsDevice, Content);
-            // TODO: use this.Content to load your game content here
+
+#if DEBUG
+            DebugDrawer = new TetrisPieceBatch(GraphicsDevice, Content);
+#endif
         }
 
         /// <summary>
@@ -210,7 +213,13 @@ namespace NGJ2012
 
             // update game progress
             gameProgress += gameProgressSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
-            if (gameProgress > Game1.worldWidthInBlocks) gameProgress -= Game1.worldWidthInBlocks;
+            if (gameProgress > Game1.worldWidthInBlocks)
+            {
+                // Finished round
+                gameProgress -= Game1.worldWidthInBlocks;
+                WaterLayer.StartRising(5000);
+                SavePlatform.StartRising(5000);
+            }
 
             platformViewport.cameraPosition = platform.cameraPosition + new Vector2(platformViewport.screenWidthInGAME/3.0f, 0);
 
