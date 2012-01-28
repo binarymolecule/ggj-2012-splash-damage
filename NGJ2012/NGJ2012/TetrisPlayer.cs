@@ -95,6 +95,13 @@ namespace NGJ2012
         {
             drawer = new TetrisPieceBatch(GraphicsDevice);
 
+            string[] shapeNames = new string[] { "LR","LL","O","T","I","MZ","Z" };
+            for (int i = 0; i < shapeNames.Length; i++)
+            {
+                string n = "shapes/" + shapeNames[i];
+                tetrisTextures.Add(Game.Content.Load<Texture2D>(n));
+            }
+
             base.LoadContent();
         }
 
