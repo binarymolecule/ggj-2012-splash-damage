@@ -78,7 +78,9 @@ namespace NGJ2012
         private GameViewport tetrisViewport;
         private GameViewport platformViewport;
 
+        //Power-Ups:
         private const float TIME_BETWEEN_POWERUPSPAWNS_SECS = 3.0f;
+        private const int SPAWNHEIGHT_OF_PWUP_ABOVE_PLAYER = 2;
         private float elapsedTimeSinceLastPowerUp = 0.0f;
 
 #if DEBUG
@@ -259,7 +261,11 @@ namespace NGJ2012
 
             if (elapsedTimeSinceLastPowerUp >= TIME_BETWEEN_POWERUPSPAWNS_SECS)
             {
-                PowerUp p = PowerUp.getRandomPowerUp(this, world, platform.cameraPosition + new Vector2(2.0f, -1.0f));
+                //Position the power up on the "screen next to the currenct visible area":
+                float maxWidthInGame = Math.Max(this.tetrisViewport.screenWidthInGAME, this.platformViewport.screenWidthInGAME);
+                
+                //Get a random power up:
+                PowerUp p = PowerUp.getRandomPowerUp(this, world, platform.cameraPosition + new Vector2(maxWidthInGame, -SPAWNHEIGHT_OF_PWUP_ABOVE_PLAYER));
                 Components.Add(p);
                 elapsedTimeSinceLastPowerUp = 0.0f;
             }    

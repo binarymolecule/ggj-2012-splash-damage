@@ -29,6 +29,8 @@ namespace NGJ2012
         private const float acceleration = 128.0f;
         private const float maxRunSpeed = 8.0f;
 
+        Game1 parent;
+
         World world;
         public Body playerCollider;
         public Vector2 cameraPosition = Vector2.Zero;
@@ -48,11 +50,12 @@ namespace NGJ2012
             set { currentlySelectedPowerUp = value; }
         }
 
-        Texture2D playerTexture;
+        AnimatedSprite playerAnimation;
 
         public PlatformPlayer(Game game, World world) : base(game)
         {
             this.world = world;
+            parent = (Game1)game;
 
             playerCollider = BodyFactory.CreateCapsule(world, 1.0f, 0.2f, 0.001f);
             playerCollider.Position = new Vector2(2, -2);
@@ -108,7 +111,13 @@ namespace NGJ2012
         protected override void LoadContent()
         {
             drawer = new TetrisPieceBatch(GraphicsDevice, Game.Content);
-            playerTexture = Game.Content.Load<Texture2D>("jumpAndRunPlayer");
+
+            // Create player animation
+            string[] playerTextureNames = new string[] { "jumpAndRunPlayer" };
+            playerAnimation = new AnimatedSprite(parent, playerTextureNames, new Vector2(36, 32));
+            playerAnimation.AddAnimation("run", 0, 0, 125, true);
+            playerAnimation.SetAnimation(0);
+            
             base.LoadContent();
         }
 
@@ -132,8 +141,8 @@ namespace NGJ2012
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         public override void Update(GameTime gameTime)
         {
-            // TODO: Add your update code here
-            
+            // Process user input
+
             KeyboardState state = Keyboard.GetState();
             float move = 0;
             if (state.IsKeyDown(Keys.A)) move = -acceleration;
@@ -178,6 +187,8 @@ namespace NGJ2012
 
             if (state.IsKeyDown(Keys.Enter)) usePowerUp();
 
+            // Update player animation
+            playerAnimation.Update(gameTime.ElapsedGameTime.Milliseconds);
 
             base.Update(gameTime);
         }
@@ -205,8 +216,12 @@ namespace NGJ2012
 
         public override void DrawGameWorldOnce(Matrix camera, bool platformMode)
         {
+            // Draw animation
             Vector2 screenPos = Vector2.Transform(playerCollider.Position, camera);
-            Rectangle screenRect = new Rectangle((int)screenPos.X, (int)screenPos.Y, 64, 64);
+            parent.SpriteBatch.Begin();
+            playerAnimation.Draw(parent.SpriteBatch, screenPos, platformMode ? 1.0f : 0.25f);
+            parent.SpriteBatch.End();
+
 #if DEBUG
             drawer.cameraMatrix = camera;
             drawer.DrawBody(playerCollider);
