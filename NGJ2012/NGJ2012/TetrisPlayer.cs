@@ -91,7 +91,7 @@ namespace NGJ2012
         {
             if (currentPiece == null)
             {
-                currentPiece = new TetrisPiece(_world, null, tetrisShapes[0], new Vector2(2, 2));
+                currentPiece = new TetrisPiece(_world, null, tetrisShapes[(new Random()).Next(tetrisShapes.Count)], new Vector2(2, 2));
                 currentPieceCollide = new OnCollisionEventHandler(currentPieceCollision);
                 currentPiece.body.OnCollision += currentPieceCollide;
                 currentPieceRotation = JointFactory.CreateFixedAngleJoint(_world, currentPiece.body);

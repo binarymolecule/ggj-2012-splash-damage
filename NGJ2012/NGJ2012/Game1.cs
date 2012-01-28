@@ -28,7 +28,7 @@ namespace NGJ2012
 
         float gameBlockSize = 32.0f;
         int worldWidthInBlocks = 24;
-        int worldHeightInBlocks = 16;
+        int worldHeightInBlocks = 20;
         Body staticWorldGround;
         Body staticWorldL;
         Body staticWorldR;
