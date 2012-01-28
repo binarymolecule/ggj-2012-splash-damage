@@ -207,7 +207,7 @@ namespace NGJ2012
                 cameraPosition.X -= Game1.worldWidthInBlocks;
             }
 
-            cameraPosition = 0.9f * cameraPosition + 0.1f * playerCollider.Position;
+            cameraPosition = 0.5f * cameraPosition + 0.5f * playerCollider.Position;
 
             if (state.IsKeyDown(Keys.Enter) || state.IsKeyDown(Keys.E)) usePowerUp();
 

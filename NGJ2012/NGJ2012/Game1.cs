@@ -211,16 +211,10 @@ namespace NGJ2012
             // update game progress
             gameProgress += gameProgressSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
             if (gameProgress > Game1.worldWidthInBlocks) gameProgress -= Game1.worldWidthInBlocks;
-            
-            platformViewport.cameraPosition = new Vector2(gameProgress, platform.playerCollider.Position.Y);
 
-            var camDiff = MathStuff.WorldDistance(platform.playerCollider.Position.X, platformViewport.cameraPosition.X, worldWidthInBlocks);
-            if (camDiff > 0 && camDiff < 10)
-            {
-                platformViewport.cameraPosition.X -= MathHelper.Clamp(camDiff, 0, 3);
-            }
+            platformViewport.cameraPosition = platform.cameraPosition + new Vector2(platformViewport.screenWidthInGAME/3.0f, 0);
 
-            float tetrisPro = gameProgress + tetrisProgressAdd;
+            float tetrisPro = platformViewport.cameraPosition.X + tetrisProgressAdd;
             if (tetrisPro > Game1.worldWidthInBlocks) tetrisPro -= Game1.worldWidthInBlocks;
             tetrisViewport.cameraPosition = new Vector2(tetrisPro, WaterLayer.Position.Y - 4);
 
