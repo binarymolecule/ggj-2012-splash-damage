@@ -28,6 +28,11 @@ namespace NGJ2012
         World world;
 
         private Texture2D texture;
+
+        public Texture2D Texture
+        {
+            get { return texture; }
+        }
         private Body collisionBody;
         private EPowerUpType powerUpType;
         private bool usageTimerRunning = false;

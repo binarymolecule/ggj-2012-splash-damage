@@ -25,13 +25,20 @@ namespace NGJ2012
     /// </summary>
     public class PlatformPlayer : DrawableGameComponentExtended
     {
-        private const int INITIAL_NUMBER_OF_LIVES = 3;
+        private const int INITIAL_NUMBER_OF_LIFES = 3;
+        private const float acceleration = 128.0f;
+        private const float maxRunSpeed = 8.0f;
 
         World world;
         public Body playerCollider;
         public Vector2 cameraPosition = Vector2.Zero;
 
-        private int numberOfLives;
+        private int numberOfLifes;
+
+        public int NumberOfLifes
+        {
+            get { return numberOfLifes; }
+        }
         private float jumpForce = 0.5f;
         private PowerUp currentlySelectedPowerUp;
 
@@ -59,7 +66,7 @@ namespace NGJ2012
             playerCollider.CollisionCategories = Game1.COLLISION_GROUP_DEFAULT;
             playerCollider.CollidesWith = Game1.COLLISION_GROUP_DEFAULT | Game1.COLLISION_GROUP_STATIC_OBJECTS | Game1.COLLISION_GROUP_TETRIS_BLOCKS;
 
-            numberOfLives = INITIAL_NUMBER_OF_LIVES;
+            numberOfLifes = INITIAL_NUMBER_OF_LIFES;
         }
 
         List<Fixture> canJumpBecauseOf = new List<Fixture>();
@@ -103,7 +110,6 @@ namespace NGJ2012
         }
 
         float currentRunSpeed;
-        float maxRunSpeed = 8.0f;
         float walkModifier;
 
         float RayCastCallback(Fixture fixture, Vector2 point, Vector2 normal, float fraction)
@@ -124,7 +130,7 @@ namespace NGJ2012
         public override void Update(GameTime gameTime)
         {
             // TODO: Add your update code here
-            float acceleration = 128.0f;
+            
             KeyboardState state = Keyboard.GetState();
             float move = 0;
             if (state.IsKeyDown(Keys.A)) move = -acceleration;
@@ -205,7 +211,7 @@ namespace NGJ2012
 
         internal void increaseLives()
         {
-            this.numberOfLives++;
+            this.numberOfLifes++;
         }
     }
 }

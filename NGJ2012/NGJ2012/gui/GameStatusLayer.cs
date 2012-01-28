@@ -19,6 +19,11 @@ namespace NGJ2012
         Game1 parent;
         Rectangle screenRectangle, playerRectangle;
 
+        private String p1Text;
+        private String textPowerup;
+        private Texture2D powerUpTex;
+        private const Vector2 textPosition = new Vector2(20.0f, 20.0f);
+
         // Assets
         SpriteFont font;
         Texture2D tex;
@@ -47,7 +52,11 @@ namespace NGJ2012
 
         public override void Update(GameTime gameTime)
         {
-            playerRectangle.Y = (int)(700 + (parent.PlatformPlayer.cameraPosition.Y / parent.WorldHeightInBlocks) * 680); 
+            playerRectangle.Y = (int)(700 + (parent.PlatformPlayer.cameraPosition.Y / parent.WorldHeightInBlocks) * 680);
+
+            p1Text = "#Lifes = " + parent.PlatformPlayer.NumberOfLifes + "\n Pos = ";
+            textPowerup = "Power-Up = ";
+            powerUpTex = (parent.PlatformPlayer.CurrentlySelectedPowerUp != null) ? parent.PlatformPlayer.CurrentlySelectedPowerUp.Texture : null;
 
             base.Update(gameTime);
         }
@@ -58,7 +67,15 @@ namespace NGJ2012
             //parent.SpriteBatch.DrawString(font, "Test", Vector2.Zero, Color.White);
             parent.SpriteBatch.Draw(tex, screenRectangle, Color.White);
             parent.SpriteBatch.Draw(tex, playerRectangle, Color.Red);
+
+            //Texts:
+            parent.SpriteBatch.DrawString(font, p1Text, textPosition, Color.White);
+            font.MeasureString(tex);
+            if (powerUpTex != null) parent.SpriteBatch.Draw(powerUpTex, textPosition, Color.White);
+
             parent.SpriteBatch.End();
+
+
         }
     }
 }
