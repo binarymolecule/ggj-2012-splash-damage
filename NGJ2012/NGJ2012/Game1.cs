@@ -37,6 +37,8 @@ namespace NGJ2012
         public const Category COLLISION_GROUP_TETRIS_BLOCKS = Category.Cat2;
         public const Category COLLISION_GROUP_STATIC_OBJECTS = Category.Cat3;
 
+        public readonly static Utility.TimerCollection Timers = new Utility.TimerCollection();
+
         // Player related components
         jumpAndRunPlayerFigure jumpAndRunPlayer;
 
@@ -114,6 +116,7 @@ namespace NGJ2012
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+            Services.AddService(typeof(Utility.TimerCollection), Timers);
 
             base.Initialize();
         }
@@ -161,6 +164,7 @@ namespace NGJ2012
             cameraPosition = 0.9f * cameraPosition + 0.1f * platform.playerCollider.Position;
             world.Step((float)gameTime.ElapsedGameTime.TotalSeconds);
 
+            Timers.Update(gameTime);
             base.Update(gameTime);
         }
 
