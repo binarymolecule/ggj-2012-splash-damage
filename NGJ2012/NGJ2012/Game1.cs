@@ -100,6 +100,7 @@ namespace NGJ2012
                 this.Exit();
 
             // TODO: Add your update logic here
+            world.Step((float)gameTime.ElapsedGameTime.TotalSeconds);
 
             base.Update(gameTime);
         }

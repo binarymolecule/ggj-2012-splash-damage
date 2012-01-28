@@ -33,6 +33,7 @@ namespace NGJ2012
             {
                 for (int x = 0; x < shape.GetLength(0); x++)
                 {
+                    if (!shape[x, y]) continue;
                     Vertices v = new Vertices(new Vector2[] { new Vector2(x+0, y+0), new Vector2(x+1, y+0), new Vector2(x+1,y+1), new Vector2(x+0, y+1) });
                     fixtures.Add(FixtureFactory.AttachPolygon(v, 1.0f, body));
                 }

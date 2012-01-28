@@ -44,7 +44,14 @@ namespace NGJ2012
             tetrisShapes.Add(new bool[,] { { false, true, false }, { true, true, true } });
             tetrisShapes.Add(new bool[,] { { true }, { true }, { true }, { true } });
             currentPiece = new TetrisPiece(world, null, tetrisShapes[0], new Vector2(2,2));
+            currentPiece.body.OnCollision += new OnCollisionEventHandler(currentPieceCollision);
+            currentPiece.body.BodyType = BodyType.Dynamic;
             pieces.Add(currentPiece);
+        }
+
+        bool currentPieceCollision(Fixture fixtureA, Fixture fixtureB, FarseerPhysics.Dynamics.Contacts.Contact contact)
+        {
+            return true;
         }
 
         /// <summary>
@@ -78,7 +85,7 @@ namespace NGJ2012
             if (state.IsKeyDown(Keys.Up)) moveDir.Y = -1;
             else if (state.IsKeyDown(Keys.Down)) moveDir.Y = +1;
             else moveDir.Y = 0;
-            currentPiece.body.Position += (float)gameTime.ElapsedGameTime.TotalSeconds * moveDir * movementSpeed;
+            currentPiece.body.LinearVelocity = moveDir * movementSpeed;
 
             base.Update(gameTime);
         }
