@@ -25,7 +25,16 @@ namespace NGJ2012
     public class TetrisPlayer : DrawableGameComponentExtended
     {
         private World _world;
-        const float movementSpeed = 8.0f;
+        const float MOVEMENT_SPEED_DOWN = 8.0f;
+        const float GRID_COL_WIDTH_RELATIVE_TO_BLOCKSIZE = 0.5f;
+        const float TIME_BETWEEN_SIDEMOVEMENT = 0.1f;
+        const float TIME_UNTIL_SWITCHING_TO_SMOOTH = 0.2f;
+        Vector2 movementSpeed;
+
+        private KeyboardState keyboardAtLastLoop;
+
+        float timeElapsedSinceLastSidemovement = 0.0f;
+        float timeElapsedSinceMovementKeyDown = 0.0f;
 
         List<bool[,]> tetrisShapes = new List<bool[,]>();
         List<Texture2D> tetrisTextures = new List<Texture2D>();
@@ -60,6 +69,8 @@ namespace NGJ2012
             tetrisShapes.Add(new bool[,] { { true, true, false }, { false, true, true } });
 
             Game1.Timers.Create(SPAWN_TIME, false, Spawn);
+
+            this.movementSpeed = new Vector2(GRID_COL_WIDTH_RELATIVE_TO_BLOCKSIZE * Game1.gameBlockSizeTetris, MOVEMENT_SPEED_DOWN);
         }
 
         bool currentPieceCollision(Fixture fixtureA, Fixture fixtureB, FarseerPhysics.Dynamics.Contacts.Contact contact)
@@ -166,9 +177,33 @@ namespace NGJ2012
             // TODO: Add your update code here
             Vector2 moveDir = new Vector2();
             KeyboardState state = Keyboard.GetState();
-            if (state.IsKeyDown(Keys.Left)) moveDir.X = -1;
-            else if (state.IsKeyDown(Keys.Right)) moveDir.X = +1;
-            else moveDir.X = 0;
+
+            if (keyboardAtLastLoop != null &&
+                (keyboardAtLastLoop.IsKeyDown(Keys.Left) && state.IsKeyDown(Keys.Left)) ||
+                (keyboardAtLastLoop.IsKeyDown(Keys.Right) && state.IsKeyDown(Keys.Right)))
+            {
+                timeElapsedSinceMovementKeyDown += (float)gameTime.ElapsedGameTime.TotalSeconds;
+            }
+            else
+            {
+                timeElapsedSinceMovementKeyDown = 0;
+            }
+
+            if (timeElapsedSinceLastSidemovement >= TIME_BETWEEN_SIDEMOVEMENT || timeElapsedSinceMovementKeyDown >= TIME_UNTIL_SWITCHING_TO_SMOOTH)
+            {
+                if (state.IsKeyDown(Keys.Left)) moveDir.X = -1;
+                else if (state.IsKeyDown(Keys.Right)) moveDir.X = +1;
+                else moveDir.X = 0;
+            } else
+            {
+                moveDir.X = 0;
+            }
+
+            if (moveDir.X == 0) {
+                timeElapsedSinceLastSidemovement += (float)gameTime.ElapsedGameTime.TotalSeconds;
+            } else {
+                timeElapsedSinceLastSidemovement = 0.0f;
+            }
 
             if (state.IsKeyDown(Keys.Down)) moveDir.Y = 3;
             else moveDir.Y = 0.25f;
@@ -229,6 +264,8 @@ namespace NGJ2012
 
             foreach (TetrisPiece cur in deactivateUs)
                 activePieces.Remove(cur);
+
+            keyboardAtLastLoop = state;
 
             base.Update(gameTime);
         }
