@@ -39,7 +39,7 @@ namespace NGJ2012
                 }
             }
 
-            body.BodyType = BodyType.Kinematic;
+            body.BodyType = BodyType.Dynamic;
             body.Restitution = 0.1f;
             body.Friction = 1.0f; 
         }

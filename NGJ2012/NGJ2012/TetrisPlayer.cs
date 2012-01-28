@@ -13,6 +13,7 @@ using FarseerPhysics.Dynamics;
 using FarseerPhysics.Factories;
 using FarseerPhysics.Collision;
 using FarseerPhysics.Collision.Shapes;
+using FarseerPhysics.Dynamics.Joints;
 
 
 namespace NGJ2012
@@ -31,6 +32,8 @@ namespace NGJ2012
 
         List<TetrisPiece> pieces = new List<TetrisPiece>();
         private TetrisPiece currentPiece;
+        FixedAngleJoint currentPieceRotation;
+        OnCollisionEventHandler currentPieceCollide;
         TetrisPieceBatch drawer;
 
         public TetrisPlayer(Game game, World world, float igameBlockSize)
@@ -43,14 +46,15 @@ namespace NGJ2012
             tetrisShapes.Add(new bool[,] { { true, true }, { true, true } });
             tetrisShapes.Add(new bool[,] { { false, true, false }, { true, true, true } });
             tetrisShapes.Add(new bool[,] { { true }, { true }, { true }, { true } });
-            currentPiece = new TetrisPiece(world, null, tetrisShapes[0], new Vector2(2,2));
-            currentPiece.body.OnCollision += new OnCollisionEventHandler(currentPieceCollision);
-            currentPiece.body.BodyType = BodyType.Dynamic;
-            pieces.Add(currentPiece);
+            currentPiece = null;
         }
 
         bool currentPieceCollision(Fixture fixtureA, Fixture fixtureB, FarseerPhysics.Dynamics.Contacts.Contact contact)
         {
+            currentPiece = null;
+            _world.RemoveJoint(currentPieceRotation);
+            currentPieceRotation = null;
+            currentPiece.body.OnCollision 
             return true;
         }
 
@@ -70,12 +74,22 @@ namespace NGJ2012
             base.LoadContent();
         }
 
+        bool spaceDown = false;
         /// <summary>
         /// Allows the game component to update itself.
         /// </summary>
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         public override void Update(GameTime gameTime)
         {
+            if (currentPiece == null)
+            {
+                currentPiece = new TetrisPiece(_world, null, tetrisShapes[0], new Vector2(2, 2));
+                currentPieceCollide = new OnCollisionEventHandler(currentPieceCollision);
+                currentPiece.body.OnCollision += currentPieceCollide;
+                currentPieceRotation = JointFactory.CreateFixedAngleJoint(_world, currentPiece.body);
+                pieces.Add(currentPiece);
+            }
+
             // TODO: Add your update code here
             Vector2 moveDir = new Vector2();
             KeyboardState state = Keyboard.GetState();
@@ -86,6 +100,16 @@ namespace NGJ2012
             else if (state.IsKeyDown(Keys.Down)) moveDir.Y = +1;
             else moveDir.Y = 0;
             currentPiece.body.LinearVelocity = moveDir * movementSpeed;
+
+            if (state.IsKeyDown(Keys.Space))
+            {
+                if (!spaceDown)
+                {
+                    currentPieceRotation.TargetAngle += (float)Math.PI / 2;
+                    spaceDown = true;
+                }
+            } 
+            else spaceDown = false;
 
             base.Update(gameTime);
         }
