@@ -54,6 +54,10 @@ namespace NGJ2012
 
         bool currentPieceCollision(Fixture fixtureA, Fixture fixtureB, FarseerPhysics.Dynamics.Contacts.Contact contact)
         {
+            // ignore collisions with Cat30
+            if ((fixtureA.CollisionCategories & Category.Cat1) != 0) return false;
+            if ((fixtureB.CollisionCategories & Category.Cat1) != 0) return false;
+
             dropCurrentPiece();
             return true;
         }
