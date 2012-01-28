@@ -20,6 +20,7 @@ namespace NGJ2012
 {
     public class TetrisPiece
     {
+        public int freezeCountdown = 10;
         public Body body;
         public List<Fixture> fixtures;
         public Texture2D texture;
@@ -43,8 +44,8 @@ namespace NGJ2012
             }
 
             body.BodyType = BodyType.Dynamic;
-            body.Restitution = 0.1f;
-            body.Friction = 1.0f;
+            body.Restitution = 0.0f;
+            body.Friction = 100.0f;
             body.CollisionCategories = Game1.COLLISION_GROUP_TETRIS_BLOCKS;
             body.CollidesWith = Game1.COLLISION_GROUP_STATIC_OBJECTS | Game1.COLLISION_GROUP_TETRIS_BLOCKS | Game1.COLLISION_GROUP_DEFAULT | Game1.COLLISION_GROUP_LEVEL_SEPARATOR;
 

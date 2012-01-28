@@ -46,6 +46,7 @@ namespace NGJ2012
         }
         private int jumpCooldownTime = 0;
         private float jumpForce = 0.5f;
+        private const float BYTE_FORCE = 500.0f;
         private PowerUp currentlySelectedPowerUp;
 
         public PowerUp CurrentlySelectedPowerUp
@@ -53,6 +54,8 @@ namespace NGJ2012
             get { return currentlySelectedPowerUp; }
             set { currentlySelectedPowerUp = value; }
         }
+
+        float viewDirection;
 
         AnimatedSprite playerAnimation;
         int animID_Stand, animID_Walk, animID_Idle, animID_Jump, animID_Fall, animID_Hit;
@@ -170,14 +173,15 @@ namespace NGJ2012
             bool isRunning = false;
             if (Math.Abs(currentRunSpeed) > 0.001f)
             {
-                float dir = Math.Sign(currentRunSpeed);
+                viewDirection = Math.Sign(currentRunSpeed);
                 walkModifier = 1.0f;
-                world.RayCast(new RayCastCallback(RayCastCallback), playerCollider.Position + dir * new Vector2(0.2f, 0), playerCollider.Position + dir * new Vector2(0.4f, 0));
+                world.RayCast(new RayCastCallback(RayCastCallback), playerCollider.Position + viewDirection * new Vector2(0.2f, 0), playerCollider.Position + viewDirection * new Vector2(0.4f, 0));
                 currentRunSpeed *= walkModifier;
                 isRunning = true;
             }
             else
                 currentRunSpeed = 0;
+
             playerCollider.LinearVelocity = new Vector2(currentRunSpeed, playerCollider.LinearVelocity.Y);
 
             // Switch to walking animation
@@ -217,10 +221,33 @@ namespace NGJ2012
 
             if (state.IsKeyDown(Keys.Enter) || state.IsKeyDown(Keys.E)) usePowerUp();
 
+            if (state.IsKeyDown(Keys.F)) bite();
+
             // Update player animation
             playerAnimation.Update(gameTime.ElapsedGameTime.Milliseconds);
 
             base.Update(gameTime);
+        }
+
+        private void bite()
+        {
+            world.RayCast(new RayCastCallback(biteRayCastCallback), playerCollider.Position + viewDirection * new Vector2(0.2f, 0), playerCollider.Position + viewDirection * new Vector2(0.6f, 0));
+        }
+
+        float biteRayCastCallback(Fixture fixture, Vector2 point, Vector2 normal, float fraction)
+        {
+            if (fixture.CollisionCategories == Game1.COLLISION_GROUP_TETRIS_BLOCKS)
+            {
+                fixture.Body.ApplyForce(new Vector2(-this.viewDirection * BYTE_FORCE, -BYTE_FORCE));
+
+                //Stop raytracing
+                return 0;
+            }
+            else
+            {
+                //Continue raytracing:
+                return -1;
+            }
         }
 
         private void usePowerUp()
