@@ -88,7 +88,7 @@ namespace NGJ2012
         TetrisPieceBatch drawer;
         protected override void LoadContent()
         {
-            drawer = new TetrisPieceBatch(GraphicsDevice);
+            drawer = new TetrisPieceBatch(GraphicsDevice, Game.Content);
             base.LoadContent();
         }
 

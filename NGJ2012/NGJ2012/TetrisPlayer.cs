@@ -63,7 +63,8 @@ namespace NGJ2012
 
         private void Spawn(Utility.Timer timer)
         {
-            currentPiece = new TetrisPiece(_world, null, tetrisShapes[(new Random()).Next(tetrisShapes.Count)], new Vector2(2, 2));
+            int shape = (new Random()).Next(tetrisShapes.Count);
+            currentPiece = new TetrisPiece(_world, tetrisTextures[shape], tetrisShapes[shape], new Vector2(2, 2));
             currentPieceCollide = new OnCollisionEventHandler(currentPieceCollision);
             currentPiece.body.OnCollision += currentPieceCollide;
             currentPieceRotation = JointFactory.CreateFixedAngleJoint(_world, currentPiece.body);
@@ -93,7 +94,7 @@ namespace NGJ2012
 
         protected override void LoadContent()
         {
-            drawer = new TetrisPieceBatch(GraphicsDevice);
+            drawer = new TetrisPieceBatch(GraphicsDevice, Game.Content);
 
             string[] shapeNames = new string[] { "LR","LL","O","T","I","MZ","Z" };
             for (int i = 0; i < shapeNames.Length; i++)
@@ -164,7 +165,7 @@ namespace NGJ2012
             drawer.cameraMatrix = camera;
             foreach (TetrisPiece cur in pieces)
             {
-                drawer.DrawBody(cur.body);
+                drawer.DrawBodyTextured(cur.body, cur.texture);
             }
         }
 
