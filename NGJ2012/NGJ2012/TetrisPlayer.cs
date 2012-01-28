@@ -35,8 +35,10 @@ namespace NGJ2012
         OnCollisionEventHandler currentPieceCollide;
         TetrisPieceBatch drawer;
 
-        public TetrisPlayer(Game game, World world)
-            : base(game)
+        // Absolute position in world coordinate system where new pieces are spawned
+        public Vector2 SpawnPosition = new Vector2(25, -25);
+
+        public TetrisPlayer(Game game, World world) : base(game)
         {
             _world = world;
 
@@ -63,7 +65,7 @@ namespace NGJ2012
 
         private void Spawn(Utility.Timer timer)
         {
-            currentPiece = new TetrisPiece(_world, null, tetrisShapes[(new Random()).Next(tetrisShapes.Count)], new Vector2(2, 2));
+            currentPiece = new TetrisPiece(_world, null, tetrisShapes[(new Random()).Next(tetrisShapes.Count)], SpawnPosition);
             currentPieceCollide = new OnCollisionEventHandler(currentPieceCollision);
             currentPiece.body.OnCollision += currentPieceCollide;
             currentPieceRotation = JointFactory.CreateFixedAngleJoint(_world, currentPiece.body);
