@@ -84,6 +84,11 @@ namespace NGJ2012
             return true;
         }
 
+        Vector2 roundPosition(Vector2 pos)
+        {
+            return new Vector2((float)Math.Floor(pos.X / GRID_COL_WIDTH_RELATIVE_TO_BLOCKSIZE) * GRID_COL_WIDTH_RELATIVE_TO_BLOCKSIZE, (float)Math.Floor(pos.Y / GRID_COL_WIDTH_RELATIVE_TO_BLOCKSIZE) * GRID_COL_WIDTH_RELATIVE_TO_BLOCKSIZE);
+        }
+
         private void Spawn(Utility.Timer timer)
         {
             if (nextPiece == null)
@@ -95,6 +100,7 @@ namespace NGJ2012
             currentPiece = nextPiece;
             currentPieceMaxLen = Math.Max(currentPiece.shape.GetLength(0), currentPiece.shape.GetLength(1));
             currentPiece.body.Position = viewportToSpawnIn.cameraPosition + new Vector2(viewportToSpawnIn.screenWidthInGAME/3.0f, -viewportToSpawnIn.screenHeightInGAME / 2.0f + 0.0f);
+            currentPiece.body.Position = roundPosition(currentPiece.body.Position);
             currentPieceCollide = new OnCollisionEventHandler(currentPieceCollision);
             currentPiece.body.OnCollision += currentPieceCollide;
             currentPieceRotation = JointFactory.CreateFixedAngleJoint(_world, currentPiece.body);
