@@ -158,11 +158,13 @@ namespace NGJ2012
                 playerCollider.Position = new Vector2(playerCollider.Position.X + (float)Game1.worldWidthInBlocks, playerCollider.Position.Y);
                 cameraPosition.X += Game1.worldWidthInBlocks;
             }
+
             if (playerCollider.Position.X > Game1.worldWidthInBlocks)
             {
                 playerCollider.Position = new Vector2(playerCollider.Position.X - (float)Game1.worldWidthInBlocks, playerCollider.Position.Y);
                 cameraPosition.X -= Game1.worldWidthInBlocks;
             }
+
             cameraPosition = 0.9f * cameraPosition + 0.1f * playerCollider.Position;
 
             if (state.IsKeyDown(Keys.Enter)) usePowerUp();

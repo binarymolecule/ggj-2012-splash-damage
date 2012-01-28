@@ -70,6 +70,10 @@ namespace NGJ2012
         RenderTarget2D tetrisModeLeft;
         RenderTarget2D tetrisModeRight;
 
+        float gameProgress = 0;
+        private GameViewport tetrisViewport;
+        private GameViewport platformViewport;
+
 
         public Game1()
         {
@@ -106,6 +110,21 @@ namespace NGJ2012
             //TODO: Create PowerUps dynamically
             Components.Add(new PowerUp(this, world, PowerUp.EPowerUpType.MegaJump, new Vector2(10, -8)));
             Components.Add(new PowerUp(this, world, PowerUp.EPowerUpType.ExtraLive, new Vector2(16, -8)));
+
+            tetrisViewport = new GameViewport(this)
+            {
+                screenWidth = tetrisModeWidth,
+                scale = 0.33f,
+                platformMode = false
+            };
+
+            platformViewport = new GameViewport(this)
+            {
+                screenWidth = platformModeWidth
+            };
+
+            Components.Add(platformViewport);
+            Components.Add(tetrisViewport);
 
             // Add GUI components
             StatusLayer = new GameStatusLayer(this);
@@ -180,75 +199,12 @@ namespace NGJ2012
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            double platformSplitLine = -1;
-            double gameWorldStartInPX = gameBlockSizePlatform * 0;
-            double gameWorldEndInPX = gameBlockSizePlatform * worldWidthInBlocks;
-            double cameraLeftInPX = platform.cameraPosition.X * gameBlockSizePlatform - platformModeWidth / 2.0f;
-            double cameraRightInPX = platform.cameraPosition.X * gameBlockSizePlatform + platformModeWidth / 2.0f;
-            if (cameraLeftInPX < gameWorldStartInPX)
-            {
-                platformSplitLine = gameWorldStartInPX - cameraLeftInPX;
-                GraphicsDevice.SetRenderTarget(platformModeLeft);
-                DrawGameWorldOnce(true, -1);
-                GraphicsDevice.SetRenderTarget(platformModeRight);
-                DrawGameWorldOnce(true, 0);
-            }
-            else if (gameWorldEndInPX < cameraRightInPX)
-            {
-                platformSplitLine = platformModeWidth - (cameraRightInPX - gameWorldEndInPX);
-                GraphicsDevice.SetRenderTarget(platformModeLeft);
-                DrawGameWorldOnce(true, 0);
-                GraphicsDevice.SetRenderTarget(platformModeRight);
-                DrawGameWorldOnce(true, 1);
-            }
-            else
-            {
-                GraphicsDevice.SetRenderTarget(platformModeLeft);
-                DrawGameWorldOnce(true, 0);
-            }
+            platformViewport.Draw(gameTime);
+            tetrisViewport.Draw(gameTime);
 
-            double tetrisSplitLine = -1;
-            gameWorldStartInPX = gameBlockSizeTetris * 0;
-            gameWorldEndInPX = gameBlockSizeTetris * worldWidthInBlocks;
-            cameraLeftInPX = platform.cameraPosition.X * gameBlockSizeTetris - tetrisModeWidth / 2.0f;
-            cameraRightInPX = platform.cameraPosition.X * gameBlockSizeTetris + tetrisModeWidth / 2.0f;
-            if (cameraLeftInPX < gameWorldStartInPX)
-            {
-                tetrisSplitLine = gameWorldStartInPX - cameraLeftInPX;
-                GraphicsDevice.SetRenderTarget(tetrisModeLeft);
-                DrawGameWorldOnce(false, -1);
-                GraphicsDevice.SetRenderTarget(tetrisModeRight);
-                DrawGameWorldOnce(false, 0);
-            }
-            else if (gameWorldEndInPX < cameraRightInPX)
-            {
-                tetrisSplitLine = tetrisModeWidth - (cameraRightInPX - gameWorldEndInPX);
-                GraphicsDevice.SetRenderTarget(tetrisModeLeft);
-                DrawGameWorldOnce(false, 0);
-                GraphicsDevice.SetRenderTarget(tetrisModeRight);
-                DrawGameWorldOnce(false, 1);
-            }
-            else
-            {
-                GraphicsDevice.SetRenderTarget(tetrisModeLeft);
-                DrawGameWorldOnce(false, 0);
-            }
-            GraphicsDevice.SetRenderTarget(null);
             spriteBatch.Begin();
-            if (platformSplitLine < 0)
-                spriteBatch.Draw(platformModeLeft, new Rectangle(0, 0, platformModeWidth, 720), Color.White);
-            else
-            {
-                spriteBatch.Draw(platformModeLeft, new Rectangle(0, 0, (int)platformSplitLine, 720), new Rectangle(0, 0, (int)platformSplitLine, 720), Color.White);
-                spriteBatch.Draw(platformModeRight, new Rectangle((int)platformSplitLine, 0, platformModeWidth - (int)platformSplitLine, 720), new Rectangle((int)platformSplitLine, 0, platformModeWidth - (int)platformSplitLine, 720), Color.White);
-            }
-            if (tetrisSplitLine < 0)
-                spriteBatch.Draw(tetrisModeLeft, new Rectangle(platformModeWidth, 0, tetrisModeWidth, 720), Color.White);
-            else
-            {
-                spriteBatch.Draw(tetrisModeLeft, new Rectangle(platformModeWidth, 0, (int)tetrisSplitLine, 720), new Rectangle(0, 0, (int)tetrisSplitLine, 720), Color.White);
-                spriteBatch.Draw(tetrisModeRight, new Rectangle(platformModeWidth+(int)tetrisSplitLine, 0, tetrisModeWidth - (int)tetrisSplitLine, 720), new Rectangle((int)tetrisSplitLine, 0, tetrisModeWidth - (int)tetrisSplitLine, 720), Color.White);
-            }
+            platformViewport.Compose(spriteBatch);
+            tetrisViewport.Compose(spriteBatch, platformModeWidth);
             spriteBatch.End();
 
             base.Draw(gameTime);
