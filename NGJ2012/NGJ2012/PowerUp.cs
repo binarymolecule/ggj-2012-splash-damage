@@ -54,8 +54,10 @@ namespace NGJ2012
             switch (this.powerUpType)
             {
                 case EPowerUpType.MegaJump:
+                    game.PlatformPlayer.addPowerUp(this.powerUpType);
                     break;
                 case EPowerUpType.ExtraLive:
+                    game.PlatformPlayer.increaseLives();
                     break;
             }
 
