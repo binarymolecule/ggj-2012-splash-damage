@@ -35,7 +35,7 @@ namespace NGJ2012
 
         protected override void LoadContent()
         {
-            texture = game.Content.Load<Texture2D>("GameOver");
+            texture = game.Content.Load<Texture2D>("TitleScreen");
             base.LoadContent();
         }
 
@@ -56,7 +56,7 @@ namespace NGJ2012
         public override void Draw(GameTime gameTime)
         {
             game.SpriteBatchOnlyForGuiOverlay.Begin();
-            //game.SpriteBatchOnlyForGuiOverlay.Draw(texture, new Vector2(0, 0), Color.White);
+            game.SpriteBatchOnlyForGuiOverlay.Draw(texture, new Vector2(0, 0), Color.White);
             game.SpriteBatchOnlyForGuiOverlay.End();
             base.Draw(gameTime);
         }
