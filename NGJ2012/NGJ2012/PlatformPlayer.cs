@@ -135,7 +135,7 @@ namespace NGJ2012
             for (int i = 9; i < 29; i++)
                 playerTextureNames.Add(String.Format("run_loop_02/run_loop_02_{0:0000}", i));
             
-            playerAnimation = new AnimatedSprite(parent, "char", playerTextureNames, new Vector2(256, 256));
+            playerAnimation = new AnimatedSprite(parent, "char", playerTextureNames, new Vector2(256, 336));
             animID_Stand = playerAnimation.AddAnimation("stand", 0, 0, 125, true);
             //animID_Walk = playerAnimation.AddAnimation("walk", 0, 29, 50, 9);
             animID_Walk = playerAnimation.AddAnimation("walk", 9, 20, 40, true);
