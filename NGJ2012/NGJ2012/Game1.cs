@@ -59,6 +59,8 @@ namespace NGJ2012
         public const Category COLLISION_GROUP_STATIC_OBJECTS = Category.Cat3;
         public const Category COLLISION_GROUP_LEVEL_SEPARATOR = Category.Cat4;
 
+        public const int SCREEN_WIDTH = 1280, SCREEN_HEIGHT = 720;
+
         public readonly static Utility.TimerCollection Timers = new Utility.TimerCollection();
 
         // Public access to world
@@ -101,8 +103,8 @@ namespace NGJ2012
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
-            graphics.PreferredBackBufferWidth = 1280;
-            graphics.PreferredBackBufferHeight = 720;
+            graphics.PreferredBackBufferWidth = SCREEN_WIDTH;
+            graphics.PreferredBackBufferHeight = SCREEN_HEIGHT;
             Content.RootDirectory = "Content";
             world = new World(new Vector2(0, 25));
 
