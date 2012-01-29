@@ -968,6 +968,312 @@
       <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
+  <ItemGroup>
+    <Compile Include="collectables\water\water_01_0001.png">
+      <Name>water_01_0001</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="collectables\water\water_01_0002.png">
+      <Name>water_01_0002</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="collectables\water\water_01_0003.png">
+      <Name>water_01_0003</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="collectables\water\water_01_0004.png">
+      <Name>water_01_0004</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="collectables\water\water_01_0005.png">
+      <Name>water_01_0005</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="collectables\water\water_01_0006.png">
+      <Name>water_01_0006</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="collectables\water\water_01_0007.png">
+      <Name>water_01_0007</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="collectables\water\water_01_0008.png">
+      <Name>water_01_0008</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="collectables\water\water_01_0009.png">
+      <Name>water_01_0009</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="collectables\water\water_01_0010.png">
+      <Name>water_01_0010</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="collectables\water\water_01_0011.png">
+      <Name>water_01_0011</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="collectables\water\water_01_0012.png">
+      <Name>water_01_0012</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="collectables\water\water_01_0013.png">
+      <Name>water_01_0013</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="collectables\water\water_01_0014.png">
+      <Name>water_01_0014</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="collectables\water\water_01_0015.png">
+      <Name>water_01_0015</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="collectables\water\water_01_0016.png">
+      <Name>water_01_0016</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="collectables\water\water_01_0017.png">
+      <Name>water_01_0017</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="collectables\water\water_01_0018.png">
+      <Name>water_01_0018</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="collectables\water\water_01_0019.png">
+      <Name>water_01_0019</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="collectables\water\water_01_0020.png">
+      <Name>water_01_0020</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="collectables\life_up\lifeup_01_0001.png">
+      <Name>lifeup_01_0001</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="collectables\life_up\lifeup_01_0002.png">
+      <Name>lifeup_01_0002</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="collectables\life_up\lifeup_01_0003.png">
+      <Name>lifeup_01_0003</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="collectables\life_up\lifeup_01_0004.png">
+      <Name>lifeup_01_0004</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="collectables\life_up\lifeup_01_0005.png">
+      <Name>lifeup_01_0005</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="collectables\life_up\lifeup_01_0006.png">
+      <Name>lifeup_01_0006</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="collectables\life_up\lifeup_01_0007.png">
+      <Name>lifeup_01_0007</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="collectables\life_up\lifeup_01_0008.png">
+      <Name>lifeup_01_0008</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="collectables\life_up\lifeup_01_0009.png">
+      <Name>lifeup_01_0009</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="collectables\life_up\lifeup_01_0010.png">
+      <Name>lifeup_01_0010</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="collectables\life_up\lifeup_01_0011.png">
+      <Name>lifeup_01_0011</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="collectables\life_up\lifeup_01_0012.png">
+      <Name>lifeup_01_0012</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="collectables\life_up\lifeup_01_0013.png">
+      <Name>lifeup_01_0013</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="collectables\life_up\lifeup_01_0014.png">
+      <Name>lifeup_01_0014</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="collectables\life_up\lifeup_01_0015.png">
+      <Name>lifeup_01_0015</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="collectables\life_up\lifeup_01_0016.png">
+      <Name>lifeup_01_0016</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="collectables\life_up\lifeup_01_0017.png">
+      <Name>lifeup_01_0017</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="collectables\life_up\lifeup_01_0018.png">
+      <Name>lifeup_01_0018</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="collectables\life_up\lifeup_01_0019.png">
+      <Name>lifeup_01_0019</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="collectables\life_up\lifeup_01_0020.png">
+      <Name>lifeup_01_0020</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="collectables\powerjump\powerjump\powerjump_01_0001.png">
+      <Name>powerjump_01_0001</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="collectables\powerjump\powerjump\powerjump_01_0002.png">
+      <Name>powerjump_01_0002</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="collectables\powerjump\powerjump\powerjump_01_0003.png">
+      <Name>powerjump_01_0003</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="collectables\powerjump\powerjump\powerjump_01_0004.png">
+      <Name>powerjump_01_0004</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="collectables\powerjump\powerjump\powerjump_01_0005.png">
+      <Name>powerjump_01_0005</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="collectables\powerjump\powerjump\powerjump_01_0006.png">
+      <Name>powerjump_01_0006</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="collectables\powerjump\powerjump\powerjump_01_0007.png">
+      <Name>powerjump_01_0007</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="collectables\powerjump\powerjump\powerjump_01_0008.png">
+      <Name>powerjump_01_0008</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="collectables\powerjump\powerjump\powerjump_01_0009.png">
+      <Name>powerjump_01_0009</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="collectables\powerjump\powerjump\powerjump_01_0010.png">
+      <Name>powerjump_01_0010</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="collectables\powerjump\powerjump\powerjump_01_0011.png">
+      <Name>powerjump_01_0011</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="collectables\powerjump\powerjump\powerjump_01_0012.png">
+      <Name>powerjump_01_0012</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="collectables\powerjump\powerjump\powerjump_01_0013.png">
+      <Name>powerjump_01_0013</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="collectables\powerjump\powerjump\powerjump_01_0014.png">
+      <Name>powerjump_01_0014</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="collectables\powerjump\powerjump\powerjump_01_0015.png">
+      <Name>powerjump_01_0015</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="collectables\powerjump\powerjump\powerjump_01_0016.png">
+      <Name>powerjump_01_0016</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="collectables\powerjump\powerjump\powerjump_01_0017.png">
+      <Name>powerjump_01_0017</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="collectables\powerjump\powerjump\powerjump_01_0018.png">
+      <Name>powerjump_01_0018</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="collectables\powerjump\powerjump\powerjump_01_0019.png">
+      <Name>powerjump_01_0019</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="collectables\powerjump\powerjump\powerjump_01_0020.png">
+      <Name>powerjump_01_0020</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\$(XnaFrameworkVersion)\Microsoft.Xna.GameStudio.ContentPipeline.targets" />
   <!--  To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
