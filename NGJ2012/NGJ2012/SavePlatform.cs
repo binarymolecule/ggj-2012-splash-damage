@@ -74,6 +74,7 @@ namespace NGJ2012
             {
                 canBeTriggered = false;
                 StartRising(2000);
+                SoundManager.PlaySound("bell");
             }
         }
 

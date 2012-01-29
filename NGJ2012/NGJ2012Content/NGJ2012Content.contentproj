@@ -456,9 +456,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="sound\352903_Storm_Flood.mp3">
-      <Name>level-01</Name>
+      <Name>background</Name>
       <Importer>Mp3Importer</Importer>
       <Processor>SongProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="sound\66951__benboncan__boxing-bell.wav">
+      <Name>bell</Name>
+      <Importer>WavImporter</Importer>
+      <Processor>SoundEffectProcessor</Processor>
     </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\$(XnaFrameworkVersion)\Microsoft.Xna.GameStudio.ContentPipeline.targets" />

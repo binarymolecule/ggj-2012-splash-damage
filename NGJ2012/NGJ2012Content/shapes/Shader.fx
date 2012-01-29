@@ -12,12 +12,14 @@ struct VertexShaderInput
 {
     float4 Position : POSITION0;
     float2 Tex : TEXCOORD0;
+    float4 Color : COLOR0;
 };
 
 struct VertexShaderOutput
 {
     float4 Position : POSITION0;
     float2 Tex : TEXCOORD0;
+    float4 Color : COLOR0;
 };
 
 uniform const float4x4	World		: register(vs, c0);	// 0 - 3
@@ -33,12 +35,13 @@ VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
 	float4 pos_ps = mul(pos_vs, Projection);
 	output.Position = pos_ps;
 	output.Tex = input.Tex;
+	output.Color = input.Color;
 	return output;
 }
 
 float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 {
-    return tex2D(TextureSampler, input.Tex);
+    return tex2D(TextureSampler, input.Tex) * input.Color;
 }
 
 technique Technique1
