@@ -229,7 +229,7 @@ namespace NGJ2012
             prevGamepadState = gamepadState;
 
             //Powerup stuff:
-            addPowerupToWorld((float)gameTime.ElapsedGameTime.TotalSeconds);
+            addPowerupToWorld(sec);
             checkForPassedPowerupsToRemove();
 
             base.Update(gameTime);
