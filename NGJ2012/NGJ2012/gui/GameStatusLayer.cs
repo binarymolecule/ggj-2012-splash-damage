@@ -82,28 +82,28 @@ namespace NGJ2012
 
         public override void Draw(GameTime gameTime)
         {
-            parent.SpriteBatch.Begin();
-            parent.SpriteBatch.Draw(tex, screenRectangle, Color.White);
-            parent.SpriteBatch.Draw(tex, playerRectangle, Color.Red);
+            parent.SpriteBatchOnlyForGuiOverlay.Begin();
+            parent.SpriteBatchOnlyForGuiOverlay.Draw(tex, screenRectangle, Color.White);
+            parent.SpriteBatchOnlyForGuiOverlay.Draw(tex, playerRectangle, Color.Red);
 
             //Texts p1:
             Vector2 widthHeight = font.MeasureString(p1Text);
             Vector2 posPowerupTxt = new Vector2(textPositionP1.X, textPositionP1.Y + widthHeight.Y);
             
-            parent.SpriteBatch.DrawString(font, p1Text, textPositionP1, Color.White);
+            parent.SpriteBatchOnlyForGuiOverlay.DrawString(font, p1Text, textPositionP1, Color.White);
             
             widthHeight = font.MeasureString(p1Text);
             if (texturePowerUp != null)
             {
-                parent.SpriteBatch.DrawString(font, textPowerup, posPowerupTxt, Color.White);
-                parent.SpriteBatch.Draw(texturePowerUp, posPowerupTxt + new Vector2(font.MeasureString(textPowerup).X, 0.0f), Color.White);
+                parent.SpriteBatchOnlyForGuiOverlay.DrawString(font, textPowerup, posPowerupTxt, Color.White);
+                parent.SpriteBatchOnlyForGuiOverlay.Draw(texturePowerUp, posPowerupTxt + new Vector2(font.MeasureString(textPowerup).X, 0.0f), Color.White);
             }
 
             //Texts p2:
-            parent.SpriteBatch.DrawString(font, p2Text, textPositionP2, Color.White);
-            if (parent.TetrisPlayer.nextTetrixPiece != null) parent.SpriteBatch.Draw(parent.TetrisPlayer.nextTetrixPiece.texture, textPositionP2 + new Vector2(font.MeasureString(p2Text).X, 0.0f), null, Color.White, 0.0f, new Vector2(), TETRIS_SCALE, SpriteEffects.None, 0.0f);
+            parent.SpriteBatchOnlyForGuiOverlay.DrawString(font, p2Text, textPositionP2, Color.White);
+            if (parent.TetrisPlayer.nextTetrixPiece != null) parent.SpriteBatchOnlyForGuiOverlay.Draw(parent.TetrisPlayer.nextTetrixPiece.texture, textPositionP2 + new Vector2(font.MeasureString(p2Text).X, 0.0f), null, Color.White, 0.0f, new Vector2(), TETRIS_SCALE, SpriteEffects.None, 0.0f);
 
-            parent.SpriteBatch.End();
+            parent.SpriteBatchOnlyForGuiOverlay.End();
 
 
         }
