@@ -50,21 +50,34 @@ namespace NGJ2012
 
         public void DrawBody(Body bod)
         {
-            Matrix mat = Matrix.CreateRotationZ(bod.Rotation) * Matrix.CreateTranslation(new Vector3(bod.Position, 0.0f)) * cameraMatrix;
+            Matrix mat = Matrix.CreateRotationZ(bod.Rotation) * Matrix.CreateTranslation(new Vector3(bod.Position, 0.0f));
 
             GraphicsDevice.SamplerStates[0] = SamplerState.AnisotropicClamp;
             //tell our basic effect to begin.
             _basicEffect.Projection = Matrix.CreateOrthographicOffCenter(0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height, 0, 0, 1);
-            _basicEffect.View = mat;
+            //_basicEffect.View = mat;
             _basicEffect.TextureEnabled = false;
             _basicEffect.CurrentTechnique.Passes[0].Apply();
 
-            foreach (Fixture fix in bod.FixtureList)
-            {
-                DrawLineShape(fix.Shape, Color.Black);
-            }
 
-            Flush();
+            bool wrapL = bod.Position.X < Game1.worldDuplicateBorder;
+            bool wrapR = bod.Position.X > Game1.worldWidthInBlocks - Game1.worldDuplicateBorder;
+
+            for (int i = -1; i <= 1; i++)
+            {
+                if (i == -1 && !wrapL) continue;
+                if (i == 1 && !wrapR) continue;
+
+                _basicEffect.View = mat * Matrix.CreateTranslation(new Vector3(-i * Game1.worldWidthInBlocks, 0, 0)) * cameraMatrix;
+                _basicEffect.CurrentTechnique.Passes[0].Apply();
+
+                foreach (Fixture fix in bod.FixtureList)
+                {
+                    DrawLineShape(fix.Shape, Color.Black);
+                }
+
+                Flush();
+            }
         }
 
         public void DrawBodyTextured(Body bod, Texture2D texture)
@@ -73,23 +86,36 @@ namespace NGJ2012
         }
         public void DrawBodyTextured(Body bod, Texture2D texture, float textureScale)
         {
-            Matrix mat = Matrix.CreateRotationZ(bod.Rotation) * Matrix.CreateTranslation(new Vector3(bod.Position, 0.0f)) * cameraMatrix;
+            Matrix mat = Matrix.CreateRotationZ(bod.Rotation) * Matrix.CreateTranslation(new Vector3(bod.Position, 0.0f));
 
             GraphicsDevice.SamplerStates[0] = SamplerState.AnisotropicClamp;
             GraphicsDevice.BlendState = BlendState.AlphaBlend;
 
             effect.Parameters["Projection"].SetValue(Matrix.CreateOrthographicOffCenter(0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height, 0, 0, 1));
-            effect.Parameters["View"].SetValue(mat);
+//            effect.Parameters["View"].SetValue(mat);
             effect.Parameters["World"].SetValue(Matrix.Identity);
             effect.Parameters["BasicTexture"].SetValue(texture);
-            effect.CurrentTechnique.Passes[0].Apply();
+//            effect.CurrentTechnique.Passes[0].Apply();
 
-            foreach (Fixture fix in bod.FixtureList)
+
+            bool wrapL = bod.Position.X < Game1.worldDuplicateBorder;
+            bool wrapR = bod.Position.X > Game1.worldWidthInBlocks - Game1.worldDuplicateBorder;
+
+            for (int i = -1; i <= 1; i++)
             {
-                DrawQuadShape(fix.Shape, Color.White, textureScale);
-            }
+                if (i == -1 && !wrapL) continue;
+                if (i == 1 && !wrapR) continue;
 
-            Flush();
+                effect.Parameters["View"].SetValue(mat * Matrix.CreateTranslation(new Vector3(-i * Game1.worldWidthInBlocks, 0, 0)) * cameraMatrix);
+                effect.CurrentTechnique.Passes[0].Apply();
+
+                foreach (Fixture fix in bod.FixtureList)
+                {
+                    DrawQuadShape(fix.Shape, Color.White, textureScale);
+                }
+
+                Flush();
+            }
         }
 
         public void DrawTetrisPiece(TetrisPiece piece)
@@ -105,8 +131,8 @@ namespace NGJ2012
             effect.Parameters["BasicTexture"].SetValue(piece.texture);
             effect.CurrentTechnique.Passes[0].Apply();
 
-            bool wrapL = piece.body.Position.X < 5;
-            bool wrapR = piece.body.Position.X > Game1.worldWidthInBlocks - 5;
+            bool wrapL = piece.body.Position.X < Game1.worldDuplicateBorder;
+            bool wrapR = piece.body.Position.X > Game1.worldWidthInBlocks - Game1.worldDuplicateBorder;
 
             for (int i = -1; i <= 1; i++)
             {

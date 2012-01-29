@@ -48,32 +48,32 @@ namespace NGJ2012
         {
 
             splitLine = -1;
-            float gameWorldStartInPX = cellSizeInPX * 0;
-            float gameWorldEndInPX = cellSizeInPX * Game1.worldWidthInBlocks;
-            float cameraLeftInPX = cameraPosition.X * cellSizeInPX - screenWidth / 2.0f;
-            float cameraRightInPX = cameraPosition.X * cellSizeInPX + screenWidth / 2.0f;
+            //float gameWorldStartInPX = cellSizeInPX * 0;
+            //float gameWorldEndInPX = cellSizeInPX * Game1.worldWidthInBlocks;
+            //float cameraLeftInPX = cameraPosition.X * cellSizeInPX - screenWidth / 2.0f;
+            //float cameraRightInPX = cameraPosition.X * cellSizeInPX + screenWidth / 2.0f;
 
-            if (cameraLeftInPX < gameWorldStartInPX)
-            {
-                splitLine = gameWorldStartInPX - cameraLeftInPX;
-                game.GraphicsDevice.SetRenderTarget(leftScreen);
-                DrawGameWorldOnce(-1);
-                GraphicsDevice.SetRenderTarget(rightScreen);
-                DrawGameWorldOnce(0);
-            }
-            else if (gameWorldEndInPX < cameraRightInPX)
-            {
-                splitLine = screenWidth - (cameraRightInPX - gameWorldEndInPX);
+            //if (cameraLeftInPX < gameWorldStartInPX)
+            //{
+            //    splitLine = gameWorldStartInPX - cameraLeftInPX;
+            //    game.GraphicsDevice.SetRenderTarget(leftScreen);
+            //    DrawGameWorldOnce(-1);
+            //    GraphicsDevice.SetRenderTarget(rightScreen);
+            //    DrawGameWorldOnce(0);
+            //}
+            //else if (gameWorldEndInPX < cameraRightInPX)
+            //{
+            //    splitLine = screenWidth - (cameraRightInPX - gameWorldEndInPX);
+            //    GraphicsDevice.SetRenderTarget(leftScreen);
+            //    DrawGameWorldOnce(0);
+            //    GraphicsDevice.SetRenderTarget(rightScreen);
+            //    DrawGameWorldOnce(1);
+            //}
+            //else
+            //{
                 GraphicsDevice.SetRenderTarget(leftScreen);
                 DrawGameWorldOnce(0);
-                GraphicsDevice.SetRenderTarget(rightScreen);
-                DrawGameWorldOnce(1);
-            }
-            else
-            {
-                GraphicsDevice.SetRenderTarget(leftScreen);
-                DrawGameWorldOnce(0);
-            }
+            //}
 
             game.GraphicsDevice.SetRenderTarget(null);
         }

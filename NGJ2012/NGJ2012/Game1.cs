@@ -40,6 +40,8 @@ namespace NGJ2012
         public const int worldWidthInBlocks = 30;
         public const int worldHeightInBlocks = 40;
 
+        public const int worldDuplicateBorder = 5;
+
         public const Category COLLISION_GROUP_DEFAULT = Category.Cat1;
         public const Category COLLISION_GROUP_TETRIS_BLOCKS = Category.Cat2;
         public const Category COLLISION_GROUP_STATIC_OBJECTS = Category.Cat3;
