@@ -111,7 +111,10 @@ namespace NGJ2012
             graphics = new GraphicsDeviceManager(this);
             graphics.PreferredBackBufferWidth = SCREEN_WIDTH;
             graphics.PreferredBackBufferHeight = SCREEN_HEIGHT;
+            graphics.IsFullScreen = true;
+#if !_DEBUG
             Content.RootDirectory = "Content";
+#endif
             world = new World(new Vector2(0, 25));
 
             staticWorldGround = BodyFactory.CreateRectangle(world, worldWidthInBlocks, 1, 1.0f, new Vector2(worldWidthInBlocks / 2.0f, 0.5f));
@@ -294,8 +297,8 @@ namespace NGJ2012
             spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied);
             tetrisViewport.Compose(spriteBatch);
 
-            if (playerSwitchProgress > 0)
-                spriteBatch.Draw(playerSwitchTexture, new Rectangle(0, 0, 1280, 720), new Color(1, 1, 1, (float)Math.Min(1,playerSwitchProgress)));
+            //if (playerSwitchProgress > 0)
+            //    spriteBatch.Draw(playerSwitchTexture, new Rectangle(0, 0, 1280, 720), new Color(1, 1, 1, (float)Math.Min(1,playerSwitchProgress)));
 
 
             spriteBatch.End();
