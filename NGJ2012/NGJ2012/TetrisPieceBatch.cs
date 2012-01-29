@@ -94,28 +94,40 @@ namespace NGJ2012
 
         public void DrawTetrisPiece(TetrisPiece piece)
         {
-            Matrix mat = Matrix.CreateRotationZ(piece.body.Rotation) * Matrix.CreateTranslation(new Vector3(piece.body.Position, 0.0f)) * cameraMatrix;
+            Matrix mat = Matrix.CreateRotationZ(piece.body.Rotation) * Matrix.CreateTranslation(new Vector3(piece.body.Position, 0.0f));
 
             GraphicsDevice.SamplerStates[0] = SamplerState.AnisotropicClamp;
             GraphicsDevice.BlendState = BlendState.AlphaBlend;
 
             effect.Parameters["Projection"].SetValue(Matrix.CreateOrthographicOffCenter(0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height, 0, 0, 1));
-            effect.Parameters["View"].SetValue(mat);
+            //effect.Parameters["View"].SetValue(mat);
             effect.Parameters["World"].SetValue(Matrix.Identity);
             effect.Parameters["BasicTexture"].SetValue(piece.texture);
             effect.CurrentTechnique.Passes[0].Apply();
 
-            for (int y = 0; y < piece.shape.GetLength(0); y++)
-            {
-                for (int x = 0; x < piece.shape.GetLength(1); x++)
-                {
-                    if (!piece.shape[y, x]) continue;
-                    Vertices v = new Vertices(new Vector2[] { new Vector2(x + 0, y + 0), new Vector2(x + 1, y + 0), new Vector2(x + 1, y + 1), new Vector2(x + 0, y + 1) });
-                    DrawPolygon(Color.White, 1.0f / 4.0f, v);
-                }
-            }
+            bool wrapL = piece.body.Position.X < 5;
+            bool wrapR = piece.body.Position.X > Game1.worldWidthInBlocks - 5;
 
-            Flush();
+            for (int i = -1; i <= 1; i++)
+            {
+                if (i == -1 && !wrapL) continue;
+                if (i == 1 && !wrapR) continue;
+
+                effect.Parameters["View"].SetValue(mat * Matrix.CreateTranslation(new Vector3(-i * Game1.worldWidthInBlocks, 0, 0)) * cameraMatrix);
+                effect.CurrentTechnique.Passes[0].Apply();
+
+                for (int y = 0; y < piece.shape.GetLength(0); y++)
+                {
+                    for (int x = 0; x < piece.shape.GetLength(1); x++)
+                    {
+                        if (!piece.shape[y, x]) continue;
+                        Vertices v = new Vertices(new Vector2[] { new Vector2(x + 0, y + 0), new Vector2(x + 1, y + 0), new Vector2(x + 1, y + 1), new Vector2(x + 0, y + 1) });
+                        DrawPolygon(Color.White, 1.0f / 4.0f, v);
+                    }
+                }
+
+                Flush();
+            }
         }
 
         public void DrawAlignedQuad(Vector2 center, Vector2 size, Texture2D texture)
