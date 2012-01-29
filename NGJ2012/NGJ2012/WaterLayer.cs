@@ -116,13 +116,14 @@ namespace NGJ2012
             {
                 for (var substep = 0; substep < resolution && (x != parent.WorldWidthInBlocks || substep == 0); substep++)
                 {
-                    var rx = x + substep * (1 / resolution);
+                    var rx = (float)x + (float)substep * (1f / resolution);
                     array[i++] = new VertexPositionColor(new Vector3(rx, 2, 0), Color.Black);
 
                     float h = pos.Y;
                     //h += (float)Math.Sin(rx - gameTime.TotalGameTime.TotalSeconds * 2.1) * 0.1f - 0.1f;
                     //h += (float)Math.Sin(rx - gameTime.TotalGameTime.TotalSeconds * 1.2) * 0.2f - 0.2f;
-                    h += (float)Perlin.noise(rx * 0.1f, gameTime.TotalGameTime.TotalSeconds * 0.1, 0);
+                    var px = rx / (float)parent.WorldWidthInBlocks * 512f;
+                    h += (float)Perlin.noise(px, gameTime.TotalGameTime.TotalSeconds * 0.6, 0) * 0.2f;
 
 
                     array[i++] = new VertexPositionColor(new Vector3(rx, h, 0), Color.White);
