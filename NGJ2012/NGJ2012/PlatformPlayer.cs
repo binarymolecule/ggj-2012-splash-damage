@@ -31,6 +31,7 @@ namespace NGJ2012
         private const float deacceleration = 256.0f;
         private const float maxRunSpeed = 8.0f;
         private const float maxSpeed = 32.0f;
+        private const float timeUntilCanDieAgainReset = 2.0f;
 
         Game1 parent;
         const float ScalePlayerSprite = 0.25f;
@@ -40,6 +41,7 @@ namespace NGJ2012
         public Vector2 cameraPosition;
 
         private int numberOfLifes;
+        float timeUntilCanDieAgain = timeUntilCanDieAgainReset;
 
         public int NumberOfLifes
         {
@@ -93,6 +95,7 @@ namespace NGJ2012
             canJumpBecauseOf.Clear();
             parent.SavePlatform.DisableTriggering();
             dead = false;
+            timeUntilCanDieAgain = timeUntilCanDieAgainReset;
         }
 
         List<Fixture> canJumpBecauseOf = new List<Fixture>();
@@ -191,11 +194,13 @@ namespace NGJ2012
             if (parent.gameOverLayer.IsActive)
                 return;
 
+            timeUntilCanDieAgain -= (float)gameTime.ElapsedGameTime.TotalSeconds;
+
             // Process user input
             int msec = gameTime.ElapsedGameTime.Milliseconds;
 
             bool eatenByWave = (Game as Game1).waveLayer.isCollidingWith(playerCollider.Position);
-            if (!dead && (this.playerCollider.Position.Y > parent.WaterLayer.Height + 1.0f || eatenByWave))
+            if (!dead && timeUntilCanDieAgain<0 && (this.playerCollider.Position.Y > parent.WaterLayer.Height + 1.0f || eatenByWave))
             {
                 this.numberOfLifes--;
 
