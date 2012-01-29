@@ -24,6 +24,7 @@ namespace NGJ2012
             : base(game)
         {
             this.game = game;
+            Visible = false;
         }
 
         protected override void LoadContent()
@@ -37,14 +38,13 @@ namespace NGJ2012
             this.position.X = game.gameProgress - game.TetrisViewport.screenWidthInGAME / 2;
             this.position.X = (this.position.X + Game1.worldWidthInBlocks) % Game1.worldWidthInBlocks;
             this.position.Y = game.WaterLayer.Height - texture.Height / Game1.gameBlockSizePlatform;
+
             base.Update(gameTime);
         }
 
         public override void DrawGameWorldOnce(Matrix camera, bool platformMode)
         {
-            game.SpriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
-            game.SpriteBatch.Draw(texture, Vector2.Transform(position, camera), Color.White);
-            game.SpriteBatch.End();
+            if(Visible) game.TetrisBatch.DrawAlignedQuad(position, new Vector2(1, 10), texture);
         }
 
         public bool isCollidingWith(Vector2 objPos)

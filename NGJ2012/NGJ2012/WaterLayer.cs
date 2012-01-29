@@ -39,6 +39,7 @@ namespace NGJ2012
         private VertexPositionColor[] array;
         private BasicEffect _basicEffect;
         private Effect effect;
+        private float WAVE_OFFSET = 13f;
 
         public WaterLayer(Game game) : base(game)
         {
@@ -124,6 +125,9 @@ namespace NGJ2012
                     //h += (float)Math.Sin(rx - gameTime.TotalGameTime.TotalSeconds * 1.2) * 0.2f - 0.2f;
                     var px = rx / (float)parent.WorldWidthInBlocks * 512f;
                     h += (float)Perlin.noise(px, gameTime.TotalGameTime.TotalSeconds * 0.6, 0) * 0.2f;
+                    var progressDist = Math.Abs(MathStuff.WorldDistanceAbs(rx, parent.gameProgress-WAVE_OFFSET, parent.WorldWidthInBlocks));
+
+                    h -= (float)Math.Cos(MathHelper.Clamp(progressDist, 0, (float)Math.PI)) * 5f + 5f;
 
 
                     array[i++] = new VertexPositionColor(new Vector3(rx, h, 0), Color.White);
@@ -145,14 +149,19 @@ namespace NGJ2012
             GraphicsDevice.BlendState = BlendState.AlphaBlend;
 
             effect.Parameters["Projection"].SetValue(Matrix.CreateOrthographicOffCenter(0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height, 0, 0, 1));
-            effect.Parameters["View"].SetValue(camera);
+//            effect.Parameters["View"].SetValue(camera);
             effect.Parameters["World"].SetValue(Matrix.Identity);
             //effect.Parameters["BasicTexture"].SetValue(texture);
-            effect.CurrentTechnique.Passes[0].Apply();
+//            effect.CurrentTechnique.Passes[0].Apply();
 
             GraphicsDevice.SetVertexBuffer(vb);
-            GraphicsDevice.DrawPrimitives(PrimitiveType.TriangleStrip, 0, vb.VertexCount-2);
 
+            for (int i = -1; i <= 1; i++)
+            {
+                effect.Parameters["View"].SetValue(Matrix.CreateTranslation(new Vector3(-i * Game1.worldWidthInBlocks, 0, 0)) * camera);
+                effect.CurrentTechnique.Passes[0].Apply();
+                GraphicsDevice.DrawPrimitives(PrimitiveType.TriangleStrip, 0, vb.VertexCount - 2);
+            }
 
 
             //Vector2 screenPos = Vector2.Transform(pos, camera);
