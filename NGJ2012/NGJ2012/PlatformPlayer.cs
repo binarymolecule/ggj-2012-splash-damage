@@ -100,7 +100,6 @@ namespace NGJ2012
                 fixtureB.Body == parent.SavePlatform.Body)
             {
                 parent.SavePlatform.Trigger();
-                return true;
             }
             if ((fixtureB.CollisionCategories & (Game1.COLLISION_GROUP_TETRIS_BLOCKS | Game1.COLLISION_GROUP_STATIC_OBJECTS)) == 0) return true;
 
@@ -136,11 +135,12 @@ namespace NGJ2012
             for (int i = 9; i < 29; i++)
                 playerTextureNames.Add(String.Format("run_loop_02/run_loop_02_{0:0000}", i));
             
-            playerAnimation = new AnimatedSprite(parent, "char", playerTextureNames, new Vector2(256, 256));
+            playerAnimation = new AnimatedSprite(parent, "char", playerTextureNames, new Vector2(256, 336));
             animID_Stand = playerAnimation.AddAnimation("stand", 0, 0, 125, true);
-            animID_Walk = playerAnimation.AddAnimation("walk", 0, 29, 50, 9);
-            animID_Idle = playerAnimation.AddAnimation("idle", 0, 0, 125, true);
-            animID_Jump = playerAnimation.AddAnimation("jump", 0, 9, 60, false);
+            //animID_Walk = playerAnimation.AddAnimation("walk", 0, 29, 50, 9);
+            animID_Walk = playerAnimation.AddAnimation("walk", 9, 20, 40, true);
+            animID_Idle = playerAnimation.AddAnimation("idle", 0, 3, 125, true);
+            animID_Jump = playerAnimation.AddAnimation("jump", 0, 9, 40, false);
             animID_Fall = playerAnimation.AddAnimation("fall", 0, 0, 125, true);
             animID_Hit = playerAnimation.AddAnimation("hit", 0, 0, 125, true);
             playerAnimation.SetAnimation(animID_Stand);
@@ -225,15 +225,13 @@ namespace NGJ2012
             if (Math.Abs(currentRunSpeed) > 0.001f)
             {
                 viewDirection = Math.Sign(currentRunSpeed);
-                walkModifier = 1.0f;
-                world.RayCast(new RayCastCallback(RayCastCallback), playerCollider.Position + viewDirection * new Vector2(0.2f, 0), playerCollider.Position + viewDirection * new Vector2(1.0f, 0));
-                currentRunSpeed *= walkModifier;
                 isRunning = true;
             }
             else
                 currentRunSpeed = 0;
 
-            playerCollider.LinearVelocity = new Vector2(currentRunSpeed, playerCollider.LinearVelocity.Y);
+            float runSpeedScaleDueToVertical = 1.0f;// (float)Math.Sqrt(Math.Max(0, maxRunSpeed * maxRunSpeed - playerCollider.LinearVelocity.Y * playerCollider.LinearVelocity.Y);
+            playerCollider.LinearVelocity = new Vector2(currentRunSpeed * runSpeedScaleDueToVertical, playerCollider.LinearVelocity.Y);
 
             if (playerCollider.LinearVelocity.Y > 0)
                 didFallSinceLastJump = true;
@@ -253,6 +251,7 @@ namespace NGJ2012
                 {
                     //canJump = false;
                     //world.RayCast(new RayCastCallback(RayCastCallbackJump), playerCollider.Position, playerCollider.Position + new Vector2(0, 1.0f));
+                    canJump = canJumpBecauseOf.Count > 0 || Math.Abs(playerCollider.LinearVelocity.Y) < 0.01;
                     if (canJump)
                     {
                         jump();
@@ -277,7 +276,7 @@ namespace NGJ2012
 
             if (state.IsKeyDown(Keys.Enter) || state.IsKeyDown(Keys.E) || gstate.IsButtonDown(Buttons.B)) usePowerUp();
 
-            if (state.IsKeyDown(Keys.F)) bite();
+            if (state.IsKeyDown(Keys.F) || gstate.IsButtonDown(Buttons.X)) bite();
 
             // Update player animation
             playerAnimation.Update(gameTime.ElapsedGameTime.Milliseconds);
@@ -335,8 +334,7 @@ namespace NGJ2012
             // Draw animation
             Vector2 screenPos = Vector2.Transform(playerCollider.Position, camera);
             parent.SpriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
-            playerAnimation.Draw(parent.SpriteBatch, screenPos,
-                                 ScalePlayerSprite * (platformMode ? Game1.ScalePlatformSprites : Game1.ScaleTetrisSprites));
+            playerAnimation.Draw(parent.SpriteBatch, screenPos, 0.25f);
             parent.SpriteBatch.End();
 
 #if DEBUG

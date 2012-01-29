@@ -20,7 +20,7 @@ namespace NGJ2012
 {
     public class TetrisPiece
     {
-        public int freezeCountdown = 10;
+        public double freezeCountdown = 1000;
         public Body body;
         public List<Fixture> fixtures;
         public Texture2D texture;
@@ -39,7 +39,7 @@ namespace NGJ2012
                     if (!shape[y, x]) continue;
                     float shrink = 0.1f;
                     Vertices v = new Vertices(new Vector2[] { new Vector2(x + 0 + shrink, y + 0 + shrink), new Vector2(x + 1 - shrink, y + 0 + shrink), new Vector2(x + 1 - shrink, y + 1 - shrink), new Vector2(x + 0 + shrink, y + 1 - shrink) });
-                    fixtures.Add(FixtureFactory.AttachPolygon(v, 1.0f, body));
+                    fixtures.Add(FixtureFactory.AttachPolygon(v, 10.0f, body));
                 }
             }
 
