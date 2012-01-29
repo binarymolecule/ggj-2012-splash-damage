@@ -213,7 +213,8 @@ namespace NGJ2012
 
                 if (currentPiece.body.Position.Y > 10) dropCurrentPiece();
 
-
+                if (currentPiece.body.Position.X < 0) currentPiece.body.Position = new Vector2(currentPiece.body.Position.X + Game1.worldWidthInBlocks, currentPiece.body.Position.Y);
+                if (currentPiece.body.Position.X > Game1.worldWidthInBlocks) currentPiece.body.Position = new Vector2(currentPiece.body.Position.X - Game1.worldWidthInBlocks, currentPiece.body.Position.Y);
             }
 
             List<TetrisPiece> deactivateUs = new List<TetrisPiece>();
