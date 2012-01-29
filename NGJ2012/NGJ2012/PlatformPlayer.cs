@@ -182,7 +182,7 @@ namespace NGJ2012
             // Process user input
             int msec = gameTime.ElapsedGameTime.Milliseconds;
 
-            if (this.playerCollider.Position.Y > parent.WaterLayer.Height)
+            if (this.playerCollider.Position.Y > parent.WaterLayer.Height || this.playerCollider.Position.X < parent.waveLayer.getRightBorder())
             {
                 this.numberOfLifes--;
 

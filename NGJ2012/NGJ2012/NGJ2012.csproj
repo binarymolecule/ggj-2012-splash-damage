@@ -114,6 +114,7 @@
     <Compile Include="AnimatedSprite.cs" />
     <Compile Include="DrawableGameComponentExtended.cs" />
     <Compile Include="GameViewport.cs" />
+    <Compile Include="WaveLayer.cs" />
     <Compile Include="MathStuff.cs" />
     <Compile Include="Perlin.cs" />
     <Compile Include="PlatformPlayer.cs" />

@@ -58,6 +58,7 @@ namespace NGJ2012
         // Other level components
         public WaterLayer WaterLayer;
         public SavePlatform SavePlatform;
+        public WaveLayer waveLayer;
 
         // GUI components
         public GameStatusLayer StatusLayer { get; protected set; }
@@ -82,6 +83,8 @@ namespace NGJ2012
         float tetrisProgressAdd = 10;
         private GameViewport tetrisViewport;
         private GameViewport platformViewport;
+
+        public GameViewport PlatformViewport { get { return platformViewport; } }
 
         //Power-Ups:
         private const float TIME_BETWEEN_POWERUPSPAWNS_SECS = 3.0f;
@@ -124,6 +127,8 @@ namespace NGJ2012
             Components.Add(WaterLayer);
             SavePlatform = new SavePlatform(this);
             Components.Add(SavePlatform);
+            waveLayer = new WaveLayer(this);
+            Components.Add(waveLayer);
 
             tetrisViewport = new GameViewport(this, gameBlockSizeTetris)
             {
