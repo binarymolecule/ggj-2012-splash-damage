@@ -96,6 +96,7 @@ namespace NGJ2012
 
 #if DEBUG
         public Vector2 manualPosition = Vector2.Zero;
+        private Texture2D uiSprites;
 #endif
 
         public Game1()
@@ -143,7 +144,7 @@ namespace NGJ2012
 
             // Add GUI components
             StatusLayer = new GameStatusLayer(this);
-            Components.Add(StatusLayer);
+            //Components.Add(StatusLayer);
         }
 
         /// <summary>
@@ -171,6 +172,7 @@ namespace NGJ2012
             background = Content.Load<Texture2D>(@"graphics/level/Background");
             tetrisBatch = new TetrisPieceBatch(GraphicsDevice, Content);
             playerSwitchTexture = Content.Load<Texture2D>(@"graphics/gui/PlayerSwitch");
+            uiSprites = Content.Load<Texture2D>(@"graphics/sprites");
 
             // Load sound
             MusicManager.LoadMusic(Content, "background", "background");
@@ -239,7 +241,7 @@ namespace NGJ2012
                 manualPosition.Y += 1.0f;
 #endif
             // update game progress
-            float sec = (float) gameTime.ElapsedGameTime.TotalSeconds;
+            float sec = (float)gameTime.ElapsedGameTime.TotalSeconds;
             gameProgress += gameProgressSpeed * sec;
             if (gameProgress > Game1.worldWidthInBlocks)
             {
@@ -265,6 +267,20 @@ namespace NGJ2012
             base.Update(gameTime);
         }
 
+        public void DrawUiSprite(int index, int x, int y, int cellX = 0, int cellY = 0)
+        {
+            int itemsPerRow = 8;
+            int cellSize = uiSprites.Width / itemsPerRow;
+            int row = index / itemsPerRow;
+            int col = index % itemsPerRow;
+
+            var srcRect = new Rectangle(col * cellSize, row * cellSize, cellSize, cellSize);
+            var destRect = new Rectangle(x + cellX * cellSize, y + cellY * cellSize, cellSize, cellSize);
+
+            spriteBatch.Draw(uiSprites, destRect, srcRect, Color.White);
+        }
+
+
         /// <summary>
         /// This is called when the game should draw itself.
         /// </summary>
@@ -273,11 +289,37 @@ namespace NGJ2012
         {
             tetrisViewport.Draw(gameTime);
 
-            spriteBatch.Begin(SpriteSortMode.Immediate,BlendState.NonPremultiplied);
+            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied);
             tetrisViewport.Compose(spriteBatch);
 
-            if(playerSwitchProgress > 0)
+            if (playerSwitchProgress > 0)
                 spriteBatch.Draw(playerSwitchTexture, new Rectangle(0, 0, 1280, 720), new Color(1, 1, 1, (float)playerSwitchProgress));
+
+            // Life display
+            {
+                int lifeUiX = 200;
+                int lifeUiY = 20;
+
+                DrawUiSprite(0, lifeUiX, lifeUiY);
+
+                var lives = platform.NumberOfLifes.ToString();
+                var i = 1;
+
+                foreach (char c in lives.ToCharArray())
+                {
+                    if (c == '0')
+                    {
+                        DrawUiSprite(17, lifeUiX, lifeUiY, i++);
+                    }
+                    else
+                    {
+                        DrawUiSprite(8 + (c - '1'), lifeUiX, lifeUiY, i++);
+                    }
+
+                }
+
+            }
+
 
             spriteBatch.End();
 
@@ -290,7 +332,7 @@ namespace NGJ2012
             GraphicsDevice.Clear(platformMode ? Color.CornflowerBlue : Color.Coral);
             spriteBatch.Begin();
             Vector3 tl = camera.Translation;
-            spriteBatch.Draw(background, new Rectangle(0,0,1280,720), Color.White);
+            spriteBatch.Draw(background, new Rectangle(0, 0, 1280, 720), Color.White);
             spriteBatch.End();
 
             tetrisBatch.cameraMatrix = camera;
@@ -319,7 +361,7 @@ namespace NGJ2012
                 int randomOffset = (new Random()).Next(0, maxWidthInGame);
 
                 Vector2 spawnPos = new Vector2();
-                spawnPos.X = (platform.cameraPosition.X + distanceToRightBorder+randomOffset) % Game1.worldWidthInBlocks;
+                spawnPos.X = (platform.cameraPosition.X + distanceToRightBorder + randomOffset) % Game1.worldWidthInBlocks;
                 spawnPos.Y = platform.cameraPosition.Y - SPAWNHEIGHT_OF_PWUP_ABOVE_PLAYER;
 
                 //Get a random power up:
@@ -327,7 +369,7 @@ namespace NGJ2012
                 Components.Add(p);
                 powerUps.Add(p);
                 elapsedTimeSinceLastPowerUp = 0.0f;
-            }    
+            }
         }
 
         private void checkForPassedPowerupsToRemove()
