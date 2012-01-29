@@ -30,6 +30,7 @@ namespace NGJ2012
 
         List<bool[,]> tetrisShapes = new List<bool[,]>();
         List<Texture2D> tetrisTextures = new List<Texture2D>();
+        List<int> tetrisProb = new List<int>();
 
         List<TetrisPiece> pieces = new List<TetrisPiece>();
         List<TetrisPiece> activePieces = new List<TetrisPiece>();
@@ -64,6 +65,17 @@ namespace NGJ2012
             tetrisShapes.Add(new bool[,] { { true } });
             tetrisShapes.Add(new bool[,] { { true }, { true } });
             tetrisShapes.Add(new bool[,] { { true }, { true }, { true } });
+
+            tetrisProb.Add(1); // LL
+            tetrisProb.Add(1); // LR
+            tetrisProb.Add(3); // O
+            tetrisProb.Add(2); // T
+            tetrisProb.Add(3); // I
+            tetrisProb.Add(1); // Z
+            tetrisProb.Add(1); // MZ
+            tetrisProb.Add(1); // I1
+            tetrisProb.Add(1); // I2
+            tetrisProb.Add(1); // I3
 
             Game1.Timers.Create(SPAWN_TIME, false, Spawn);
         }
@@ -134,9 +146,24 @@ namespace NGJ2012
             return p;
         }
 
+        Random rnd = new Random();
         private TetrisPiece getRandomTetrisPiece()
         {
-            int shape = (new Random()).Next(tetrisShapes.Count);
+            int probSum = 0;
+            foreach (int c in tetrisProb)
+                probSum += c;
+            int shapeS = rnd.Next(probSum);
+            int shape = tetrisProb.Count - 1;
+            for (int i = 0; i < tetrisProb.Count; i++)
+			{
+                shapeS -= tetrisProb[i];
+                if (shapeS < 0)
+                {
+                    shape = i;
+                    break;
+                }
+            }
+
             return new TetrisPiece(_world, tetrisTextures[shape], tetrisShapes[shape], new Vector2(-100, -100));
         }
 
