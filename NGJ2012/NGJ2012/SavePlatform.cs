@@ -76,7 +76,7 @@ namespace NGJ2012
             }
         }
 
-        protected void StartRising(int msec)
+        public void StartRising(int msec)
         {
             // Start rising 3 blocks
             riseTime = msec;

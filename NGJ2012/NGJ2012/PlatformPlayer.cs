@@ -35,7 +35,7 @@ namespace NGJ2012
 
         World world;
         public Body playerCollider;
-        public Vector2 cameraPosition = Vector2.Zero;
+        public Vector2 cameraPosition;
         
         private int numberOfLifes;
 
@@ -45,7 +45,7 @@ namespace NGJ2012
         }
         private bool didFallSinceLastJump = true;
         private float jumpForce = 0.5f;
-        private const float BYTE_FORCE = 500.0f;
+        private const float BYTE_FORCE = 300.0f;
         private PowerUp currentlySelectedPowerUp;
 
         public PowerUp CurrentlySelectedPowerUp
@@ -65,7 +65,6 @@ namespace NGJ2012
             parent = (Game1)game;
 
             playerCollider = BodyFactory.CreateCapsule(world, 1.0f, 0.2f, 0.001f);
-            playerCollider.Position = new Vector2(2, -2);
             playerCollider.OnCollision += new OnCollisionEventHandler(PlayerCollidesWithWorld);
             playerCollider.OnSeparation += new OnSeparationEventHandler(PlayerSeparatesFromWorld);
             playerCollider.Friction = 0.0f;
@@ -76,7 +75,15 @@ namespace NGJ2012
             playerCollider.CollisionCategories = Game1.COLLISION_GROUP_DEFAULT;
             playerCollider.CollidesWith = Game1.COLLISION_GROUP_DEFAULT | Game1.COLLISION_GROUP_STATIC_OBJECTS | Game1.COLLISION_GROUP_TETRIS_BLOCKS;
 
+            resetPlayer();
+
             numberOfLifes = INITIAL_NUMBER_OF_LIFES;
+        }
+
+        private void resetPlayer()
+        {
+            playerCollider.Position = new Vector2(2, -2);
+            cameraPosition = Vector2.Zero;
         }
 
         List<Fixture> canJumpBecauseOf = new List<Fixture>();
@@ -175,6 +182,21 @@ namespace NGJ2012
             // Process user input
             int msec = gameTime.ElapsedGameTime.Milliseconds;
 
+            if (this.playerCollider.Position.Y > parent.WaterLayer.Height)
+            {
+                this.numberOfLifes--;
+
+                if (this.numberOfLifes == 0)
+                {
+                    //TODO: Gameover
+                }
+                else
+                {
+                    resetPlayer();
+                    //TODO Switch players:
+                }
+            }
+
             KeyboardState state = Keyboard.GetState();
             GamePadState gstate = GamePad.GetState(PlayerIndex.One);
             float move = 0;
@@ -203,15 +225,13 @@ namespace NGJ2012
             if (Math.Abs(currentRunSpeed) > 0.001f)
             {
                 viewDirection = Math.Sign(currentRunSpeed);
-                walkModifier = 1.0f;
-                world.RayCast(new RayCastCallback(RayCastCallback), playerCollider.Position + viewDirection * new Vector2(0.2f, 0), playerCollider.Position + viewDirection * new Vector2(1.0f, 0));
-                currentRunSpeed *= walkModifier;
                 isRunning = true;
             }
             else
                 currentRunSpeed = 0;
 
-            playerCollider.LinearVelocity = new Vector2(currentRunSpeed, playerCollider.LinearVelocity.Y);
+            float runSpeedScaleDueToVertical = 1.0f;// (float)Math.Sqrt(Math.Max(0, maxRunSpeed * maxRunSpeed - playerCollider.LinearVelocity.Y * playerCollider.LinearVelocity.Y);
+            playerCollider.LinearVelocity = new Vector2(currentRunSpeed * runSpeedScaleDueToVertical, playerCollider.LinearVelocity.Y);
 
             if (playerCollider.LinearVelocity.Y > 0)
                 didFallSinceLastJump = true;
@@ -231,6 +251,7 @@ namespace NGJ2012
                 {
                     //canJump = false;
                     //world.RayCast(new RayCastCallback(RayCastCallbackJump), playerCollider.Position, playerCollider.Position + new Vector2(0, 1.0f));
+                    canJump = canJumpBecauseOf.Count > 0 || Math.Abs(playerCollider.LinearVelocity.Y) < 0.01;
                     if (canJump)
                     {
                         jump();
@@ -255,7 +276,7 @@ namespace NGJ2012
 
             if (state.IsKeyDown(Keys.Enter) || state.IsKeyDown(Keys.E) || gstate.IsButtonDown(Buttons.B)) usePowerUp();
 
-            if (state.IsKeyDown(Keys.F)) bite();
+            if (state.IsKeyDown(Keys.F) || gstate.IsButtonDown(Buttons.X)) bite();
 
             // Update player animation
             playerAnimation.Update(gameTime.ElapsedGameTime.Milliseconds);
@@ -265,23 +286,22 @@ namespace NGJ2012
 
         private void bite()
         {
-            Vector2 start = playerCollider.Position + viewDirection * new Vector2(0.2f, 0);
             //Check for objects slightly above or below to get also objects that are not directly on the height of your head:
-            world.RayCast(new RayCastCallback(biteRayCastCallback), start, playerCollider.Position + viewDirection * new Vector2(0.6f, -0.5f));
-            world.RayCast(new RayCastCallback(biteRayCastCallback), start, playerCollider.Position + viewDirection * new Vector2(0.6f, +0.5f));
+            world.RayCast(new RayCastCallback(biteRayCastCallback), playerCollider.Position, playerCollider.Position + new Vector2(0.6f * viewDirection, -0.5f));
+            world.RayCast(new RayCastCallback(biteRayCastCallback), playerCollider.Position, playerCollider.Position + new Vector2(0.6f * viewDirection, 0.0f));
+            world.RayCast(new RayCastCallback(biteRayCastCallback), playerCollider.Position, playerCollider.Position + new Vector2(0.6f * viewDirection, +0.5f));
         }
 
         float biteRayCastCallback(Fixture fixture, Vector2 point, Vector2 normal, float fraction)
         {
             if (fixture.CollisionCategories == Game1.COLLISION_GROUP_TETRIS_BLOCKS)
             {
+                parent.TetrisPlayer.reactiveAllPieces();
                 fixture.Body.ApplyForce(new Vector2(-this.viewDirection * BYTE_FORCE, -BYTE_FORCE));
-
+              
                 //Stop raytracing
                 return 0;
-            }
-            else
-            {
+            } else {
                 //Continue raytracing:
                 return -1;
             }
@@ -314,8 +334,7 @@ namespace NGJ2012
             // Draw animation
             Vector2 screenPos = Vector2.Transform(playerCollider.Position, camera);
             parent.SpriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
-            playerAnimation.Draw(parent.SpriteBatch, screenPos,
-                                 ScalePlayerSprite * (platformMode ? Game1.ScalePlatformSprites : Game1.ScaleTetrisSprites));
+            playerAnimation.Draw(parent.SpriteBatch, screenPos, 1.0f);
             parent.SpriteBatch.End();
 
 #if DEBUG

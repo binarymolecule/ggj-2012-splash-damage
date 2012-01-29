@@ -37,11 +37,8 @@ namespace NGJ2012
         Body staticWorldGround;
         Body staticWorldL;
         Body staticWorldR;
-        public const int worldWidthInBlocks = 24;
-        public const int worldHeightInBlocks = 20;
-
-        public const float ScalePlatformSprites = 1.0f;
-        public const float ScaleTetrisSprites = 0.25f * ScalePlatformSprites;
+        public const int worldWidthInBlocks = 30;
+        public const int worldHeightInBlocks = 40;
 
         public const Category COLLISION_GROUP_DEFAULT = Category.Cat1;
         public const Category COLLISION_GROUP_TETRIS_BLOCKS = Category.Cat2;
@@ -63,25 +60,19 @@ namespace NGJ2012
         public GameStatusLayer StatusLayer { get; protected set; }
         public SpriteBatch SpriteBatch { get { return spriteBatch; } }
 
-        public const float gameBlockSizePlatform = 64.0f;
-        public const float gameBlockSizeTetris = 32.0f;
+        public const float gameBlockSizeTetris = 48;
 
-        public const int platformModeWidth = 850;
-        public const int tetrisModeWidth = 1280 - platformModeWidth;
-
-        RenderTarget2D platformModeLeft;
-        RenderTarget2D platformModeRight;
-
-        RenderTarget2D tetrisModeLeft;
-        RenderTarget2D tetrisModeRight;
 
         Texture2D background;
 
+<<<<<<< HEAD
         public float gameProgress = 0;
         float gameProgressSpeed = 1;
         float tetrisProgressAdd = 10;
+=======
+        float gameProgressSpeed = 3.5f;
+>>>>>>> 54c415c28997a3039f76c231655f55e5da222cda
         private GameViewport tetrisViewport;
-        private GameViewport platformViewport;
 
         //Power-Ups:
         private const float TIME_BETWEEN_POWERUPSPAWNS_SECS = 3.0f;
@@ -125,17 +116,10 @@ namespace NGJ2012
             SavePlatform = new SavePlatform(this);
             Components.Add(SavePlatform);
 
-            tetrisViewport = new GameViewport(this, gameBlockSizeTetris)
-            {
-                platformMode = false
-            };
-            tetrisViewport.resize(tetrisModeWidth, 720);
+            tetrisViewport = new GameViewport(this, gameBlockSizeTetris);
+            tetrisViewport.resize(1280, 720);
             tetris.viewportToSpawnIn = tetrisViewport;
 
-            platformViewport = new GameViewport(this, gameBlockSizePlatform);
-            platformViewport.resize(platformModeWidth, 720);
-
-            Components.Add(platformViewport);
             Components.Add(tetrisViewport);
 
             // Add GUI components
@@ -163,11 +147,6 @@ namespace NGJ2012
         /// </summary>
         protected override void LoadContent()
         {
-            platformModeLeft = new RenderTarget2D(GraphicsDevice, platformModeWidth, 720);
-            platformModeRight = new RenderTarget2D(GraphicsDevice, platformModeWidth, 720);
-            tetrisModeLeft = new RenderTarget2D(GraphicsDevice, tetrisModeWidth, 720);
-            tetrisModeRight = new RenderTarget2D(GraphicsDevice, tetrisModeWidth, 720);
-
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
             background = Content.Load<Texture2D>("graphics/level/Background");
@@ -216,13 +195,12 @@ namespace NGJ2012
             {
                 gameProgress -= Game1.worldWidthInBlocks;
                 SavePlatform.AllowTriggering();
+                WaterLayer.StartRising(5000);
+                SavePlatform.StartRising(5000);
             }
 
-            platformViewport.cameraPosition = platform.cameraPosition + new Vector2(platformViewport.screenWidthInGAME/3.0f, 0);
+            tetrisViewport.cameraPosition = new Vector2(gameProgress, WaterLayer.Position.Y - 4);
 
-            float tetrisPro = platformViewport.cameraPosition.X + tetrisProgressAdd;
-            if (tetrisPro > Game1.worldWidthInBlocks) tetrisPro -= Game1.worldWidthInBlocks;
-            tetrisViewport.cameraPosition = new Vector2(tetrisPro, WaterLayer.Position.Y - 4);
 
             world.Step((float)gameTime.ElapsedGameTime.TotalSeconds);
 
@@ -242,12 +220,10 @@ namespace NGJ2012
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            platformViewport.Draw(gameTime);
             tetrisViewport.Draw(gameTime);
 
             spriteBatch.Begin();
-            platformViewport.Compose(spriteBatch);
-            tetrisViewport.Compose(spriteBatch, platformModeWidth);
+            tetrisViewport.Compose(spriteBatch);
             spriteBatch.End();
 
             base.Draw(gameTime);
@@ -282,7 +258,7 @@ namespace NGJ2012
             if (elapsedTimeSinceLastPowerUp >= TIME_BETWEEN_POWERUPSPAWNS_SECS)
             {
                 //Position the power up on the "screen next to the currenct visible area":
-                int maxWidthInGame = (int)Math.Ceiling(Math.Max(this.tetrisViewport.screenWidthInGAME, this.platformViewport.screenWidthInGAME));
+                int maxWidthInGame = (int)Math.Ceiling(Math.Max(this.tetrisViewport.screenWidthInGAME, this.tetrisViewport.screenWidthInGAME));
                 int distanceToRightBorder = maxWidthInGame - (int)PlatformPlayer.cameraPosition.X % maxWidthInGame;
                 int randomOffset = (new Random()).Next(0, maxWidthInGame);
                 
