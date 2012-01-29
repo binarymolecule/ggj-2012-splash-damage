@@ -1,3 +1,7 @@
+#if DEBUG
+  #define DEBUG_COLLISION
+#endif
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -324,11 +328,10 @@ namespace NGJ2012
                     (c as DrawableGameComponentExtended).DrawGameWorldOnce(camera, platformMode);
                 }
             }
-
+#if DEBUG_COLLISION
             foreach (Body cur in world.BodyList)
-            {
                 tetrisBatch.DrawBody(cur);
-            }
+#endif
         }
 
         private void addPowerupToWorld(float elapsedSeconds)
