@@ -91,6 +91,7 @@ namespace NGJ2012
                 SoundManager.PlaySound("collect_powerup");
 
                 this.Visible = false;
+                world.RemoveBody(this.collisionBody);
             }
 
             return false;

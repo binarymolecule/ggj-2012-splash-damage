@@ -223,6 +223,17 @@ namespace NGJ2012
                     _lineVertsCount += 2;
                 }
             }
+            else
+            {
+                _lineVertices[_lineVertsCount].Position = new Vector3(-shape.Radius, -shape.Radius, 0f);
+                _lineVertices[_lineVertsCount + 1].Position = new Vector3(shape.Radius, shape.Radius, 0f);
+                _lineVertices[_lineVertsCount].Color = _lineVertices[_lineVertsCount + 1].Color = color;
+                _lineVertsCount += 2;
+                _lineVertices[_lineVertsCount].Position = new Vector3(shape.Radius, -shape.Radius, 0f);
+                _lineVertices[_lineVertsCount + 1].Position = new Vector3(-shape.Radius, shape.Radius, 0f);
+                _lineVertices[_lineVertsCount].Color = _lineVertices[_lineVertsCount + 1].Color = color;
+                _lineVertsCount += 2;
+            }
         }
 
         private void DrawQuadShape(Shape shape, Color color, float textureScale)
