@@ -60,14 +60,8 @@ namespace NGJ2012
             _basicEffect.CurrentTechnique.Passes[0].Apply();
 
 
-            bool wrapL = bod.Position.X < Game1.worldWidthInBlocks / 2 + Game1.worldDuplicateBorder;
-            bool wrapR = bod.Position.X > Game1.worldWidthInBlocks / 2 - Game1.worldDuplicateBorder;
-
-            for (int i = -1; i <= 1; i++)
+            for (int i = -2; i <= 2; i++)
             {
-                if (i == -1 && !wrapL) continue;
-                if (i == 1 && !wrapR) continue;
-
                 _basicEffect.View = mat * Matrix.CreateTranslation(new Vector3(-i * Game1.worldWidthInBlocks, 0, 0)) * cameraMatrix;
                 _basicEffect.CurrentTechnique.Passes[0].Apply();
 
@@ -144,24 +138,25 @@ namespace NGJ2012
                 if (i == -1 && !wrapL) continue;
                 if (i == 1 && !wrapR) continue;
 
-                effect.Parameters["View"].SetValue(mat * Matrix.CreateTranslation(new Vector3(-i * Game1.worldWidthInBlocks, 0, 0)) * cameraMatrix);
+                Matrix off = Matrix.CreateTranslation(new Vector3(-0.5f, -0.5f, 0));
+                effect.Parameters["View"].SetValue(off * mat * Matrix.CreateTranslation(new Vector3(-i * Game1.worldWidthInBlocks, 0, 0)) * cameraMatrix);
                 effect.CurrentTechnique.Passes[0].Apply();
 
-                for (int y = 0; y < piece.shape.GetLength(0); y++)
-                {
-                    for (int x = 0; x < piece.shape.GetLength(1); x++)
-                    {
-                        if (!piece.shape[y, x]) continue;
-                        Vertices v = new Vertices(new Vector2[] { new Vector2(x + 0, y + 0), new Vector2(x + 1, y + 0), new Vector2(x + 1, y + 1), new Vector2(x + 0, y + 1) });
-                        DrawPolygon(color, 1.0f / 4.0f, v);
-                    }
-                }
+                int maxX = piece.shape.GetLength(1) + 1;
+                int maxY = piece.shape.GetLength(0) + 1;
+                Vertices v = new Vertices(new Vector2[] { new Vector2(0, 0), new Vector2(maxX, 0), new Vector2(maxX, maxY), new Vector2(0, maxY) });
+                DrawPolygon(color, 1.0f / 5.0f, v);
 
                 Flush();
             }
         }
 
         public void DrawAlignedQuad(Vector2 center, Vector2 size, Texture2D texture)
+        {
+            DrawAlignedQuad(center, size, texture, false);
+        }
+
+        public void DrawAlignedQuad(Vector2 center, Vector2 size, Texture2D texture, bool flipped)
         {
             Matrix mat = Matrix.CreateTranslation(new Vector3(center, 0.0f));
 
@@ -185,25 +180,26 @@ namespace NGJ2012
                 effect.Parameters["View"].SetValue(mat * Matrix.CreateTranslation(new Vector3(-i * Game1.worldWidthInBlocks, 0, 0)) * cameraMatrix);
                 effect.CurrentTechnique.Passes[0].Apply();
 
-                Vertices vertices = new Vertices(new Vector2[] { new Vector2(-size.X / 2, -size.Y / 2), new Vector2(size.X / 2, -size.Y / 2), new Vector2(size.X / 2, size.Y / 2), new Vector2(-size.X / 2, size.Y / 2) });
+                Vertices vertices = new Vertices(new Vector2[] { new Vector2(-size.X / 2, -size.Y / 2), new Vector2(size.X / 2, -size.Y / 2),
+                                                                 new Vector2(size.X / 2, size.Y / 2), new Vector2(-size.X / 2, size.Y / 2) });
                 _quadVertices[_quadVertsCount].Color = Color.White;
-                _quadVertices[_quadVertsCount].TextureCoordinate = new Vector2(0, 0);
+                _quadVertices[_quadVertsCount].TextureCoordinate = flipped ? new Vector2(1, 0) : new Vector2(0, 0);
                 _quadVertices[_quadVertsCount++].Position = new Vector3(-size.X / 2, -size.Y / 2, 0f);
                 _quadVertices[_quadVertsCount].Color = Color.White;
-                _quadVertices[_quadVertsCount].TextureCoordinate = new Vector2(1, 0);
+                _quadVertices[_quadVertsCount].TextureCoordinate = flipped ? new Vector2(0, 0) : new Vector2(1, 0);
                 _quadVertices[_quadVertsCount++].Position = new Vector3(size.X / 2, -size.Y / 2, 0f);
                 _quadVertices[_quadVertsCount].Color = Color.White;
-                _quadVertices[_quadVertsCount].TextureCoordinate = new Vector2(1, 1);
+                _quadVertices[_quadVertsCount].TextureCoordinate = flipped ? new Vector2(0, 1) : new Vector2(1, 1);
                 _quadVertices[_quadVertsCount++].Position = new Vector3(size.X / 2, size.Y / 2, 0f);
 
                 _quadVertices[_quadVertsCount].Color = Color.White;
-                _quadVertices[_quadVertsCount].TextureCoordinate = new Vector2(0, 0);
+                _quadVertices[_quadVertsCount].TextureCoordinate = flipped ? new Vector2(1, 0) : new Vector2(0, 0);
                 _quadVertices[_quadVertsCount++].Position = new Vector3(-size.X / 2, -size.Y / 2, 0f);
                 _quadVertices[_quadVertsCount].Color = Color.White;
-                _quadVertices[_quadVertsCount].TextureCoordinate = new Vector2(1, 1);
+                _quadVertices[_quadVertsCount].TextureCoordinate = flipped ? new Vector2(0, 1) : new Vector2(1, 1);
                 _quadVertices[_quadVertsCount++].Position = new Vector3(size.X / 2, size.Y / 2, 0f);
                 _quadVertices[_quadVertsCount].Color = Color.White;
-                _quadVertices[_quadVertsCount].TextureCoordinate = new Vector2(0, 1);
+                _quadVertices[_quadVertsCount].TextureCoordinate = flipped ? new Vector2(1, 1) : new Vector2(0, 1);
                 _quadVertices[_quadVertsCount++].Position = new Vector3(-size.X / 2, size.Y / 2, 0f);
 
                 Flush();
@@ -226,6 +222,17 @@ namespace NGJ2012
                     _lineVertices[_lineVertsCount].Color = _lineVertices[_lineVertsCount + 1].Color = color;
                     _lineVertsCount += 2;
                 }
+            }
+            else
+            {
+                _lineVertices[_lineVertsCount].Position = new Vector3(-shape.Radius, -shape.Radius, 0f);
+                _lineVertices[_lineVertsCount + 1].Position = new Vector3(shape.Radius, shape.Radius, 0f);
+                _lineVertices[_lineVertsCount].Color = _lineVertices[_lineVertsCount + 1].Color = color;
+                _lineVertsCount += 2;
+                _lineVertices[_lineVertsCount].Position = new Vector3(shape.Radius, -shape.Radius, 0f);
+                _lineVertices[_lineVertsCount + 1].Position = new Vector3(-shape.Radius, shape.Radius, 0f);
+                _lineVertices[_lineVertsCount].Color = _lineVertices[_lineVertsCount + 1].Color = color;
+                _lineVertsCount += 2;
             }
         }
 

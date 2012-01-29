@@ -50,7 +50,7 @@ namespace NGJ2012
         Body staticWorldL;
         Body staticWorldR;
         public const int worldWidthInBlocks = 30;
-        public const int worldHeightInBlocks = 40;
+        public const int worldHeightInBlocks = 30;
 
         public const int worldDuplicateBorder = 5;
 
@@ -58,6 +58,8 @@ namespace NGJ2012
         public const Category COLLISION_GROUP_TETRIS_BLOCKS = Category.Cat2;
         public const Category COLLISION_GROUP_STATIC_OBJECTS = Category.Cat3;
         public const Category COLLISION_GROUP_LEVEL_SEPARATOR = Category.Cat4;
+
+        public const int SCREEN_WIDTH = 1280, SCREEN_HEIGHT = 720;
 
         public readonly static Utility.TimerCollection Timers = new Utility.TimerCollection();
 
@@ -77,9 +79,11 @@ namespace NGJ2012
         public GameStatusLayer StatusLayer { get; protected set; }
         public SpriteBatch SpriteBatchOnlyForGuiOverlay { get { return spriteBatch; } }
 
-        public const float gameBlockSizePlatform = 64;
+        public const float gameBlockSizePlatform = 48;
         public const float gameBlockSizeTetris = 48;
         Texture2D background;
+        Texture2D cloud1;
+        Texture2D cloud2;
 
         public float gameProgress = 0;
         //float tetrisProgressAdd = 10;
@@ -102,12 +106,12 @@ namespace NGJ2012
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
-            graphics.PreferredBackBufferWidth = 1280;
-            graphics.PreferredBackBufferHeight = 720;
+            graphics.PreferredBackBufferWidth = SCREEN_WIDTH;
+            graphics.PreferredBackBufferHeight = SCREEN_HEIGHT;
             Content.RootDirectory = "Content";
             world = new World(new Vector2(0, 25));
 
-            staticWorldGround = BodyFactory.CreateRectangle(world, worldWidthInBlocks, 1, 1.0f, new Vector2(worldWidthInBlocks / 2.0f, 0));
+            staticWorldGround = BodyFactory.CreateRectangle(world, worldWidthInBlocks, 1, 1.0f, new Vector2(worldWidthInBlocks / 2.0f, 0.5f));
             staticWorldL = BodyFactory.CreateRectangle(world, 4, worldHeightInBlocks, 1.0f, new Vector2(2.0f, -worldHeightInBlocks / 2.0f));
             staticWorldR = BodyFactory.CreateRectangle(world, 1, worldHeightInBlocks, 1.0f, new Vector2(worldWidthInBlocks, -worldHeightInBlocks / 2.0f));
             staticWorldGround.BodyType = BodyType.Static;
@@ -170,6 +174,8 @@ namespace NGJ2012
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
             background = Content.Load<Texture2D>(@"graphics/level/Background");
+            cloud1 = Content.Load<Texture2D>(@"graphics/level/cloud_01");
+            cloud2 = Content.Load<Texture2D>(@"graphics/level/cloud_02");
             tetrisBatch = new TetrisPieceBatch(GraphicsDevice, Content);
             playerSwitchTexture = Content.Load<Texture2D>(@"graphics/gui/PlayerSwitch");
             uiSprites = Content.Load<Texture2D>(@"graphics/sprites");
@@ -229,7 +235,7 @@ namespace NGJ2012
 
             if (playerSwitchProgress > 0)
             {
-                playerSwitchProgress -= gameTime.ElapsedGameTime.TotalSeconds;
+                playerSwitchProgress -= gameTime.ElapsedGameTime.TotalSeconds * 0.5;
                 return;
             }
 
@@ -280,6 +286,7 @@ namespace NGJ2012
             spriteBatch.Draw(uiSprites, destRect, srcRect, Color.White);
         }
 
+        Vector2 cloudOffsets = Vector2.Zero;
 
         /// <summary>
         /// This is called when the game should draw itself.
@@ -287,6 +294,11 @@ namespace NGJ2012
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
+            cloudOffsets.X += 0.5f * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            cloudOffsets.Y += 1.3f * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            if (cloudOffsets.X > Game1.worldWidthInBlocks) cloudOffsets.X -= Game1.worldWidthInBlocks;
+            if (cloudOffsets.Y > Game1.worldWidthInBlocks) cloudOffsets.Y -= Game1.worldWidthInBlocks;
+
             tetrisViewport.Draw(gameTime);
 
             spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied);
@@ -327,6 +339,7 @@ namespace NGJ2012
             base.Draw(gameTime);
         }
 
+
         public void DrawGameWorldOnce(Matrix camera, bool platformMode, int wrapAround)
         {
             GraphicsDevice.Clear(platformMode ? Color.CornflowerBlue : Color.Coral);
@@ -336,16 +349,25 @@ namespace NGJ2012
             spriteBatch.End();
 
             tetrisBatch.cameraMatrix = camera;
-            tetrisBatch.DrawBody(staticWorldGround);
-            tetrisBatch.DrawBody(staticWorldL);
-            tetrisBatch.DrawBody(staticWorldR);
-            //tetrisBatch.DrawAlignedQuad(new Vector2(Game1.worldWidthInBlocks,0)/2, new Vector2(Game1.worldWidthInBlocks,Game1.worldHeightInBlocks), background);
+            //tetrisBatch.DrawBody(staticWorldGround);
+            //tetrisBatch.DrawBody(staticWorldL);
+            //tetrisBatch.DrawBody(staticWorldR);
+            tetrisBatch.DrawAlignedQuad(new Vector2(worldWidthInBlocks / 2, -worldHeightInBlocks / 2), new Vector2(worldWidthInBlocks, worldHeightInBlocks), background);
+            tetrisBatch.DrawAlignedQuad(tetrisViewport.cameraPosition + new Vector2(-cloudOffsets.X, 0), new Vector2(tetrisViewport.screenWidthInGAME, tetrisViewport.screenHeightInGAME), cloud1);
+            tetrisBatch.DrawAlignedQuad(tetrisViewport.cameraPosition + new Vector2(-cloudOffsets.Y, 0), new Vector2(tetrisViewport.screenWidthInGAME, tetrisViewport.screenHeightInGAME), cloud2);
+
+
             foreach (GameComponent c in Components)
             {
                 if (c is DrawableGameComponentExtended)
                 {
                     (c as DrawableGameComponentExtended).DrawGameWorldOnce(camera, platformMode);
                 }
+            }
+
+            foreach (Body cur in world.BodyList)
+            {
+                tetrisBatch.DrawBody(cur);
             }
         }
 
@@ -374,10 +396,25 @@ namespace NGJ2012
 
         private void checkForPassedPowerupsToRemove()
         {
+            List<PowerUp> toDel = new List<PowerUp>();
             foreach (PowerUp p in powerUps)
             {
-                if (waveLayer.isCollidingWith(p.Position)) Components.Remove(p);
+                if (p != platform.CurrentlySelectedPowerUp && waveLayer.isCollidingWith(p.Position))
+                {
+                    toDel.Add(p);
+                }
             }
+
+            foreach (PowerUp p in toDel)
+            {
+                removePowerUp(p);
+            }
+        }
+
+        public void removePowerUp(PowerUp p)
+        {
+            Components.Remove(p);
+            powerUps.Remove(p);
         }
     }
 }

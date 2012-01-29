@@ -1,4 +1,8 @@
-﻿using System;
+﻿#if DEBUG
+//  #define DEBUG_COLLISION
+#endif
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
@@ -41,7 +45,7 @@ namespace NGJ2012
 
         public enum EPowerUpType
         {
-            MegaJump, ExtraLife
+            MegaJump, ExtraLife, WaterProof
         }
 
         public PowerUp(Game1 game, World world, EPowerUpType powerUpType, Vector2 position)
@@ -61,6 +65,7 @@ namespace NGJ2012
             collisionBody.BodyType = BodyType.Kinematic;
             collisionBody.CollisionCategories = Category.Cat1;
             collisionBody.CollidesWith = Category.Cat1;
+            collisionBody.IsSensor = true;
         }
 
         public static PowerUp getRandomPowerUp(Game1 game, World world, Vector2 position) 
@@ -86,6 +91,7 @@ namespace NGJ2012
                 SoundManager.PlaySound("collect_powerup");
 
                 this.Visible = false;
+                world.RemoveBody(this.collisionBody);
             }
 
             return false;
@@ -95,11 +101,12 @@ namespace NGJ2012
         protected override void LoadContent()
         {
             // Create animations for power ups
-            List<String> animationNames = new List<String> { "PowerUp_Jump", "PowerUp_Life", "PowerUp_Star" };
+            List<String> animationNames = new List<String> { "PowerUp_Jump", "PowerUp_Life", "PowerUp_Star", "PowerUp_Waterproof" };
             animation = new AnimatedSprite(game, "", animationNames, new Vector2(20, 30));
-            animation.AddAnimation("jump", 0, 0, 125, true);
+            animation.AddAnimation("jump", 0, 1, 125, true);
             animation.AddAnimation("life", 1, 1, 125, true);
-            animation.AddAnimation("star", 2, 2, 125, true);
+            animation.AddAnimation("star", 2, 1, 125, true);
+            animation.AddAnimation("waterproof", 3, 1, 125, true);
 
             switch (this.powerUpType)
             {
@@ -108,6 +115,9 @@ namespace NGJ2012
                     break;
                 case EPowerUpType.ExtraLife:
                     animation.SetAnimation("life");
+                    break;
+                case EPowerUpType.WaterProof:
+                    animation.SetAnimation("waterproof");
                     break;
                 default:
                     animation.SetAnimation("star");
@@ -135,7 +145,7 @@ namespace NGJ2012
             {
                 animation.Draw(game.TetrisBatch, collisionBody.WorldCenter, new Vector2(0.5f, 0.5f));
 
-#if DEBUG
+#if DEBUG_COLLISION
                 this.game.TetrisBatch.DrawBody(collisionBody);
 #endif
             }
@@ -153,6 +163,10 @@ namespace NGJ2012
                         game.PlatformPlayer.increaseJumpPower(JUMP_INCREASE);
                         break;
 
+                    case EPowerUpType.WaterProof:
+                        //TODO
+                        break;
+
                     case EPowerUpType.ExtraLife:
                         game.PlatformPlayer.increaseLifes();
                         break;
@@ -165,15 +179,17 @@ namespace NGJ2012
             switch (this.powerUpType)
             {
                 case EPowerUpType.MegaJump:
-                    game.PlatformPlayer.increaseJumpPower(-JUMP_INCREASE);
+                    game.PlatformPlayer.resetJumpPower();
+                    break;
+                case EPowerUpType.WaterProof:
+                    //TODO
                     break;
                 case EPowerUpType.ExtraLife:
-                    //Nothing TODO.
+                    //Nothing to be done
                     break;
             }
 
             game.PlatformPlayer.clearCurrentPowerUp();
-            game.Components.Remove(this);
         }
 
         public bool UsageTimerRunning
