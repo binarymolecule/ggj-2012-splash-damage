@@ -41,7 +41,7 @@ namespace NGJ2012
 
         public enum EPowerUpType
         {
-            MegaJump, ExtraLife
+            MegaJump, ExtraLife, WaterProof
         }
 
         public PowerUp(Game1 game, World world, EPowerUpType powerUpType, Vector2 position)
@@ -95,11 +95,12 @@ namespace NGJ2012
         protected override void LoadContent()
         {
             // Create animations for power ups
-            List<String> animationNames = new List<String> { "PowerUp_Jump", "PowerUp_Life", "PowerUp_Star" };
+            List<String> animationNames = new List<String> { "PowerUp_Jump", "PowerUp_Life", "PowerUp_Star", "PowerUp_Waterproof" };
             animation = new AnimatedSprite(game, "", animationNames, new Vector2(20, 30));
-            animation.AddAnimation("jump", 0, 0, 125, true);
+            animation.AddAnimation("jump", 0, 1, 125, true);
             animation.AddAnimation("life", 1, 1, 125, true);
-            animation.AddAnimation("star", 2, 2, 125, true);
+            animation.AddAnimation("star", 2, 1, 125, true);
+            animation.AddAnimation("waterproof", 3, 1, 125, true);
 
             switch (this.powerUpType)
             {
@@ -108,6 +109,9 @@ namespace NGJ2012
                     break;
                 case EPowerUpType.ExtraLife:
                     animation.SetAnimation("life");
+                    break;
+                case EPowerUpType.WaterProof:
+                    animation.SetAnimation("waterproof");
                     break;
                 default:
                     animation.SetAnimation("star");
@@ -153,6 +157,10 @@ namespace NGJ2012
                         game.PlatformPlayer.increaseJumpPower(JUMP_INCREASE);
                         break;
 
+                    case EPowerUpType.WaterProof:
+                        //TODO
+                        break;
+
                     case EPowerUpType.ExtraLife:
                         game.PlatformPlayer.increaseLifes();
                         break;
@@ -167,13 +175,15 @@ namespace NGJ2012
                 case EPowerUpType.MegaJump:
                     game.PlatformPlayer.increaseJumpPower(-JUMP_INCREASE);
                     break;
+                case EPowerUpType.WaterProof:
+                    //TODO
+                    break;
                 case EPowerUpType.ExtraLife:
-                    //Nothing TODO.
+                    //Nothing to be done
                     break;
             }
 
             game.PlatformPlayer.clearCurrentPowerUp();
-            game.Components.Remove(this);
         }
 
         public bool UsageTimerRunning

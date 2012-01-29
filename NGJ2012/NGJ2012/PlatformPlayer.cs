@@ -351,7 +351,8 @@ namespace NGJ2012
 
         public void clearCurrentPowerUp()
         {
-            this.currentlySelectedPowerUp = null;
+            parent.removePowerUp(currentlySelectedPowerUp);
+            this.currentlySelectedPowerUp = null;            
         }
 
         public void increaseJumpPower(float inc)
