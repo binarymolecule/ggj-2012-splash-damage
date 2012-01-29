@@ -220,12 +220,13 @@ namespace NGJ2012
             int msec = gameTime.ElapsedGameTime.Milliseconds;
 
             bool eatenByWave = (Game as Game1).waveLayer.isCollidingWith(playerCollider.Position);
-            if (!dead && timeUntilCanDieAgain<0 && (this.playerCollider.Position.Y > parent.WaterLayer.Height + 1.0f || eatenByWave))
+            if (!dead)
             {
                 if (this.playerCollider.Position.Y > parent.WaterLayer.Height && autoJump) jump();
-                if (this.playerCollider.Position.Y > parent.WaterLayer.Height + 1.0f) die();
 
-                if (eatenByWave) die();
+                if (timeUntilCanDieAgain < 0 &&
+                    (this.playerCollider.Position.Y > parent.WaterLayer.Height + 1.0f || eatenByWave)) die();
+
             }
 
             if (dead)
