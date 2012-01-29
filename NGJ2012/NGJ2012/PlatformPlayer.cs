@@ -30,6 +30,7 @@ namespace NGJ2012
         private const float acceleration = 512.0f;
         private const float deacceleration = 256.0f;
         private const float maxRunSpeed = 8.0f;
+        private const float maxSpeed = 32.0f;
 
         Game1 parent;
         const float ScalePlayerSprite = 0.25f;
@@ -221,7 +222,7 @@ namespace NGJ2012
                 floodHeight = MathHelper.Clamp(floodHeight + (float)gameTime.ElapsedGameTime.TotalSeconds, 0, 1);
 
                 KeyboardState state = Keyboard.GetState();
-                GamePadState gstate = GamePad.GetState(PlayerIndex.One);
+                GamePadState gstate = GamePad.GetState((Game as Game1).PlayerIdPlatform);
                 float move = 0;
                 if (state.IsKeyDown(Keys.A))
                 {
@@ -255,6 +256,9 @@ namespace NGJ2012
 
                 float runSpeedScaleDueToVertical = 1.0f;// (float)Math.Sqrt(Math.Max(0, maxRunSpeed * maxRunSpeed - playerCollider.LinearVelocity.Y * playerCollider.LinearVelocity.Y);
                 playerCollider.LinearVelocity = new Vector2(currentRunSpeed * runSpeedScaleDueToVertical, playerCollider.LinearVelocity.Y);
+
+            if (playerCollider.LinearVelocity.LengthSquared() > maxSpeed * maxSpeed)
+                playerCollider.LinearVelocity = playerCollider.LinearVelocity * (maxSpeed / playerCollider.LinearVelocity.Length());
 
                 if (playerCollider.LinearVelocity.Y > 0)
                     didFallSinceLastJump = true;
