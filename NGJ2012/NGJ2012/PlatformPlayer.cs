@@ -16,6 +16,7 @@ using FarseerPhysics.Factories;
 using FarseerPhysics.Collision;
 using FarseerPhysics.Collision.Shapes;
 using FarseerPhysics.Dynamics.Joints;
+using Utility;
 
 
 namespace NGJ2012
@@ -47,6 +48,8 @@ namespace NGJ2012
         private float jumpForce = 0.5f;
         private const float BYTE_FORCE = 300.0f;
         private PowerUp currentlySelectedPowerUp;
+        public float floodHeight = 0;
+        public bool dead = false;
 
         public PowerUp CurrentlySelectedPowerUp
         {
@@ -78,8 +81,9 @@ namespace NGJ2012
             numberOfLifes = INITIAL_NUMBER_OF_LIFES;
         }
 
-        public void ResetPlayer()
+        public void ResetPlayer(Timer timer = null)
         {
+            dead = false;
             playerCollider.Position = new Vector2(3, -2 + parent.WaterLayer.Height);
             playerAnimation.SetAnimation(animID_Stand);
             cameraPosition = Vector2.Zero;
@@ -194,9 +198,17 @@ namespace NGJ2012
                 }
                 else
                 {
+                    dead = true;
+                    Game1.Timers.Create(500, false, ResetPlayer);
                     ResetPlayer();
+
                     //TODO Switch players:
                 }
+            }
+
+            if (!dead)
+            {
+                floodHeight = MathHelper.Clamp(floodHeight + (float)gameTime.ElapsedGameTime.TotalSeconds, 0, 1);
             }
 
             KeyboardState state = Keyboard.GetState();

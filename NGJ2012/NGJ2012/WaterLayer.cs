@@ -127,7 +127,7 @@ namespace NGJ2012
                     h += (float)Perlin.noise(px, gameTime.TotalGameTime.TotalSeconds * 0.6, 0) * 0.2f;
                     var progressDist = Math.Abs(MathStuff.WorldDistanceAbs(rx, parent.gameProgress-WAVE_OFFSET, parent.WorldWidthInBlocks));
 
-                    h -= (float)Math.Cos(MathHelper.Clamp(progressDist, 0, (float)Math.PI)) * 5f + 5f;
+                    h -= parent.PlatformPlayer.floodHeight * ((float)Math.Cos(MathHelper.Clamp(progressDist * MathHelper.Lerp(0.25f, 1f, parent.PlatformPlayer.floodHeight), 0, (float)Math.PI)) * 5f + 5f);
 
 
                     array[i++] = new VertexPositionColor(new Vector3(rx, h, 0), Color.White);
