@@ -35,7 +35,7 @@ namespace NGJ2012
 
         World world;
         public Body playerCollider;
-        public Vector2 cameraPosition = Vector2.Zero;
+        public Vector2 cameraPosition;
         
         private int numberOfLifes;
 
@@ -65,7 +65,6 @@ namespace NGJ2012
             parent = (Game1)game;
 
             playerCollider = BodyFactory.CreateCapsule(world, 1.0f, 0.2f, 0.001f);
-            playerCollider.Position = new Vector2(2, -2);
             playerCollider.OnCollision += new OnCollisionEventHandler(PlayerCollidesWithWorld);
             playerCollider.OnSeparation += new OnSeparationEventHandler(PlayerSeparatesFromWorld);
             playerCollider.Friction = 0.0f;
@@ -76,7 +75,15 @@ namespace NGJ2012
             playerCollider.CollisionCategories = Game1.COLLISION_GROUP_DEFAULT;
             playerCollider.CollidesWith = Game1.COLLISION_GROUP_DEFAULT | Game1.COLLISION_GROUP_STATIC_OBJECTS | Game1.COLLISION_GROUP_TETRIS_BLOCKS;
 
+            resetPlayer();
+
             numberOfLifes = INITIAL_NUMBER_OF_LIFES;
+        }
+
+        private void resetPlayer()
+        {
+            playerCollider.Position = new Vector2(2, -2);
+            cameraPosition = Vector2.Zero;
         }
 
         List<Fixture> canJumpBecauseOf = new List<Fixture>();
@@ -174,6 +181,21 @@ namespace NGJ2012
         {
             // Process user input
             int msec = gameTime.ElapsedGameTime.Milliseconds;
+
+            if (this.playerCollider.Position.Y > parent.WaterLayer.Height)
+            {
+                this.numberOfLifes--;
+
+                if (this.numberOfLifes == 0)
+                {
+                    //TODO: Gameover
+                }
+                else
+                {
+                    resetPlayer();
+                    //TODO Switch players:
+                }
+            }
 
             KeyboardState state = Keyboard.GetState();
             GamePadState gstate = GamePad.GetState(PlayerIndex.One);
