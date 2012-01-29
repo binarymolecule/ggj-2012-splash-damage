@@ -11,9 +11,8 @@ namespace NGJ2012
     /// </summary>
     public static class MusicManager
     {
-        const int MAX_MUSIC_ITEMS = 3;
-        static List<Song> music = new List<Song>(MAX_MUSIC_ITEMS);
-        static Dictionary<string, int> musicCues = new Dictionary<string, int>(MAX_MUSIC_ITEMS);
+        static List<Song> music = new List<Song>();
+        static Dictionary<string, int> musicCues = new Dictionary<string, int>();
         static FadeHelper fader = new FadeHelper();
         static int currentMusicIndex = -1;
         public static float MaxVolume = 1.0f;

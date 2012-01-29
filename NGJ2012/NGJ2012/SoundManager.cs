@@ -4,19 +4,17 @@ using System.Linq;
 using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Content;
 
-namespace BalloonFight
+namespace NGJ2012
 {
     /// <summary>
     /// Manager class used for loading and playing sound effects.
     /// </summary>
     public static class SoundManager
     {
-        const int MAX_SOUND_ITEMS = 32;
-        static List<SoundEffect> sounds = new List<SoundEffect>(MAX_SOUND_ITEMS);
-        static Dictionary<string, int> soundCues = new Dictionary<string, int>(MAX_SOUND_ITEMS);
-        static bool globalMode = true;
-        static int numOfGlobals = 0;
+        static List<SoundEffect> sounds = new List<SoundEffect>();
+        static Dictionary<string, int> soundCues = new Dictionary<string, int>();
 
         /// <summary>
         /// Get or set volume of sound effects.
@@ -28,29 +26,15 @@ namespace BalloonFight
         }
 
         /// <summary>
-        /// Finalize global resources and switch to local resource loading mode.
-        /// </summary>
-        public static void SwitchToLocalMode()
-        {
-            globalMode = false;
-        }
-
-        /// <summary>
         /// Add sound effect with the given cue to the content manager.
         /// </summary>
-        public static void LoadSound(string cue)
+        public static void LoadSound(ContentManager content, string cue)
         {
             if (cue != "" && !soundCues.ContainsKey(cue))
             {
                 soundCues.Add(cue, sounds.Count);
                 String fullAssetName = Path.Combine(@"sound", cue);
-                if (globalMode)
-                {
-                    sounds.Add(MainGame.GlobalContent.Load<SoundEffect>(fullAssetName));
-                    numOfGlobals++;
-                }
-                else
-                    sounds.Add(MainGame.LocalContent.Load<SoundEffect>(fullAssetName));
+                sounds.Add(content.Load<SoundEffect>(fullAssetName));
             }
         }
 
@@ -73,30 +57,12 @@ namespace BalloonFight
         }
 
         /// <summary>
-        /// Reset sound manager and delete links to local resources.
-        /// </summary>
-        public static void ResetLocal()
-        {
-            List<string> localKeys = new List<string>(soundCues.Count - numOfGlobals);
-            foreach (KeyValuePair<string, int> item in soundCues)
-            {
-                if (item.Value >= numOfGlobals)
-                    localKeys.Add(item.Key);
-            }
-            foreach (string localKey in localKeys)
-                soundCues.Remove(localKey);
-            sounds.RemoveRange(numOfGlobals, sounds.Count - numOfGlobals);
-        }
-
-        /// <summary>
         /// Reset sound manager and delete all links to resources.
         /// </summary>
         public static void Reset()
         {
             sounds.Clear();
             soundCues.Clear();
-            globalMode = true;
-            numOfGlobals = 0;
         }
     }
 }

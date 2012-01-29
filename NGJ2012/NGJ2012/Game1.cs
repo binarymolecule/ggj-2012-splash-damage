@@ -155,6 +155,8 @@ namespace NGJ2012
 
             // Load sound
             MusicManager.LoadMusic(Content, "background", "sound/level-01");
+            MusicManager.MaxVolume = 0.25f;
+            SoundManager.SoundVolume = 1.0f;
 
             // Reset player state
             platform.ResetPlayer();
@@ -170,7 +172,8 @@ namespace NGJ2012
         /// </summary>
         protected override void UnloadContent()
         {
-            // TODO: Unload any non ContentManager content here
+            MusicManager.Reset();
+            SoundManager.Reset();
         }
 
         /// <summary>
@@ -192,7 +195,6 @@ namespace NGJ2012
             // Start/update background music
             if (!MusicManager.IsPlaying)
             {
-                MusicManager.MaxVolume = 0.25f;
                 MusicManager.FadeInMusic("background", true, 2.0f, 0.0f);
             }
             int msec = gameTime.ElapsedGameTime.Milliseconds;
