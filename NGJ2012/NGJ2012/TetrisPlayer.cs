@@ -128,7 +128,10 @@ namespace NGJ2012
 
         private Vector2 getSpawnPosition()
         {
-            return viewportToSpawnIn.cameraPosition + new Vector2(viewportToSpawnIn.screenWidthInGAME / 3.0f, -viewportToSpawnIn.screenHeightInGAME / 2.0f + 0.0f);
+            Vector2 p = viewportToSpawnIn.cameraPosition + new Vector2(viewportToSpawnIn.screenWidthInGAME / 3.0f, -viewportToSpawnIn.screenHeightInGAME / 2.0f + 0.0f);
+            while (p.X < 0) p.X += Game1.worldWidthInBlocks;
+            while (p.X > Game1.worldWidthInBlocks) p.X -= Game1.worldWidthInBlocks;
+            return p;
         }
 
         private TetrisPiece getRandomTetrisPiece()

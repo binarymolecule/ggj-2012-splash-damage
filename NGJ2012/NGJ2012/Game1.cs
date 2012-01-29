@@ -377,6 +377,7 @@ namespace NGJ2012
 
         public void removePowerUp(PowerUp p)
         {
+            if (p == null) return;
             Components.Remove(p);
             powerUps.Remove(p);
             p.delme();
