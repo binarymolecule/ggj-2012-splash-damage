@@ -61,9 +61,9 @@ namespace NGJ2012
         public GameStatusLayer StatusLayer { get; protected set; }
         public SpriteBatch SpriteBatch { get { return spriteBatch; } }
 
-        public const float gameBlockSizeTetris = 48;
+        public const float gameBlockSizePlatform = 64;
+        public const float gameBlockSizeTetris = 48;        
         public const float gameBlockSizePlatform = 32;
-
         Texture2D background;
 
         public float gameProgress = 0;
@@ -71,6 +71,7 @@ namespace NGJ2012
         float gameProgressSpeed = 3.5f;
         private GameViewport tetrisViewport;
 
+        //public GameViewport PlatformViewport { get { return platformViewport; } }
 
         //Power-Ups:
         private const float TIME_BETWEEN_POWERUPSPAWNS_SECS = 3.0f;
@@ -151,6 +152,9 @@ namespace NGJ2012
             spriteBatch = new SpriteBatch(GraphicsDevice);
             background = Content.Load<Texture2D>("graphics/level/Background");
             tetrisBatch = new TetrisPieceBatch(GraphicsDevice, Content);
+
+            // Reset player state
+            platform.ResetPlayer();
 
 #if DEBUG
             DebugDrawer = new TetrisPieceBatch(GraphicsDevice, Content);

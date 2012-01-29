@@ -31,6 +31,7 @@ namespace NGJ2012
 
         bool canBeTriggered = false;
         public void AllowTriggering() { canBeTriggered = true; }
+        public void DisableTriggering() { canBeTriggered = false; }
         public Body Body { get { return platformBody; } }
 
         // Assets

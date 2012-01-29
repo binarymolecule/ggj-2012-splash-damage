@@ -75,15 +75,16 @@ namespace NGJ2012
             playerCollider.CollisionCategories = Game1.COLLISION_GROUP_DEFAULT;
             playerCollider.CollidesWith = Game1.COLLISION_GROUP_DEFAULT | Game1.COLLISION_GROUP_STATIC_OBJECTS | Game1.COLLISION_GROUP_TETRIS_BLOCKS;
 
-            resetPlayer();
-
             numberOfLifes = INITIAL_NUMBER_OF_LIFES;
         }
 
-        private void resetPlayer()
+        public void ResetPlayer()
         {
-            playerCollider.Position = new Vector2(2, -2);
+            playerCollider.Position = new Vector2(3, -2 + parent.WaterLayer.Height);
+            playerAnimation.SetAnimation(animID_Stand);
             cameraPosition = Vector2.Zero;
+            canJumpBecauseOf.Clear();
+            parent.SavePlatform.DisableTriggering();
         }
 
         List<Fixture> canJumpBecauseOf = new List<Fixture>();
@@ -192,7 +193,7 @@ namespace NGJ2012
                 }
                 else
                 {
-                    resetPlayer();
+                    ResetPlayer();
                     //TODO Switch players:
                 }
             }
