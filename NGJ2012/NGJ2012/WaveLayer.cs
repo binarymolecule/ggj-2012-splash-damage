@@ -18,6 +18,8 @@ namespace NGJ2012
         private Texture2D texture;
         private Vector2 position = new Vector2(0, 0);
 
+        private const float WAVE_SPEED = 10.0f;
+
         public WaveLayer(Game1 game)
             : base(game)
         {
@@ -32,6 +34,7 @@ namespace NGJ2012
 
         public override void Update(Microsoft.Xna.Framework.GameTime gameTime)
         {
+            this.position.X = WAVE_SPEED * (float)gameTime.ElapsedGameTime.TotalSeconds;
             this.position.Y = game.WaterLayer.Height - texture.Height / Game1.gameBlockSizePlatform;
             base.Update(gameTime);
         }

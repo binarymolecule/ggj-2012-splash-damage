@@ -62,7 +62,7 @@ namespace NGJ2012
         public SpriteBatch SpriteBatch { get { return spriteBatch; } }
 
         public const float gameBlockSizeTetris = 48;
-
+        public const float gameBlockSizePlatform = 32;
 
         Texture2D background;
 
@@ -71,7 +71,6 @@ namespace NGJ2012
         float gameProgressSpeed = 3.5f;
         private GameViewport tetrisViewport;
 
-        public GameViewport PlatformViewport { get { return platformViewport; } }
 
         //Power-Ups:
         private const float TIME_BETWEEN_POWERUPSPAWNS_SECS = 3.0f;
