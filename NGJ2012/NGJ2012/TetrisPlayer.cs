@@ -307,7 +307,7 @@ namespace NGJ2012
             drawer.cameraMatrix = camera;
             foreach (TetrisPiece cur in pieces)
             {
-                Color colr = ((cur == currentPiece || cur == currentCheat) && isCurrentPieceBlocked()) ? new Color(1, 1, 1, 0.5f) : Color.White;
+                Color colr = ((cur == currentPiece || cur == currentCheat) && isCurrentPieceBlocked()) ? new Color(1.0f, 0.5f, 0.5f, 0.5f) : Color.White;
                 drawer.DrawTetrisPiece(cur, colr);
                 drawer.DrawBody(cur.body);
             }
