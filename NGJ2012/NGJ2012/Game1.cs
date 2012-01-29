@@ -31,6 +31,7 @@ namespace NGJ2012
 
         public TetrisPlayer TetrisPlayer { get { return tetris; } }
         TetrisPieceBatch tetrisBatch;
+        public TetrisPieceBatch TetrisBatch { get { return tetrisBatch; } }
         PlatformPlayer platform;
         public PlatformPlayer PlatformPlayer { get { return platform; } }
 
@@ -39,6 +40,8 @@ namespace NGJ2012
         Body staticWorldR;
         public const int worldWidthInBlocks = 30;
         public const int worldHeightInBlocks = 40;
+
+        public const int worldDuplicateBorder = 5;
 
         public const Category COLLISION_GROUP_DEFAULT = Category.Cat1;
         public const Category COLLISION_GROUP_TETRIS_BLOCKS = Category.Cat2;
@@ -60,7 +63,7 @@ namespace NGJ2012
 
         // GUI components
         public GameStatusLayer StatusLayer { get; protected set; }
-        public SpriteBatch SpriteBatch { get { return spriteBatch; } }
+        public SpriteBatch SpriteBatchOnlyForGuiOverlay { get { return spriteBatch; } }
 
         public const float gameBlockSizePlatform = 64;
         public const float gameBlockSizeTetris = 48;
@@ -81,7 +84,6 @@ namespace NGJ2012
 
 #if DEBUG
         public Vector2 manualPosition = Vector2.Zero;
-        public TetrisPieceBatch DebugDrawer;
 #endif
 
         public Game1()
@@ -161,10 +163,6 @@ namespace NGJ2012
 
             // Reset player state
             platform.ResetPlayer();
-
-#if DEBUG
-            DebugDrawer = new TetrisPieceBatch(GraphicsDevice, Content);
-#endif
         }
 
         /// <summary>
