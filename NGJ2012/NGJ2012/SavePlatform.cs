@@ -1,4 +1,8 @@
-﻿using System;
+﻿#if DEBUG
+//  #define DEBUG_COLLISION
+#endif
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
@@ -122,7 +126,9 @@ namespace NGJ2012
 
             drawer.cameraMatrix = camera;
             drawer.DrawAlignedQuad(platformBody.WorldCenter+new Vector2(0.8f,-0.7f), new Vector2(7, 7), platformTexture);
-            //drawer.DrawBody(platformBody);
+#if DEBUG_COLLISION
+            drawer.DrawBody(platformBody);
+#endif
         }
     }
 }

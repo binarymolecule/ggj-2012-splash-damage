@@ -1,3 +1,7 @@
+#if DEBUG
+//  #define DEBUG_COLLISION
+#endif
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
