@@ -34,6 +34,11 @@ namespace NGJ2012
         private const float defaultJumpForce = 0.5f;
         private const float timeUntilCanDieAgainReset = 2.0f;
 
+        private const int timeUntilCanBiteAgain = 750; // msec
+        private const int biteActivationTime = 500; // msec
+        private int biteTimer = 0;
+        private bool biteCollisionHasBeenTested = false;
+
         Game1 parent;
         const float ScalePlayerSprite = 0.25f;
 
@@ -50,7 +55,7 @@ namespace NGJ2012
         }
         private bool didFallSinceLastJump = true;
         private float jumpForce = defaultJumpForce;
-        private const float BYTE_FORCE = 300.0f;
+        private Vector2 biteForce = new Vector2(-50.0f, -250.0f);
         private PowerUp currentlySelectedPowerUp;
         public float floodHeight = 0;
         public bool dead = false;
@@ -95,11 +100,15 @@ namespace NGJ2012
             playerCollider.Position = new Vector2(3, -2 + parent.WaterLayer.Height);
             playerCollider.ResetDynamics();
             playerAnimation.SetAnimation(animID_Stand);
+            playerAnimation.Flipped = false;
             cameraPosition = Vector2.Zero;
             canJumpBecauseOf.Clear();
             parent.SavePlatform.DisableTriggering();
             dead = false;
             timeUntilCanDieAgain = timeUntilCanDieAgainReset;
+            biteTimer = 0;
+            biteCollisionHasBeenTested = false;
+            viewDirection = 1;
             //resetJumpPower();
         }
 
@@ -170,7 +179,7 @@ namespace NGJ2012
             animID_Walk = playerAnimation.AddAnimation("walk", frame_Walk, frameNum_Walk, 33, true);
             animID_Jump = playerAnimation.AddAnimation("jump", frame_Jump, frameNum_Jump, 33, false);
             animID_PowerJump = playerAnimation.AddAnimation("power_jump", frame_PowerJump, frameNum_PowerJump, 33, false);
-            animID_Bite = playerAnimation.AddAnimation("bite", frame_Bite, frameNum_Bite, 33, false);
+            animID_Bite = playerAnimation.AddAnimation("bite", frame_Bite, frameNum_Bite, 25, false);
             animID_Killed = animID_PowerJump; // playerAnimation.AddAnimation("killed", 0, 0, 125, true);
             playerAnimation.SetAnimation(animID_Stand);
 
@@ -243,16 +252,19 @@ namespace NGJ2012
                 {
                     move = -acceleration;
                     playerAnimation.Flipped = true;
+                    viewDirection = -1;
                 }
                 if (state.IsKeyDown(Keys.D))
                 {
                     move = acceleration;
                     playerAnimation.Flipped = false;
+                    viewDirection = 1;
                 }
                 if (gstate.IsConnected)
                 {
                     move = gstate.ThumbSticks.Left.X * Math.Abs(gstate.ThumbSticks.Left.X) * acceleration;
                     playerAnimation.Flipped = move < 0;
+                    viewDirection = (move < 0 ? -1 : 1);
                 }
 
                 currentRunSpeed *= Math.Max(0.0f, 1.0f - deacceleration * (float)gameTime.ElapsedGameTime.TotalSeconds);
@@ -263,7 +275,6 @@ namespace NGJ2012
                 bool isRunning = false;
                 if (Math.Abs(currentRunSpeed) > 0.001f)
                 {
-                    viewDirection = Math.Sign(currentRunSpeed);
                     isRunning = true;
                 }
                 else
@@ -279,7 +290,7 @@ namespace NGJ2012
                     didFallSinceLastJump = true;
 
                 canJump = canJumpBecauseOf.Count > 0;
-                if (canJump && didFallSinceLastJump)
+                if (canJump && didFallSinceLastJump && biteTimer == 0)
                 {
                     if (isRunning)
                         playerAnimation.SetAnimation(animID_Walk);
@@ -321,7 +332,24 @@ namespace NGJ2012
 
                 if (state.IsKeyDown(Keys.Enter) || state.IsKeyDown(Keys.E) || gstate.IsButtonDown(Buttons.B)) usePowerUp();
 
-                if (state.IsKeyDown(Keys.F) || gstate.IsButtonDown(Buttons.X)) bite();
+                if (biteTimer > 0)
+                {
+                    biteTimer -= msec;
+                    if (!biteCollisionHasBeenTested && biteTimer <= timeUntilCanBiteAgain - biteActivationTime)
+                    {
+                        biteCollisionHasBeenTested = true;
+                        testBiteCollision();
+                    }
+                    if (biteTimer <= 0)
+                        biteTimer = 0;
+                }
+                else if (state.IsKeyDown(Keys.F) || gstate.IsButtonDown(Buttons.X))
+                {                    
+                     // Show bite animation and start bite collision timer
+                    biteTimer = timeUntilCanBiteAgain;
+                    biteCollisionHasBeenTested = false;
+                    playerAnimation.SetAnimation(animID_Bite);
+                }
 
                 // Update player animation
                 playerAnimation.Update(gameTime.ElapsedGameTime.Milliseconds);
@@ -348,20 +376,20 @@ namespace NGJ2012
             }
         }
 
-        private void bite()
+        private void testBiteCollision()
         {
             //Check for objects slightly above or below to get also objects that are not directly on the height of your head:
-            world.RayCast(new RayCastCallback(biteRayCastCallback), playerCollider.Position, playerCollider.Position + new Vector2(0.6f * viewDirection, -0.5f));
-            world.RayCast(new RayCastCallback(biteRayCastCallback), playerCollider.Position, playerCollider.Position + new Vector2(0.6f * viewDirection, 0.0f));
-            world.RayCast(new RayCastCallback(biteRayCastCallback), playerCollider.Position, playerCollider.Position + new Vector2(0.6f * viewDirection, +0.5f));
+            float length = 0.5f;
+            world.RayCast(new RayCastCallback(biteRayCastCallback), playerCollider.Position, playerCollider.Position + new Vector2(length * viewDirection, -0.5f));
+            world.RayCast(new RayCastCallback(biteRayCastCallback), playerCollider.Position, playerCollider.Position + new Vector2(length * viewDirection, 0.0f));
+            //world.RayCast(new RayCastCallback(biteRayCastCallback), playerCollider.Position, playerCollider.Position + new Vector2(length * viewDirection, 0.5f));
         }
 
         float biteRayCastCallback(Fixture fixture, Vector2 point, Vector2 normal, float fraction)
         {
             if (fixture.CollisionCategories == Game1.COLLISION_GROUP_TETRIS_BLOCKS)
             {
-                parent.TetrisPlayer.reactiveAllPieces();
-                fixture.Body.ApplyForce(new Vector2(-this.viewDirection * BYTE_FORCE, -BYTE_FORCE));
+                fixture.Body.ApplyLinearImpulse(new Vector2(this.viewDirection * biteForce.X, biteForce.Y));
                 //Stop raytracing
                 return 0;
             }
@@ -399,10 +427,13 @@ namespace NGJ2012
         public void jump()
         {
             playerCollider.ApplyForce(new Vector2(0, -jumpForce));
-            if (jumpForce > defaultJumpForce)
-                playerAnimation.SetAnimation(animID_PowerJump);
-            else
-                playerAnimation.SetAnimation(animID_Jump);
+            if (biteTimer == 0)
+            {
+                if (jumpForce > defaultJumpForce)
+                    playerAnimation.SetAnimation(animID_PowerJump);
+                else
+                    playerAnimation.SetAnimation(animID_Jump);
+            }
 
             // TODO Verify this works!
             canJumpBecauseOf.Clear();
