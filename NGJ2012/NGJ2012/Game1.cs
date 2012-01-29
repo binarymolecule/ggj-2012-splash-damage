@@ -32,7 +32,7 @@ namespace NGJ2012
         public TetrisPlayer TetrisPlayer { get { return tetris; } }
         TetrisPieceBatch tetrisBatch;
         public TetrisPieceBatch TetrisBatch { get { return tetrisBatch; } }
-        PlatformPlayer platform;
+        public PlatformPlayer platform;
         public PlatformPlayer PlatformPlayer { get { return platform; } }
 
         public PlayerIndex PlayerIdTetris = PlayerIndex.Two, PlayerIdPlatform = PlayerIndex.One;
@@ -73,6 +73,7 @@ namespace NGJ2012
         public SavePlatform SavePlatform;
         public WaveLayer waveLayer;
         public GameOverLayer gameOverLayer;
+        public TitleScreenLayer titleScreenLayer;
         private List<PowerUp> powerUps = new List<PowerUp>();
 
         // GUI components
@@ -100,6 +101,7 @@ namespace NGJ2012
 
 #if DEBUG
         public Vector2 manualPosition = Vector2.Zero;
+        private Texture2D uiSprites;
 #endif
 
         public Game1()
@@ -137,6 +139,7 @@ namespace NGJ2012
             waveLayer = new WaveLayer(this);
             Components.Add(waveLayer);
 
+            titleScreenLayer = new TitleScreenLayer(this);
             gameOverLayer = new GameOverLayer(this);
 
             tetrisViewport = new GameViewport(this, gameBlockSizeTetris);
@@ -224,8 +227,8 @@ namespace NGJ2012
             int msec = gameTime.ElapsedGameTime.Milliseconds;
             MusicManager.Update(msec);
 
-            //Don't update the game while game over
-            if (gameOverLayer.IsActive)
+            //Don't update the game while showing screens:
+            if (gameOverLayer.IsActive || titleScreenLayer.IsActive)
             {
                 base.Update(gameTime);
                 return;
@@ -245,7 +248,7 @@ namespace NGJ2012
                 manualPosition.Y += 1.0f;
 #endif
             // update game progress
-            float sec = (float) gameTime.ElapsedGameTime.TotalSeconds;
+            float sec = (float)gameTime.ElapsedGameTime.TotalSeconds;
             gameProgress += gameProgressSpeed * sec;
             if (gameProgress > Game1.worldWidthInBlocks)
             {
@@ -271,8 +274,8 @@ namespace NGJ2012
             base.Update(gameTime);
         }
 
-        Vector2 cloudOffsets = Vector2.Zero;
 
+        Vector2 cloudOffsets = Vector2.Zero;
 
         /// <summary>
         /// This is called when the game should draw itself.
@@ -287,11 +290,12 @@ namespace NGJ2012
 
             tetrisViewport.Draw(gameTime);
 
-            spriteBatch.Begin(SpriteSortMode.Immediate,BlendState.NonPremultiplied);
+            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied);
             tetrisViewport.Compose(spriteBatch);
 
-            if(playerSwitchProgress > 0)
+            if (playerSwitchProgress > 0)
                 spriteBatch.Draw(playerSwitchTexture, new Rectangle(0, 0, 1280, 720), new Color(1, 1, 1, (float)playerSwitchProgress));
+
 
             spriteBatch.End();
 
@@ -302,7 +306,11 @@ namespace NGJ2012
 
         public void DrawGameWorldOnce(Matrix camera, bool platformMode, int wrapAround)
         {
-            GraphicsDevice.Clear(Color.Black);
+            GraphicsDevice.Clear(platformMode ? Color.CornflowerBlue : Color.Coral);
+            spriteBatch.Begin();
+            Vector3 tl = camera.Translation;
+            spriteBatch.Draw(background, new Rectangle(0, 0, 1280, 720), Color.White);
+            spriteBatch.End();
 
             tetrisBatch.cameraMatrix = camera;
             //tetrisBatch.DrawBody(staticWorldGround);
@@ -339,7 +347,7 @@ namespace NGJ2012
                 int randomOffset = (new Random()).Next(0, maxWidthInGame);
 
                 Vector2 spawnPos = new Vector2();
-                spawnPos.X = (platform.cameraPosition.X + distanceToRightBorder+randomOffset) % Game1.worldWidthInBlocks;
+                spawnPos.X = (platform.cameraPosition.X + distanceToRightBorder + randomOffset) % Game1.worldWidthInBlocks;
                 spawnPos.Y = platform.cameraPosition.Y - SPAWNHEIGHT_OF_PWUP_ABOVE_PLAYER;
 
                 //Get a random power up:
@@ -347,7 +355,7 @@ namespace NGJ2012
                 Components.Add(p);
                 powerUps.Add(p);
                 elapsedTimeSinceLastPowerUp = 0.0f;
-            }    
+            }
         }
 
         private void checkForPassedPowerupsToRemove()
