@@ -79,7 +79,7 @@ namespace NGJ2012
         public GameStatusLayer StatusLayer { get; protected set; }
         public SpriteBatch SpriteBatchOnlyForGuiOverlay { get { return spriteBatch; } }
 
-        public const float gameBlockSizePlatform = 64;
+        public const float gameBlockSizePlatform = 48;
         public const float gameBlockSizeTetris = 48;
         Texture2D background;
         Texture2D cloud1;

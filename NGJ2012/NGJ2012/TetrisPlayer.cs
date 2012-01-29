@@ -55,9 +55,9 @@ namespace NGJ2012
             _world = world;
 
             tetrisShapes.Add(new bool[,] { { true, false }, { true, false }, { true, true } });
-            tetrisShapes.Add(new bool[,] { { false, true }, { false, true }, { true, true } });
+            tetrisShapes.Add(new bool[,] { { true, true, true }, { false, false, true } });
             tetrisShapes.Add(new bool[,] { { true, true }, { true, true } });
-            tetrisShapes.Add(new bool[,] { { false, true, false }, { true, true, true } });
+            tetrisShapes.Add(new bool[,] { { true, true, true }, { false, true, false } });
             tetrisShapes.Add(new bool[,] { { true }, { true }, { true }, { true } });
             tetrisShapes.Add(new bool[,] { { false, true, true }, { true, true, false } });
             tetrisShapes.Add(new bool[,] { { true, true, false }, { false, true, true } });
@@ -314,7 +314,7 @@ namespace NGJ2012
             {
                 Color colr = ((cur == currentPiece || cur == currentCheat) && isCurrentPieceBlocked()) ? new Color(1.0f, 0.5f, 0.5f, 0.5f) : Color.White;
                 drawer.DrawTetrisPiece(cur, colr);
-                drawer.DrawBody(cur.body);
+                //drawer.DrawBody(cur.body);
             }
         }
 
