@@ -180,6 +180,9 @@ namespace NGJ2012
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         public override void Update(GameTime gameTime)
         {
+            if (parent.gameOverLayer.IsActive)
+                return;
+
             // Process user input
             int msec = gameTime.ElapsedGameTime.Milliseconds;
 

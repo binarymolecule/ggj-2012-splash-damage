@@ -63,6 +63,7 @@ namespace NGJ2012
             //originalComponents = game.Components;
             //game.Components.Clear();
             game.Components.Add(this);
+            MusicManager.FadeOutMusic(2.0f);
         }
 
         private void onGameOverEnd()
