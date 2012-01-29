@@ -187,8 +187,9 @@ namespace NGJ2012
             // Process user input
             int msec = gameTime.ElapsedGameTime.Milliseconds;
 
-            if (this.playerCollider.Position.Y > parent.WaterLayer.Height + 1.0f)
-                //|| parent.waveLayer.isCollidingWith(this.playerCollider.Position))
+            //bool eatenByWave = playerCollider.Position.X < (Game as Game1).gameProgress && playerCollider.Position.X > (Game as Game1).gameProgress - 10;
+            bool eatenByWave = (Game as Game1).waveLayer.isCollidingWith(playerCollider.Position);
+            if (this.playerCollider.Position.Y > parent.WaterLayer.Height + 1.0f || eatenByWave)
             {
                 this.numberOfLifes--;
 
