@@ -1,7 +1,3 @@
-#if DEBUG
-//  #define DEBUG_COLLISION
-#endif
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -211,7 +207,7 @@ namespace NGJ2012
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         public override void Update(GameTime gameTime)
         {
-            if (parent.gameOverLayer.IsActive)
+            if (!parent.GameIsRunning)
                 return;
 
             timeUntilCanDieAgain -= (float)gameTime.ElapsedGameTime.TotalSeconds;

@@ -78,6 +78,8 @@ namespace NGJ2012
 
         public override void Update(GameTime gameTime)
         {
+            if (!parent.GameIsRunning) return;
+
             playerRectangle.Y = (int)(700 + (parent.PlatformPlayer.cameraPosition.Y / parent.WorldHeightInBlocks) * 680);
 
             p1Text = "#Lifes = " + parent.PlatformPlayer.NumberOfLifes;
@@ -98,6 +100,8 @@ namespace NGJ2012
 
         public override void Draw(GameTime gameTime)
         {
+            if (!parent.GameIsRunning) return;
+
             parent.SpriteBatchOnlyForGuiOverlay.Begin();
             parent.SpriteBatchOnlyForGuiOverlay.Draw(tex, screenRectangle, Color.White);
             parent.SpriteBatchOnlyForGuiOverlay.Draw(tex, playerRectangle, Color.Red);
