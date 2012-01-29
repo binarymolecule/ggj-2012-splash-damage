@@ -185,11 +185,11 @@ namespace NGJ2012
                 float spawnL = viewportToSpawnIn.cameraPosition.X - spawnWidth + currentPieceMaxLen / 2.0f;
                 float spawnR = viewportToSpawnIn.cameraPosition.X + spawnWidth - currentPieceMaxLen / 2.0f;
                 Vector2 currentPieceCenter = currentPiece.body.GetWorldPoint(currentPiece.body.LocalCenter);
-                if (currentPieceCenter.X < spawnL && moveDir.X < 0) moveDir.X = 0;
-                if (spawnR < currentPieceCenter.X && moveDir.X > 0) moveDir.X = 0;
+//                if (currentPieceCenter.X < spawnL && moveDir.X < 0) moveDir.X = 0;
+//                if (spawnR < currentPieceCenter.X && moveDir.X > 0) moveDir.X = 0;
                 currentPiece.body.LinearVelocity = moveDir * movementSpeed;
 
-                if (currentPieceCenter.X < spawnL) currentPiece.body.LinearVelocity = new Vector2(currentPiece.body.LinearVelocity.X + (spawnL - currentPieceCenter.X) * 10, currentPiece.body.LinearVelocity.Y);
+ //              if (currentPieceCenter.X < spawnL && currentPieceCenter.X > spawnL+Game1.worldWidthInBlocks/2) currentPiece.body.LinearVelocity = new Vector2(currentPiece.body.LinearVelocity.X + (spawnL - currentPieceCenter.X) * 10, currentPiece.body.LinearVelocity.Y);
 
                 if (state.IsKeyDown(Keys.PageDown) || gstate.IsButtonDown(Buttons.X))
                 {
