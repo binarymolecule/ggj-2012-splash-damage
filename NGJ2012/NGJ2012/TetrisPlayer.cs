@@ -55,9 +55,9 @@ namespace NGJ2012
             _world = world;
 
             tetrisShapes.Add(new bool[,] { { true, false }, { true, false }, { true, true } });
-            tetrisShapes.Add(new bool[,] { { false, true }, { false, true }, { true, true } });
+            tetrisShapes.Add(new bool[,] { { true, true, true }, { false, false, true } });
             tetrisShapes.Add(new bool[,] { { true, true }, { true, true } });
-            tetrisShapes.Add(new bool[,] { { false, true, false }, { true, true, true } });
+            tetrisShapes.Add(new bool[,] { { true, true, true }, { false, true, false } });
             tetrisShapes.Add(new bool[,] { { true }, { true }, { true }, { true } });
             tetrisShapes.Add(new bool[,] { { false, true, true }, { true, true, false } });
             tetrisShapes.Add(new bool[,] { { true, true, false }, { false, true, true } });
@@ -113,6 +113,9 @@ namespace NGJ2012
                 countdownToCheat = 5;
             }
 
+            currentPiece.body.Enabled = true;
+            if(currentCheat!=null) currentCheat.body.Enabled = true;
+
             nextPiece = getRandomTetrisPiece();
 
             Debug.Print("Spawn new tetris piece at: {0}, {1}", currentPiece.body.Position.X, currentPiece.body.Position.Y);
@@ -130,6 +133,7 @@ namespace NGJ2012
             {
                 if (isCurrentPieceBlocked())
                 {
+                    currentPiece.body.Enabled = false;
                     currentPiece.body.OnCollision -= currentPieceCollide;
                     currentPiece.body.OnSeparation -= currentPieceSeparate;
                     _world.RemoveBody(currentPiece.body);
@@ -137,6 +141,7 @@ namespace NGJ2012
                     activePieces.Remove(currentPiece);
                     if (currentCheat != null)
                     {
+                        currentCheat.body.Enabled = false;
                         currentCheat.body.OnCollision -= currentPieceCollide;
                         currentCheat.body.OnSeparation -= currentPieceSeparate;
                         _world.RemoveBody(currentCheat.body);
@@ -309,7 +314,7 @@ namespace NGJ2012
             {
                 Color colr = ((cur == currentPiece || cur == currentCheat) && isCurrentPieceBlocked()) ? new Color(1.0f, 0.5f, 0.5f, 0.5f) : Color.White;
                 drawer.DrawTetrisPiece(cur, colr);
-                drawer.DrawBody(cur.body);
+                //drawer.DrawBody(cur.body);
             }
         }
 

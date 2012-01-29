@@ -144,18 +144,14 @@ namespace NGJ2012
                 if (i == -1 && !wrapL) continue;
                 if (i == 1 && !wrapR) continue;
 
-                effect.Parameters["View"].SetValue(mat * Matrix.CreateTranslation(new Vector3(-i * Game1.worldWidthInBlocks, 0, 0)) * cameraMatrix);
+                Matrix off = Matrix.CreateTranslation(new Vector3(-0.5f, -0.5f, 0));
+                effect.Parameters["View"].SetValue(off * mat * Matrix.CreateTranslation(new Vector3(-i * Game1.worldWidthInBlocks, 0, 0)) * cameraMatrix);
                 effect.CurrentTechnique.Passes[0].Apply();
 
-                for (int y = 0; y < piece.shape.GetLength(0); y++)
-                {
-                    for (int x = 0; x < piece.shape.GetLength(1); x++)
-                    {
-                        if (!piece.shape[y, x]) continue;
-                        Vertices v = new Vertices(new Vector2[] { new Vector2(x + 0, y + 0), new Vector2(x + 1, y + 0), new Vector2(x + 1, y + 1), new Vector2(x + 0, y + 1) });
-                        DrawPolygon(color, 1.0f / 4.0f, v);
-                    }
-                }
+                int maxX = piece.shape.GetLength(1) + 1;
+                int maxY = piece.shape.GetLength(0) + 1;
+                Vertices v = new Vertices(new Vector2[] { new Vector2(0, 0), new Vector2(maxX, 0), new Vector2(maxX, maxY), new Vector2(0, maxY) });
+                DrawPolygon(color, 1.0f / 5.0f, v);
 
                 Flush();
             }

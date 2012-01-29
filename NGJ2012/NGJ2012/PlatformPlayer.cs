@@ -31,7 +31,11 @@ namespace NGJ2012
         private const float deacceleration = 256.0f;
         private const float maxRunSpeed = 8.0f;
         private const float maxSpeed = 32.0f;
+<<<<<<< HEAD
         private const float defaultJumpForce = 0.5f;
+=======
+        private const float timeUntilCanDieAgainReset = 2.0f;
+>>>>>>> 381bdcf5e6387311069357e5f2f01cbb1e1e9dcc
 
         Game1 parent;
         const float ScalePlayerSprite = 0.25f;
@@ -41,6 +45,7 @@ namespace NGJ2012
         public Vector2 cameraPosition;
 
         private int numberOfLifes;
+        float timeUntilCanDieAgain = timeUntilCanDieAgainReset;
 
         public int NumberOfLifes
         {
@@ -94,8 +99,12 @@ namespace NGJ2012
             canJumpBecauseOf.Clear();
             parent.SavePlatform.DisableTriggering();
             dead = false;
+<<<<<<< HEAD
 
             //resetJumpPower();
+=======
+            timeUntilCanDieAgain = timeUntilCanDieAgainReset;
+>>>>>>> 381bdcf5e6387311069357e5f2f01cbb1e1e9dcc
         }
 
         List<Fixture> canJumpBecauseOf = new List<Fixture>();
@@ -204,11 +213,13 @@ namespace NGJ2012
             if (parent.gameOverLayer.IsActive)
                 return;
 
+            timeUntilCanDieAgain -= (float)gameTime.ElapsedGameTime.TotalSeconds;
+
             // Process user input
             int msec = gameTime.ElapsedGameTime.Milliseconds;
 
             bool eatenByWave = (Game as Game1).waveLayer.isCollidingWith(playerCollider.Position);
-            if (!dead && (this.playerCollider.Position.Y > parent.WaterLayer.Height + 1.0f || eatenByWave))
+            if (!dead && timeUntilCanDieAgain<0 && (this.playerCollider.Position.Y > parent.WaterLayer.Height + 1.0f || eatenByWave))
             {
                 this.numberOfLifes--;
 
@@ -359,7 +370,8 @@ namespace NGJ2012
 
         public void clearCurrentPowerUp()
         {
-            this.currentlySelectedPowerUp = null;
+            parent.removePowerUp(currentlySelectedPowerUp);
+            this.currentlySelectedPowerUp = null;            
         }
 
         public void increaseJumpPower(float inc)
