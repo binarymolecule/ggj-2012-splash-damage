@@ -34,7 +34,7 @@ namespace NGJ2012
 
         public override void Update(Microsoft.Xna.Framework.GameTime gameTime)
         {
-            this.position.X = WAVE_SPEED * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            this.position.X = WAVE_SPEED * (float)gameTime.ElapsedGameTime.TotalSeconds; //TODO Cam Speed nehmen.
             this.position.Y = game.WaterLayer.Height - texture.Height / Game1.gameBlockSizePlatform;
             base.Update(gameTime);
         }
