@@ -41,7 +41,8 @@ namespace NGJ2012
         private Effect effect;
         private float WAVE_OFFSET = 13f;
 
-        public WaterLayer(Game game) : base(game)
+        public WaterLayer(Game game)
+            : base(game)
         {
             parent = (Game1)game;
             screenRect = new Rectangle(0, 0, parent.WorldWidthInBlocks * 96, parent.WorldHeightInBlocks * 96);
@@ -121,13 +122,27 @@ namespace NGJ2012
                     array[i++] = new VertexPositionColor(new Vector3(rx, 2, 0), Color.Black);
 
                     float h = pos.Y;
-                    //h += (float)Math.Sin(rx - gameTime.TotalGameTime.TotalSeconds * 2.1) * 0.1f - 0.1f;
-                    //h += (float)Math.Sin(rx - gameTime.TotalGameTime.TotalSeconds * 1.2) * 0.2f - 0.2f;
-                    var px = rx / (float)parent.WorldWidthInBlocks * 512f;
-                    h += (float)Perlin.noise(px, gameTime.TotalGameTime.TotalSeconds * 0.6, 0) * 0.2f;
-                    var progressDist = Math.Abs(MathStuff.WorldDistanceAbs(rx, parent.gameProgress-WAVE_OFFSET, parent.WorldWidthInBlocks));
+                    //var px = rx / (float)parent.WorldWidthInBlocks * 512f;
+                    h += (float)Perlin.noise(rx, gameTime.TotalGameTime.TotalSeconds * 0.6, 0) * 0.2f;
 
-                    h -= parent.PlatformPlayer.floodHeight * ((float)Math.Cos(MathHelper.Clamp(progressDist * MathHelper.Lerp(0.25f, 1f, parent.PlatformPlayer.floodHeight), 0, (float)Math.PI)) * 5f + 5f);
+
+                    var fh = parent.PlatformPlayer.floodHeight;
+                    var progressDist = MathStuff.WorldDistanceShortest(rx - MathHelper.SmoothStep(2f, 0, fh), parent.gameProgress - WAVE_OFFSET, parent.WorldWidthInBlocks);
+                    
+
+                    var wh = MathHelper.SmoothStep(0, 5, fh);
+
+                    if (progressDist < 0)
+                    {
+                        progressDist = Math.Abs(progressDist);
+                        h -= ((float)Math.Cos(MathHelper.Clamp(progressDist * MathHelper.SmoothStep(0.5f, 1f, fh), 0, (float)Math.PI)) + 1f) * wh;
+                    }
+                    else
+                    {
+                        h -= ((float)Math.Cos(MathHelper.Clamp(progressDist * MathHelper.SmoothStep(0.25f, 0.5f, fh), 0, (float)Math.PI)) + 1f) * wh;
+                    }
+
+                    
 
 
                     array[i++] = new VertexPositionColor(new Vector3(rx, h, 0), Color.White);
@@ -149,10 +164,10 @@ namespace NGJ2012
             GraphicsDevice.BlendState = BlendState.AlphaBlend;
 
             effect.Parameters["Projection"].SetValue(Matrix.CreateOrthographicOffCenter(0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height, 0, 0, 1));
-//            effect.Parameters["View"].SetValue(camera);
+            //            effect.Parameters["View"].SetValue(camera);
             effect.Parameters["World"].SetValue(Matrix.Identity);
             //effect.Parameters["BasicTexture"].SetValue(texture);
-//            effect.CurrentTechnique.Passes[0].Apply();
+            //            effect.CurrentTechnique.Passes[0].Apply();
 
             GraphicsDevice.SetVertexBuffer(vb);
 
@@ -167,7 +182,7 @@ namespace NGJ2012
             //Vector2 screenPos = Vector2.Transform(pos, camera);
             //screenRect.X = (int)screenPos.X;
             //screenRect.Y = (int)screenPos.Y;
-            
+
             //parent.SpriteBatch.Begin();
             //parent.SpriteBatch.Draw(waterTexture, screenRect, Color.White * 0.5f);
             //parent.SpriteBatch.End();
