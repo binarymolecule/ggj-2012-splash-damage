@@ -39,7 +39,13 @@ namespace NGJ2012
         private Body collisionBody;
         private EPowerUpType powerUpType;
         private bool usageTimerRunning = false;
-        private double remainingPowerUpTimeInSecs = 3;
+        private double remainingPowerUpTimeInSecs = 5;
+        private const double START_BLINKING_FAST= 2;
+
+        private const double BLINK_SLOW = 60.0f;
+        private const double BLINK_FAST = 20.0f;
+
+        public bool invisibleBecauseBlinking = false;
 
         private bool isUsedOnCollectingAndHasNoDuration;
 
@@ -91,12 +97,19 @@ namespace NGJ2012
                 SoundManager.PlaySound("collect_powerup");
 
                 this.Visible = false;
-                world.RemoveBody(this.collisionBody);
+                delme();
             }
 
             return false;
-        }            
+        }
 
+        bool deleted = false;
+        public void delme()
+        {
+            if (deleted) return;
+            deleted = true;
+            world.RemoveBody(collisionBody);
+        }
 
         protected override void LoadContent()
         {
@@ -135,6 +148,13 @@ namespace NGJ2012
             }
 
             if (remainingPowerUpTimeInSecs <= 0) this.onPowerUpExhausted();
+            else
+            {
+                if (remainingPowerUpTimeInSecs >= START_BLINKING_FAST) this.invisibleBecauseBlinking = (remainingPowerUpTimeInSecs * 100.0f) % BLINK_SLOW > BLINK_SLOW / 2;
+                else this.invisibleBecauseBlinking = (remainingPowerUpTimeInSecs * 100.0f) % BLINK_FAST > BLINK_FAST / 2;
+            }
+
+            
 
             base.Update(gameTime);
         }

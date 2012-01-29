@@ -153,10 +153,15 @@ namespace NGJ2012
 
         public void DrawAlignedQuad(Vector2 center, Vector2 size, Texture2D texture)
         {
-            DrawAlignedQuad(center, size, texture, false);
+            DrawAlignedQuad(center, size, texture, false, Color.White);
         }
 
         public void DrawAlignedQuad(Vector2 center, Vector2 size, Texture2D texture, bool flipped)
+        {
+            DrawAlignedQuad(center, size, texture, flipped, Color.White);
+        }
+
+        public void DrawAlignedQuad(Vector2 center, Vector2 size, Texture2D texture, bool flipped, Color color)
         {
             Matrix mat = Matrix.CreateTranslation(new Vector3(center, 0.0f));
 
@@ -182,23 +187,23 @@ namespace NGJ2012
 
                 Vertices vertices = new Vertices(new Vector2[] { new Vector2(-size.X / 2, -size.Y / 2), new Vector2(size.X / 2, -size.Y / 2),
                                                                  new Vector2(size.X / 2, size.Y / 2), new Vector2(-size.X / 2, size.Y / 2) });
-                _quadVertices[_quadVertsCount].Color = Color.White;
+                _quadVertices[_quadVertsCount].Color = color;
                 _quadVertices[_quadVertsCount].TextureCoordinate = flipped ? new Vector2(1, 0) : new Vector2(0, 0);
                 _quadVertices[_quadVertsCount++].Position = new Vector3(-size.X / 2, -size.Y / 2, 0f);
-                _quadVertices[_quadVertsCount].Color = Color.White;
+                _quadVertices[_quadVertsCount].Color = color;
                 _quadVertices[_quadVertsCount].TextureCoordinate = flipped ? new Vector2(0, 0) : new Vector2(1, 0);
                 _quadVertices[_quadVertsCount++].Position = new Vector3(size.X / 2, -size.Y / 2, 0f);
-                _quadVertices[_quadVertsCount].Color = Color.White;
+                _quadVertices[_quadVertsCount].Color = color;
                 _quadVertices[_quadVertsCount].TextureCoordinate = flipped ? new Vector2(0, 1) : new Vector2(1, 1);
                 _quadVertices[_quadVertsCount++].Position = new Vector3(size.X / 2, size.Y / 2, 0f);
 
-                _quadVertices[_quadVertsCount].Color = Color.White;
+                _quadVertices[_quadVertsCount].Color = color;
                 _quadVertices[_quadVertsCount].TextureCoordinate = flipped ? new Vector2(1, 0) : new Vector2(0, 0);
                 _quadVertices[_quadVertsCount++].Position = new Vector3(-size.X / 2, -size.Y / 2, 0f);
-                _quadVertices[_quadVertsCount].Color = Color.White;
+                _quadVertices[_quadVertsCount].Color = color;
                 _quadVertices[_quadVertsCount].TextureCoordinate = flipped ? new Vector2(0, 1) : new Vector2(1, 1);
                 _quadVertices[_quadVertsCount++].Position = new Vector3(size.X / 2, size.Y / 2, 0f);
-                _quadVertices[_quadVertsCount].Color = Color.White;
+                _quadVertices[_quadVertsCount].Color = color;
                 _quadVertices[_quadVertsCount].TextureCoordinate = flipped ? new Vector2(1, 1) : new Vector2(0, 1);
                 _quadVertices[_quadVertsCount++].Position = new Vector3(-size.X / 2, size.Y / 2, 0f);
 

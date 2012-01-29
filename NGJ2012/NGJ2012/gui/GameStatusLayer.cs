@@ -106,7 +106,8 @@ namespace NGJ2012
             parent.SpriteBatchOnlyForGuiOverlay.Draw(tex, screenRectangle, Color.White);
             parent.SpriteBatchOnlyForGuiOverlay.Draw(tex, playerRectangle, Color.Red);
 
-            if (parent.PlatformPlayer.CurrentlySelectedPowerUp != null) {
+            if (parent.PlatformPlayer.CurrentlySelectedPowerUp != null && !parent.PlatformPlayer.CurrentlySelectedPowerUp.invisibleBecauseBlinking)
+            {
                 int posX = 500;
 
                 switch (parent.PlatformPlayer.CurrentlySelectedPowerUp.PowerUpType)

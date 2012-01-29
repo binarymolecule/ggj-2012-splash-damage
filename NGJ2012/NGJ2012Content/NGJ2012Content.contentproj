@@ -926,6 +926,14 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="shapes\I1.png">
+      <Name>I1</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <ProcessorParameters_GenerateMipmaps>True</ProcessorParameters_GenerateMipmaps>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
     <Compile Include="graphics\sprites.png">
       <Name>sprites</Name>
       <Importer>TextureImporter</Importer>
@@ -933,8 +941,29 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="shapes\I2.png">
+      <Name>I2</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <ProcessorParameters_GenerateMipmaps>True</ProcessorParameters_GenerateMipmaps>
+    </Compile>
+    <Compile Include="shapes\I3.png">
+      <Name>I3</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <ProcessorParameters_GenerateMipmaps>True</ProcessorParameters_GenerateMipmaps>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
     <Compile Include="TitleScreen.png">
       <Name>TitleScreen</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="graphics\gui\playerMarker.png">
+      <Name>playerMarker</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
