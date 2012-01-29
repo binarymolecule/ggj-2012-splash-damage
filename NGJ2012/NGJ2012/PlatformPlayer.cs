@@ -119,6 +119,8 @@ namespace NGJ2012
             {
                 parent.SavePlatform.Trigger();
             }
+            Debug.Print("Fix:" + fixtureB.CollisionCategories);
+
             if ((fixtureB.CollisionCategories & (Game1.COLLISION_GROUP_TETRIS_BLOCKS | Game1.COLLISION_GROUP_STATIC_OBJECTS)) == 0) return true;
 
             Vector2 normal;
