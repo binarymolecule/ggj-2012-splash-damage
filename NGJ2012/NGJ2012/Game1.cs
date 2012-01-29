@@ -237,7 +237,7 @@ namespace NGJ2012
 
             if (playerSwitchProgress > 0)
             {
-                playerSwitchProgress -= gameTime.ElapsedGameTime.TotalSeconds * 0.5;
+                playerSwitchProgress -= gameTime.ElapsedGameTime.TotalSeconds * 0.4;
                 return;
             }
 
