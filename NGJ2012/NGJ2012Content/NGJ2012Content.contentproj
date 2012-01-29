@@ -955,7 +955,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="TitleScreen.png">
+    <Compile Include="TitleScreen.jpg">
       <Name>TitleScreen</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
