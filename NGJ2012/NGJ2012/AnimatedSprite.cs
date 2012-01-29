@@ -129,10 +129,11 @@ namespace NGJ2012
             spriteBatch.Draw(currentTexture, position, null, Color, 0.0f, textureOrigin, scale,
                              Flipped ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 1.0f);
         }
+
         public void Draw(TetrisPieceBatch batch, Vector2 position, Vector2 scale)
         {
             if (!this.Visible) return;
-            batch.DrawAlignedQuad(position, scale, currentTexture);
+            batch.DrawAlignedQuad(position, scale, currentTexture, Flipped);
         }
     }
 }
