@@ -195,6 +195,7 @@ namespace NGJ2012
                 }
                 else
                 {
+                    SoundManager.PlaySound("splash");
                     ResetPlayer();
                     //TODO Switch players:
                 }
