@@ -144,14 +144,19 @@ namespace NGJ2012
             GraphicsDevice.BlendState = BlendState.AlphaBlend;
 
             effect.Parameters["Projection"].SetValue(Matrix.CreateOrthographicOffCenter(0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height, 0, 0, 1));
-            effect.Parameters["View"].SetValue(camera);
+//            effect.Parameters["View"].SetValue(camera);
             effect.Parameters["World"].SetValue(Matrix.Identity);
             //effect.Parameters["BasicTexture"].SetValue(texture);
-            effect.CurrentTechnique.Passes[0].Apply();
+//            effect.CurrentTechnique.Passes[0].Apply();
 
             GraphicsDevice.SetVertexBuffer(vb);
-            GraphicsDevice.DrawPrimitives(PrimitiveType.TriangleStrip, 0, vb.VertexCount-2);
 
+            for (int i = -1; i <= 1; i++)
+            {
+                effect.Parameters["View"].SetValue(Matrix.CreateTranslation(new Vector3(-i * Game1.worldWidthInBlocks, 0, 0)) * camera);
+                effect.CurrentTechnique.Passes[0].Apply();
+                GraphicsDevice.DrawPrimitives(PrimitiveType.TriangleStrip, 0, vb.VertexCount - 2);
+            }
 
 
             //Vector2 screenPos = Vector2.Transform(pos, camera);

@@ -126,10 +126,9 @@ namespace NGJ2012
         {
             if (this.Visible)
             {
-                animation.Draw(game.TetrisBatch, collisionBody.Position, new Vector2(0.5f, 0.5f));
+                animation.Draw(game.TetrisBatch, collisionBody.WorldCenter, new Vector2(0.5f, 0.5f));
 
 #if DEBUG
-                this.game.TetrisBatch.cameraMatrix = camera;
                 this.game.TetrisBatch.DrawBody(collisionBody);
 #endif
             }
