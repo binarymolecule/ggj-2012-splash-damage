@@ -274,6 +274,18 @@ namespace NGJ2012
             base.Update(gameTime);
         }
 
+        public void DrawUiSprite(int index, int x, int y, int cellX = 0, int cellY = 0)
+        {
+            int itemsPerRow = 8;
+            int cellSize = uiSprites.Width / itemsPerRow;
+            int row = index / itemsPerRow;
+            int col = index % itemsPerRow;
+
+            var srcRect = new Rectangle(col * cellSize, row * cellSize, cellSize, cellSize);
+            var destRect = new Rectangle(x + cellX * cellSize, y + cellY * cellSize, cellSize, cellSize);
+
+            spriteBatch.Draw(uiSprites, destRect, srcRect, Color.White);
+        }
 
         Vector2 cloudOffsets = Vector2.Zero;
 
