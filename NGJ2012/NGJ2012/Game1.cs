@@ -35,6 +35,17 @@ namespace NGJ2012
         PlatformPlayer platform;
         public PlatformPlayer PlatformPlayer { get { return platform; } }
 
+        public PlayerIndex PlayerIdTetris = PlayerIndex.Two, PlayerIdPlatform = PlayerIndex.One;
+        double playerSwitchProgress = -1;
+        Texture2D playerSwitchTexture;
+        public void SwitchPlayers()
+        {
+            PlayerIndex tmp = PlayerIdTetris;
+            PlayerIdTetris = PlayerIdPlatform;
+            PlayerIdPlatform = tmp;
+            playerSwitchProgress = 1.0;
+        }
+
         Body staticWorldGround;
         Body staticWorldL;
         Body staticWorldR;
@@ -59,6 +70,7 @@ namespace NGJ2012
         public WaterLayer WaterLayer;
         public SavePlatform SavePlatform;
         public WaveLayer waveLayer;
+        public GameOverLayer gameOverLayer;
         private List<PowerUp> powerUps = new List<PowerUp>();
 
         // GUI components
@@ -121,6 +133,8 @@ namespace NGJ2012
             waveLayer = new WaveLayer(this);
             Components.Add(waveLayer);
 
+            gameOverLayer = new GameOverLayer(this);
+
             tetrisViewport = new GameViewport(this, gameBlockSizeTetris);
             tetrisViewport.resize(1280, 720);
             tetris.viewportToSpawnIn = tetrisViewport;
@@ -154,11 +168,15 @@ namespace NGJ2012
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            background = Content.Load<Texture2D>("graphics/level/Background");
+            background = Content.Load<Texture2D>(@"graphics/level/Background");
             tetrisBatch = new TetrisPieceBatch(GraphicsDevice, Content);
+            playerSwitchTexture = Content.Load<Texture2D>(@"graphics/gui/PlayerSwitch");
 
             // Load sound
-            MusicManager.LoadMusic(Content, "background", "sound/level-01");
+            MusicManager.LoadMusic(Content, "background", "background");
+            SoundManager.LoadSound(Content, "bell", "bell-01");
+            SoundManager.LoadSound(Content, "collect_powerup", "powerup-01");
+            SoundManager.LoadSound(Content, "splash", "splash-03");
             MusicManager.MaxVolume = 0.25f;
             SoundManager.SoundVolume = 1.0f;
 
@@ -199,6 +217,19 @@ namespace NGJ2012
             }
             int msec = gameTime.ElapsedGameTime.Milliseconds;
             MusicManager.Update(msec);
+
+            //Don't update the game while game over
+            if (gameOverLayer.IsActive)
+            {
+                base.Update(gameTime);
+                return;
+            }
+
+            if (playerSwitchProgress > 0)
+            {
+                playerSwitchProgress -= gameTime.ElapsedGameTime.TotalSeconds;
+                return;
+            }
 
             // Move camera manually
 #if DEBUG
@@ -242,9 +273,14 @@ namespace NGJ2012
         {
             tetrisViewport.Draw(gameTime);
 
-            spriteBatch.Begin();
+            spriteBatch.Begin(SpriteSortMode.Immediate,BlendState.NonPremultiplied);
             tetrisViewport.Compose(spriteBatch);
+
+            if(playerSwitchProgress > 0)
+                spriteBatch.Draw(playerSwitchTexture, new Rectangle(0, 0, 1280, 720), new Color(1, 1, 1, (float)playerSwitchProgress));
+
             spriteBatch.End();
+
 
             base.Draw(gameTime);
         }

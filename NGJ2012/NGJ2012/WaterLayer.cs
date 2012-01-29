@@ -119,7 +119,7 @@ namespace NGJ2012
                 for (var substep = 0; substep < resolution && (x != parent.WorldWidthInBlocks || substep == 0); substep++)
                 {
                     var rx = (float)x + (float)substep * (1f / resolution);
-                    array[i++] = new VertexPositionColor(new Vector3(rx, 2, 0), Color.Black);
+                    array[i++] = new VertexPositionColor(new Vector3(rx, 5, 0), Color.Black);
 
                     float h = pos.Y;
                     //var px = rx / (float)parent.WorldWidthInBlocks * 512f;

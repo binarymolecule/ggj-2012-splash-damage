@@ -28,12 +28,12 @@ namespace NGJ2012
         /// <summary>
         /// Add sound effect with the given cue to the content manager.
         /// </summary>
-        public static void LoadSound(ContentManager content, string cue)
+        public static void LoadSound(ContentManager content, string cue, string asset)
         {
             if (cue != "" && !soundCues.ContainsKey(cue))
             {
                 soundCues.Add(cue, sounds.Count);
-                String fullAssetName = Path.Combine(@"sound", cue);
+                String fullAssetName = Path.Combine(@"sound", asset);
                 sounds.Add(content.Load<SoundEffect>(fullAssetName));
             }
         }

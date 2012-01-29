@@ -190,19 +190,21 @@ namespace NGJ2012
             int msec = gameTime.ElapsedGameTime.Milliseconds;
 
             bool eatenByWave = (Game as Game1).waveLayer.isCollidingWith(playerCollider.Position);
-            if (!dead && this.playerCollider.Position.Y > parent.WaterLayer.Height + 1.0f || eatenByWave)
+            if (!dead && (this.playerCollider.Position.Y > parent.WaterLayer.Height + 1.0f || eatenByWave))
             {
                 this.numberOfLifes--;
 
                 if (this.numberOfLifes == 0)
                 {
-                    //TODO: Gameover
+                    parent.gameOverLayer.onGameOver();
                 }
                 else
                 {
                     dead = true;
                     playerCollider.Enabled = false;
                     Game1.Timers.Create(1.5f, false, ResetPlayer);
+                    SoundManager.PlaySound("splash");
+                    (Game as Game1).SwitchPlayers();
                 }
             }
 

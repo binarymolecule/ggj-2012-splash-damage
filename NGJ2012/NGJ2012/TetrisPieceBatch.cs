@@ -120,6 +120,11 @@ namespace NGJ2012
 
         public void DrawTetrisPiece(TetrisPiece piece)
         {
+            DrawTetrisPiece(piece, Color.White);
+        }
+
+        public void DrawTetrisPiece(TetrisPiece piece, Color color)
+        {
             Matrix mat = Matrix.CreateRotationZ(piece.body.Rotation) * Matrix.CreateTranslation(new Vector3(piece.body.Position, 0.0f));
 
             GraphicsDevice.SamplerStates[0] = SamplerState.AnisotropicClamp;
@@ -148,7 +153,7 @@ namespace NGJ2012
                     {
                         if (!piece.shape[y, x]) continue;
                         Vertices v = new Vertices(new Vector2[] { new Vector2(x + 0, y + 0), new Vector2(x + 1, y + 0), new Vector2(x + 1, y + 1), new Vector2(x + 0, y + 1) });
-                        DrawPolygon(Color.White, 1.0f / 4.0f, v);
+                        DrawPolygon(color, 1.0f / 4.0f, v);
                     }
                 }
 

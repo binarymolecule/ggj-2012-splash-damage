@@ -15,6 +15,7 @@ using FarseerPhysics.Factories;
 using FarseerPhysics.Collision;
 using FarseerPhysics.Collision.Shapes;
 using FarseerPhysics.Dynamics.Joints;
+using FarseerPhysics.Dynamics.Contacts;
 
 
 namespace NGJ2012
@@ -40,6 +41,7 @@ namespace NGJ2012
         internal TetrisPiece nextTetrixPiece { get { return nextPiece; } }
         FixedAngleJoint currentPieceRotation;
         OnCollisionEventHandler currentPieceCollide;
+        OnSeparationEventHandler currentPieceSeparate;
         TetrisPieceBatch drawer;
 
         public float SPAWN_TIME = 0.5f;
@@ -74,6 +76,10 @@ namespace NGJ2012
             return true;
         }
 
+        void currentPieceSeparation(Fixture fixtureA, Fixture fixtureB)
+        {
+        }
+
         private void Spawn(Utility.Timer timer)
         {
             if (nextPiece == null)
@@ -81,12 +87,13 @@ namespace NGJ2012
                 nextPiece = getRandomTetrisPiece();
             }
 
-
             currentPiece = nextPiece;
             currentPieceMaxLen = Math.Max(currentPiece.shape.GetLength(0), currentPiece.shape.GetLength(1));
             currentPiece.body.Position = viewportToSpawnIn.cameraPosition + new Vector2(viewportToSpawnIn.screenWidthInGAME / 3.0f, -viewportToSpawnIn.screenHeightInGAME / 2.0f + 0.0f);
             currentPieceCollide = new OnCollisionEventHandler(currentPieceCollision);
+            currentPieceSeparate = new OnSeparationEventHandler(currentPieceSeparation);
             currentPiece.body.OnCollision += currentPieceCollide;
+            currentPiece.body.OnSeparation += currentPieceSeparate;
             currentPieceRotation = JointFactory.CreateFixedAngleJoint(_world, currentPiece.body);
             pieces.Add(currentPiece);
             activePieces.Add(currentPiece);
@@ -99,6 +106,7 @@ namespace NGJ2012
                 currentCheat.body.FixedRotation = true;
                 currentCheat.body.Rotation = (float)Math.PI / 2;
                 currentCheat.body.OnCollision += currentPieceCollide;
+                currentCheat.body.OnSeparation += currentPieceSeparate;
                 JointFactory.CreateRevoluteJoint(_world, currentCheat.body, currentPiece.body, currentPiece.body.LocalCenter);
                 pieces.Add(currentCheat);
                 activePieces.Add(currentCheat);
@@ -118,17 +126,69 @@ namespace NGJ2012
 
         private void dropCurrentPiece()
         {
-            currentPiece.body.LinearVelocity = Vector2.Zero;
-            currentPiece.body.ResetDynamics();
-            currentPiece.body.OnCollision -= currentPieceCollide;
-            if (currentCheat != null)
-                currentCheat.body.OnCollision -= currentPieceCollide;
-            currentPieceCollide = null;
+            if (currentPiece != null)
+            {
+                if (isCurrentPieceBlocked())
+                {
+                    currentPiece.body.OnCollision -= currentPieceCollide;
+                    currentPiece.body.OnSeparation -= currentPieceSeparate;
+                    _world.RemoveBody(currentPiece.body);
+                    pieces.Remove(currentPiece);
+                    activePieces.Remove(currentPiece);
+                    if (currentCheat != null)
+                    {
+                        currentCheat.body.OnCollision -= currentPieceCollide;
+                        currentCheat.body.OnSeparation -= currentPieceSeparate;
+                        _world.RemoveBody(currentCheat.body);
+                        pieces.Remove(currentCheat);
+                        activePieces.Remove(currentCheat);
+                    }
+                }
+                else
+                {
+                    currentPiece.body.LinearVelocity = Vector2.Zero;
+                    currentPiece.body.ResetDynamics();
+                    currentPiece.body.OnCollision -= currentPieceCollide;
+                    currentPiece.body.OnSeparation -= currentPieceSeparate;
+                    if (currentCheat != null)
+                    {
+                        currentCheat.body.OnCollision -= currentPieceCollide;
+                        currentCheat.body.OnSeparation -= currentPieceSeparate;
+                    }
+                }
+            }
+
             currentPiece = null;
-            _world.RemoveJoint(currentPieceRotation);
-            currentPieceRotation = null;
+            currentPieceCollide = null;
+            currentCheat = null;
+            if (currentPieceRotation != null)
+            {
+                _world.RemoveJoint(currentPieceRotation);
+                currentPieceRotation = null;
+            }
 
             Game1.Timers.Create(SPAWN_TIME, false, Spawn);
+        }
+
+        private bool isCurrentPieceBlocked()
+        {
+            bool blocked = false;
+            ContactEdge contact = currentPiece.body.ContactList;
+            while (contact != null)
+            {
+                if ((contact.Other.FixtureList[0].CollisionCategories & Game1.COLLISION_GROUP_LEVEL_SEPARATOR) != 0) blocked = true;
+                contact = contact.Next;
+            }
+            if (currentCheat != null)
+            {
+                contact = currentCheat.body.ContactList;
+                while (contact != null)
+                {
+                    if ((contact.Other.FixtureList[0].CollisionCategories & Game1.COLLISION_GROUP_LEVEL_SEPARATOR) != 0) blocked = true;
+                    contact = contact.Next;
+                }
+            }
+            return blocked;
         }
 
         /// <summary>
@@ -168,7 +228,7 @@ namespace NGJ2012
             // TODO: Add your update code here
             Vector2 moveDir = new Vector2();
             KeyboardState state = Keyboard.GetState();
-            GamePadState gstate = GamePad.GetState(PlayerIndex.Two);
+            GamePadState gstate = GamePad.GetState((Game as Game1).PlayerIdTetris);
             if (state.IsKeyDown(Keys.Left)) moveDir.X = -1;
             else if (state.IsKeyDown(Keys.Right)) moveDir.X = +1;
             else moveDir.X = 0;
@@ -247,7 +307,8 @@ namespace NGJ2012
             drawer.cameraMatrix = camera;
             foreach (TetrisPiece cur in pieces)
             {
-                drawer.DrawTetrisPiece(cur);
+                Color colr = ((cur == currentPiece || cur == currentCheat) && isCurrentPieceBlocked()) ? new Color(1.0f, 0.5f, 0.5f, 0.5f) : Color.White;
+                drawer.DrawTetrisPiece(cur, colr);
                 drawer.DrawBody(cur.body);
             }
         }

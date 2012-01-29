@@ -42,7 +42,7 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 		return float4(0.88,0.88,1,1);
 	} else {
 		float darkness = lerp(0.5, 1, input.Color.r);
-		return float4(0.05*darkness,0.05*darkness,0.8*darkness,0.8);
+		return float4(0.05*darkness,0.05*darkness,0.8*darkness,0.5);
 	}
 }
 
