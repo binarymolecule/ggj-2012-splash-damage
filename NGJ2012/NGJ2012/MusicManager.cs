@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Media;
@@ -56,8 +57,9 @@ namespace NGJ2012
         {
             if (cue != "" && !musicCues.ContainsKey(cue))
             {
+                String fullAssetName = Path.Combine(@"sound", asset);
                 musicCues.Add(cue, music.Count);
-                music.Add(content.Load<Song>(asset));
+                music.Add(content.Load<Song>(fullAssetName));
             }
         }
 
