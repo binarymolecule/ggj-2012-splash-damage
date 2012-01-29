@@ -222,7 +222,7 @@ namespace NGJ2012
                 floodHeight = MathHelper.Clamp(floodHeight + (float)gameTime.ElapsedGameTime.TotalSeconds, 0, 1);
 
                 KeyboardState state = Keyboard.GetState();
-                GamePadState gstate = GamePad.GetState(PlayerIndex.One);
+                GamePadState gstate = GamePad.GetState((Game as Game1).PlayerIdPlatform);
                 float move = 0;
                 if (state.IsKeyDown(Keys.A))
                 {
