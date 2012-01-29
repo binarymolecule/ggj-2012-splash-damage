@@ -89,7 +89,7 @@ namespace NGJ2012
 
             currentPiece = nextPiece;
             currentPieceMaxLen = Math.Max(currentPiece.shape.GetLength(0), currentPiece.shape.GetLength(1));
-            currentPiece.body.Position = viewportToSpawnIn.cameraPosition + new Vector2(viewportToSpawnIn.screenWidthInGAME / 3.0f, -viewportToSpawnIn.screenHeightInGAME / 2.0f + 0.0f);
+            currentPiece.body.Position = getSpawnPosition();
             currentPieceCollide = new OnCollisionEventHandler(currentPieceCollision);
             currentPieceSeparate = new OnSeparationEventHandler(currentPieceSeparation);
             currentPiece.body.OnCollision += currentPieceCollide;
@@ -121,6 +121,11 @@ namespace NGJ2012
             Debug.Print("Spawn new tetris piece at: {0}, {1}", currentPiece.body.Position.X, currentPiece.body.Position.Y);
         }
 
+        private Vector2 getSpawnPosition()
+        {
+            return viewportToSpawnIn.cameraPosition + new Vector2(viewportToSpawnIn.screenWidthInGAME / 3.0f, -viewportToSpawnIn.screenHeightInGAME / 2.0f + 0.0f);
+        }
+
         private TetrisPiece getRandomTetrisPiece()
         {
             int shape = (new Random()).Next(tetrisShapes.Count);
@@ -133,21 +138,7 @@ namespace NGJ2012
             {
                 if (isCurrentPieceBlocked())
                 {
-                    currentPiece.body.Enabled = false;
-                    currentPiece.body.OnCollision -= currentPieceCollide;
-                    currentPiece.body.OnSeparation -= currentPieceSeparate;
-                    _world.RemoveBody(currentPiece.body);
-                    pieces.Remove(currentPiece);
-                    activePieces.Remove(currentPiece);
-                    if (currentCheat != null)
-                    {
-                        currentCheat.body.Enabled = false;
-                        currentCheat.body.OnCollision -= currentPieceCollide;
-                        currentCheat.body.OnSeparation -= currentPieceSeparate;
-                        _world.RemoveBody(currentCheat.body);
-                        pieces.Remove(currentCheat);
-                        activePieces.Remove(currentCheat);
-                    }
+                    currentPiece.body.Position = getSpawnPosition();
                 }
                 else
                 {
@@ -160,19 +151,20 @@ namespace NGJ2012
                         currentCheat.body.OnCollision -= currentPieceCollide;
                         currentCheat.body.OnSeparation -= currentPieceSeparate;
                     }
+
+                    if (currentPieceRotation != null)
+                    {
+                        _world.RemoveJoint(currentPieceRotation);
+                        currentPieceRotation = null;
+                    }
+
+                    currentPiece = null;
+                    currentPieceCollide = null;
+                    currentCheat = null;
+
+                    Game1.Timers.Create(SPAWN_TIME, false, Spawn);
                 }
             }
-
-            currentPiece = null;
-            currentPieceCollide = null;
-            currentCheat = null;
-            if (currentPieceRotation != null)
-            {
-                _world.RemoveJoint(currentPieceRotation);
-                currentPieceRotation = null;
-            }
-
-            Game1.Timers.Create(SPAWN_TIME, false, Spawn);
         }
 
         private bool isCurrentPieceBlocked()
