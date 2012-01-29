@@ -20,6 +20,8 @@ namespace NGJ2012
         private bool isActive = false;
         private float elapsedTimeSinceActive = 0.0f;
         private Texture2D texture;
+        SpriteFont font;
+        int highscore;
 
         public bool IsActive
         {
@@ -35,6 +37,7 @@ namespace NGJ2012
         protected override void LoadContent()
         {
             texture = game.Content.Load<Texture2D>("GameOver");
+            font = game.Content.Load<SpriteFont>("fonts/guifont");
             base.LoadContent();
         }
 
@@ -53,6 +56,7 @@ namespace NGJ2012
         {
             game.SpriteBatchOnlyForGuiOverlay.Begin();
             game.SpriteBatchOnlyForGuiOverlay.Draw(texture, new Vector2(0,0), Color.White);
+            game.SpriteBatchOnlyForGuiOverlay.DrawString(font, "Your highscore: " + highscore, new Vector2(0, 0), Color.White);
             game.SpriteBatchOnlyForGuiOverlay.End();
             base.Draw(gameTime);
         }
@@ -64,6 +68,7 @@ namespace NGJ2012
             //game.Components.Clear();
             game.Components.Add(this);
             MusicManager.FadeOutMusic(2.0f);
+            highscore = (int)-game.WaterLayer.Height * 100;
         }
 
         private void onGameOverEnd()
