@@ -99,10 +99,7 @@ namespace NGJ2012
         private const int SPAWNHEIGHT_OF_PWUP_ABOVE_PLAYER = 2;
         private float elapsedTimeSinceLastPowerUp = 0.0f;
 
-#if DEBUG
         public Vector2 manualPosition = Vector2.Zero;
-        private Texture2D uiSprites;
-#endif
 
         public Game1()
         {
@@ -273,7 +270,6 @@ namespace NGJ2012
 
             base.Update(gameTime);
         }
-
 
         Vector2 cloudOffsets = Vector2.Zero;
 
