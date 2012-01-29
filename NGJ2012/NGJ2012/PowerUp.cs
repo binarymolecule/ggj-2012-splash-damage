@@ -97,12 +97,19 @@ namespace NGJ2012
                 SoundManager.PlaySound("collect_powerup");
 
                 this.Visible = false;
-                world.RemoveBody(this.collisionBody);
+                delme();
             }
 
             return false;
-        }            
+        }
 
+        bool deleted = false;
+        public void delme()
+        {
+            if (deleted) return;
+            deleted = true;
+            world.RemoveBody(collisionBody);
+        }
 
         protected override void LoadContent()
         {

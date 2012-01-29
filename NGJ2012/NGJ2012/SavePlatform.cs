@@ -80,7 +80,7 @@ namespace NGJ2012
         {
             // Start rising one block
             riseTime = msec;
-            riseSpeed = 1.0f / (0.001f * msec);
+            riseSpeed = WaterLayer.waterRiseAmount / (0.001f * msec);
             parent.WaterLayer.StartRising(msec);
         }
 
