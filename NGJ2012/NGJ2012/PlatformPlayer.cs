@@ -334,7 +334,7 @@ namespace NGJ2012
             // Draw animation
             Vector2 screenPos = Vector2.Transform(playerCollider.Position, camera);
             parent.SpriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
-            playerAnimation.Draw(parent.SpriteBatch, screenPos, 1.0f);
+            playerAnimation.Draw(parent.SpriteBatch, screenPos, 0.25f);
             parent.SpriteBatch.End();
 
 #if DEBUG

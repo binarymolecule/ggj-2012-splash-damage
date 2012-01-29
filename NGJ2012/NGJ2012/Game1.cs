@@ -65,13 +65,9 @@ namespace NGJ2012
 
         Texture2D background;
 
-<<<<<<< HEAD
         public float gameProgress = 0;
-        float gameProgressSpeed = 1;
-        float tetrisProgressAdd = 10;
-=======
+        //float tetrisProgressAdd = 10;
         float gameProgressSpeed = 3.5f;
->>>>>>> 54c415c28997a3039f76c231655f55e5da222cda
         private GameViewport tetrisViewport;
 
         //Power-Ups:
