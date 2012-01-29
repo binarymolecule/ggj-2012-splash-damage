@@ -99,10 +99,7 @@ namespace NGJ2012
         private const int SPAWNHEIGHT_OF_PWUP_ABOVE_PLAYER = 2;
         private float elapsedTimeSinceLastPowerUp = 0.0f;
 
-#if DEBUG
         public Vector2 manualPosition = Vector2.Zero;
-        private Texture2D uiSprites;
-#endif
 
         public Game1()
         {
@@ -272,19 +269,6 @@ namespace NGJ2012
             checkForPassedPowerupsToRemove();
 
             base.Update(gameTime);
-        }
-
-        public void DrawUiSprite(int index, int x, int y, int cellX = 0, int cellY = 0)
-        {
-            int itemsPerRow = 8;
-            int cellSize = uiSprites.Width / itemsPerRow;
-            int row = index / itemsPerRow;
-            int col = index % itemsPerRow;
-
-            var srcRect = new Rectangle(col * cellSize, row * cellSize, cellSize, cellSize);
-            var destRect = new Rectangle(x + cellX * cellSize, y + cellY * cellSize, cellSize, cellSize);
-
-            spriteBatch.Draw(uiSprites, destRect, srcRect, Color.White);
         }
 
         Vector2 cloudOffsets = Vector2.Zero;
