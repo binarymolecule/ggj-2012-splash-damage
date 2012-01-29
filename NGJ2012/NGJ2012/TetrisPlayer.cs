@@ -51,7 +51,7 @@ namespace NGJ2012
         OnCollisionEventHandler currentPieceCollide;
         TetrisPieceBatch drawer;
 
-        public float SPAWN_TIME = 1.5f;
+        public float SPAWN_TIME = 0.5f;
 
         // Absolute position in world coordinate system where new pieces are spawned
         public GameViewport viewportToSpawnIn;
@@ -76,8 +76,9 @@ namespace NGJ2012
         bool currentPieceCollision(Fixture fixtureA, Fixture fixtureB, FarseerPhysics.Dynamics.Contacts.Contact contact)
         {
             // ignore collisions with Cat30
-            if ((fixtureA.CollisionCategories & Game1.COLLISION_GROUP_DEFAULT) != 0) return false;
+//            if ((fixtureA.CollisionCategories & Game1.COLLISION_GROUP_DEFAULT) != 0) return false;
             if ((fixtureB.CollisionCategories & Game1.COLLISION_GROUP_DEFAULT) != 0) return false;
+            if ((fixtureB.CollisionCategories & Game1.COLLISION_GROUP_LEVEL_SEPARATOR) != 0) return false;
 
             dropCurrentPiece();
             return true;
@@ -93,7 +94,7 @@ namespace NGJ2012
 
             currentPiece = nextPiece;
             currentPieceMaxLen = Math.Max(currentPiece.shape.GetLength(0), currentPiece.shape.GetLength(1));
-            currentPiece.body.Position = viewportToSpawnIn.cameraPosition + new Vector2(0, -viewportToSpawnIn.screenHeightInGAME / 2.0f + 1.0f);
+            currentPiece.body.Position = viewportToSpawnIn.cameraPosition + new Vector2(viewportToSpawnIn.screenWidthInGAME/3.0f, -viewportToSpawnIn.screenHeightInGAME / 2.0f + 0.0f);
             currentPieceCollide = new OnCollisionEventHandler(currentPieceCollision);
             currentPiece.body.OnCollision += currentPieceCollide;
             currentPieceRotation = JointFactory.CreateFixedAngleJoint(_world, currentPiece.body);
@@ -177,7 +178,7 @@ namespace NGJ2012
             // TODO: Add your update code here
             Vector2 moveDir = new Vector2();
             KeyboardState state = Keyboard.GetState();
-
+            GamePadState gstate = GamePad.GetState(PlayerIndex.Two);
             if (keyboardAtLastLoop != null &&
                 (keyboardAtLastLoop.IsKeyDown(Keys.Left) && state.IsKeyDown(Keys.Left)) ||
                 (keyboardAtLastLoop.IsKeyDown(Keys.Right) && state.IsKeyDown(Keys.Right)))
@@ -205,7 +206,7 @@ namespace NGJ2012
                 timeElapsedSinceLastSidemovement = 0.0f;
             }
 
-            if (state.IsKeyDown(Keys.Down)) moveDir.Y = 3;
+            if (state.IsKeyDown(Keys.Down) || gstate.IsButtonDown(Buttons.A) || gstate.ThumbSticks.Left.Y < -0.5) moveDir.Y = 3;
             else moveDir.Y = 0.25f;
 
             if (state.IsKeyDown(Keys.M)) paused = true;
@@ -222,7 +223,7 @@ namespace NGJ2012
 
                 if (currentPieceCenter.X < spawnL) currentPiece.body.LinearVelocity = new Vector2(currentPiece.body.LinearVelocity.X + (spawnL-currentPieceCenter.X)*10,currentPiece.body.LinearVelocity.Y);
 
-                if (state.IsKeyDown(Keys.PageDown))
+                if (state.IsKeyDown(Keys.PageDown) || gstate.IsButtonDown(Buttons.X))
                 {
                     if (!downDown)
                     {
@@ -232,7 +233,7 @@ namespace NGJ2012
                 }
                 else downDown = false;
 
-                if (state.IsKeyDown(Keys.Up))
+                if (state.IsKeyDown(Keys.Up) || gstate.IsButtonDown(Buttons.B))
                 {
                     if (!upDown)
                     {
@@ -242,17 +243,20 @@ namespace NGJ2012
                 }
                 else upDown = false;
 
+                if (currentPiece.body.Position.Y > 10) dropCurrentPiece();
+
+
             }
 
             List<TetrisPiece> deactivateUs = new List<TetrisPiece>();
             foreach (TetrisPiece cur in activePieces)
             {
-                if (cur.body.Awake) cur.freezeCountdown = 50;
+                if (cur.body.Awake) cur.freezeCountdown = 10;
                 else {
                     Vector2 center = cur.body.GetWorldPoint(cur.body.LocalCenter);
                     if (center.Y < (Game as Game1).WaterLayer.Position.Y)
                     {
-                        --cur.freezeCountdown;
+                        cur.freezeCountdown -= gameTime.ElapsedGameTime.TotalSeconds;
                         if (cur.freezeCountdown < 0)
                         {
                             cur.body.BodyType = BodyType.Static;
@@ -289,7 +293,7 @@ namespace NGJ2012
                 if (!activePieces.Contains(piece))
                 {
                     piece.body.BodyType = BodyType.Dynamic;
-                    activePieces.Remove(piece);
+                    activePieces.Add(piece);
                 }
             }
         }

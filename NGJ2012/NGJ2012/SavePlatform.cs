@@ -29,7 +29,7 @@ namespace NGJ2012
         float riseSpeed = 0;
         int riseTime = 0;
 
-        bool canBeTriggered = false; // determines if save platform can be triggered by player
+        bool canBeTriggered = false;
         public void AllowTriggering() { canBeTriggered = true; }
         public Body Body { get { return platformBody; } }
 
@@ -45,6 +45,8 @@ namespace NGJ2012
             // Create physical objects
             platformBody = BodyFactory.CreateRectangle(parent.World, 4, 1, 1.0f, parent.WaterLayer.Position + offsetToWater);
             platformBody.BodyType = BodyType.Kinematic;
+            //platformBody.IgnoreGravity = true;
+            //platformBody.IsStatic = true;
             platformBody.Friction = 100.0f;
             platformBody.CollisionCategories = Game1.COLLISION_GROUP_STATIC_OBJECTS;
             platformBody.CollidesWith = Game1.COLLISION_GROUP_TETRIS_BLOCKS | Game1.COLLISION_GROUP_DEFAULT;
@@ -74,7 +76,7 @@ namespace NGJ2012
             }
         }
 
-        protected void StartRising(int msec)
+        public void StartRising(int msec)
         {
             // Start rising 3 blocks
             riseTime = msec;
