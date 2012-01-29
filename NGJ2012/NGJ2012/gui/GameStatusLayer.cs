@@ -28,6 +28,8 @@ namespace NGJ2012
         private Vector2 textPositionP1;
         private Vector2 textPositionP2;
 
+        int uiBaseline = 20;
+
         private const float TETRIS_SCALE = 0.125f;
 
         // Assets
@@ -42,8 +44,8 @@ namespace NGJ2012
             playerRectangle = new Rectangle(screenRectangle.X - 8, 0, 32, 32);
 
             float offset = 4.0f;
-            textPositionP1 = new Vector2(offset, 2.0f);
-            textPositionP2 = new Vector2(1000 + offset, 2.0f);
+            textPositionP1 = new Vector2(offset, 0);
+            textPositionP2 = new Vector2(1000 + offset, 0);
         }
 
         protected override void LoadContent()
@@ -106,25 +108,12 @@ namespace NGJ2012
             parent.SpriteBatchOnlyForGuiOverlay.Draw(tex, screenRectangle, Color.White);
             parent.SpriteBatchOnlyForGuiOverlay.Draw(tex, playerRectangle, Color.Red);
 
-            if (parent.PlatformPlayer.CurrentlySelectedPowerUp != null) {
-                int posX = 500;
-
-                switch (parent.PlatformPlayer.CurrentlySelectedPowerUp.PowerUpType)
-                {
-                    case PowerUp.EPowerUpType.MegaJump:
-                        DrawUiSprite(4, posX, 0);
-                        break;
-                    case PowerUp.EPowerUpType.WaterProof:
-                        DrawUiSprite(5, posX, 0);
-                        break;
-                }
-            }
 
             if (parent.TetrisPlayer.nextTetrixPiece != null)
             {
                 var posX = textPositionP2.X;
-                DrawUiSprite(46, (int)posX, 0, 0, 0);
-                DrawUiSprite(46 + 1, (int)posX, 0, 1, 0);
+                DrawUiSprite(46, (int)posX, uiBaseline, 0, 0);
+                DrawUiSprite(46 + 1, (int)posX, uiBaseline, 1, 0);
 
                 parent.SpriteBatchOnlyForGuiOverlay.Draw(parent.TetrisPlayer.nextTetrixPiece.texture, textPositionP2 + new Vector2(64, 0), null, Color.White, 0.0f, new Vector2(), TETRIS_SCALE, SpriteEffects.None, 0.0f);
             }
@@ -140,9 +129,9 @@ namespace NGJ2012
             // Life display
             {
                 int lifeUiX = 200;
-                int lifeUiY = 20;
 
-                DrawUiSprite(0, lifeUiX, lifeUiY);
+
+                DrawUiSprite(0, lifeUiX, uiBaseline);
 
                 var lives = parent.platform.NumberOfLifes.ToString();
                 var i = 1;
@@ -151,15 +140,32 @@ namespace NGJ2012
                 {
                     if (c == '0')
                     {
-                        DrawUiSprite(17, lifeUiX, lifeUiY, i++);
+                        DrawUiSprite(17, lifeUiX, uiBaseline, i++);
                     }
                     else
                     {
-                        DrawUiSprite(8 + (c - '1'), lifeUiX, lifeUiY, i++);
+                        DrawUiSprite(8 + (c - '1'), lifeUiX, uiBaseline, i++);
                     }
 
                 }
 
+
+
+                if (parent.PlatformPlayer.CurrentlySelectedPowerUp != null)
+                {
+                    DrawUiSprite(62, lifeUiX, uiBaseline, 8);
+                    DrawUiSprite(63, lifeUiX, uiBaseline, 9);
+
+                    switch (parent.PlatformPlayer.CurrentlySelectedPowerUp.PowerUpType)
+                    {
+                        case PowerUp.EPowerUpType.MegaJump:
+                            DrawUiSprite(4, lifeUiX, uiBaseline, 10);
+                            break;
+                        case PowerUp.EPowerUpType.WaterProof:
+                            DrawUiSprite(5, lifeUiX, uiBaseline, 10);
+                            break;
+                    }
+                }
             }
         }
     }
