@@ -339,10 +339,25 @@ namespace NGJ2012
 
         private void checkForPassedPowerupsToRemove()
         {
+            List<PowerUp> toDel = new List<PowerUp>();
             foreach (PowerUp p in powerUps)
             {
-                if (waveLayer.isCollidingWith(p.Position)) Components.Remove(p);
+                if (p != platform.CurrentlySelectedPowerUp && waveLayer.isCollidingWith(p.Position))
+                {
+                    toDel.Add(p);
+                }
             }
+
+            foreach (PowerUp p in toDel)
+            {
+                removePowerUp(p);
+            }
+        }
+
+        public void removePowerUp(PowerUp p)
+        {
+            Components.Remove(p);
+            powerUps.Remove(p);
         }
     }
 }

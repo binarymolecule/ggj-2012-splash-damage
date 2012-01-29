@@ -168,12 +168,11 @@ namespace NGJ2012
                     game.PlatformPlayer.increaseJumpPower(-JUMP_INCREASE);
                     break;
                 case EPowerUpType.ExtraLife:
-                    //Nothing TODO.
+                    //Nothing to be done
                     break;
             }
 
             game.PlatformPlayer.clearCurrentPowerUp();
-            game.Components.Remove(this);
         }
 
         public bool UsageTimerRunning
