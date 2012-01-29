@@ -56,7 +56,7 @@ namespace NGJ2012
         {
             game.SpriteBatchOnlyForGuiOverlay.Begin();
             game.SpriteBatchOnlyForGuiOverlay.Draw(texture, new Vector2(0,0), Color.White);
-            game.SpriteBatchOnlyForGuiOverlay.DrawString(font, "Your highscore: " + highscore, new Vector2(0, 0), Color.White);
+            game.SpriteBatchOnlyForGuiOverlay.DrawString(font, "YOUR SCORE: " + highscore, new Vector2(0, 0), Color.White);
             game.SpriteBatchOnlyForGuiOverlay.End();
             base.Draw(gameTime);
         }

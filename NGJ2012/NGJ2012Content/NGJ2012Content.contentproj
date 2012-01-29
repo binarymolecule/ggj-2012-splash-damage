@@ -191,11 +191,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="GameOver.png">
-      <Name>GameOver</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
     <Compile Include="graphics\gui\PlayerSwitch.png">
       <Name>PlayerSwitch</Name>
       <Importer>TextureImporter</Importer>
@@ -1270,6 +1265,13 @@
     </Compile>
     <Compile Include="collectables\powerjump\powerjump\powerjump_01_0020.png">
       <Name>powerjump_01_0020</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="GameOver.jpg">
+      <Name>GameOver</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
