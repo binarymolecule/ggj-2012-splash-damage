@@ -94,9 +94,9 @@ namespace NGJ2012
 
         public void StartRising(int msec)
         {
-            // Start rising 3 blocks
+            // Start rising one block
             riseTime = msec;
-            riseSpeed = 3.0f / (0.001f * msec);
+            riseSpeed = 1.0f / (0.001f * msec);
         }
 
         public override void Update(GameTime gameTime)
