@@ -131,8 +131,8 @@ namespace NGJ2012
             effect.Parameters["BasicTexture"].SetValue(piece.texture);
             effect.CurrentTechnique.Passes[0].Apply();
 
-            bool wrapL = piece.body.Position.X < Game1.worldDuplicateBorder;
-            bool wrapR = piece.body.Position.X > Game1.worldWidthInBlocks - Game1.worldDuplicateBorder;
+            bool wrapL = piece.body.Position.X < Game1.worldWidthInBlocks/2 + Game1.worldDuplicateBorder;
+            bool wrapR = piece.body.Position.X > Game1.worldWidthInBlocks/2 - Game1.worldDuplicateBorder;
 
             for (int i = -1; i <= 1; i++)
             {
@@ -169,8 +169,8 @@ namespace NGJ2012
             effect.Parameters["BasicTexture"].SetValue(texture);
             //effect.CurrentTechnique.Passes[0].Apply();
 
-            bool wrapL = center.X - size.X < 0;
-            bool wrapR = center.X + size.X > Game1.worldWidthInBlocks;
+            bool wrapL = center.X - size.X < Game1.worldWidthInBlocks/2;
+            bool wrapR = center.X + size.X > Game1.worldWidthInBlocks/2;
 
             for (int i = -1; i <= 1; i++)
             {
