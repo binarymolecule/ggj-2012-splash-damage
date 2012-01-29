@@ -191,7 +191,7 @@ namespace NGJ2012
 
                 if (this.numberOfLifes == 0)
                 {
-                    //TODO: Gameover
+                    parent.gameOverLayer.onGameOver();
                 }
                 else
                 {

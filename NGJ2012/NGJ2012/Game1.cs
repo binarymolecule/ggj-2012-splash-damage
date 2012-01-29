@@ -70,6 +70,7 @@ namespace NGJ2012
         public WaterLayer WaterLayer;
         public SavePlatform SavePlatform;
         public WaveLayer waveLayer;
+        public GameOverLayer gameOverLayer;
         private List<PowerUp> powerUps = new List<PowerUp>();
 
         // GUI components
@@ -132,6 +133,8 @@ namespace NGJ2012
             waveLayer = new WaveLayer(this);
             Components.Add(waveLayer);
 
+            gameOverLayer = new GameOverLayer(this);
+
             tetrisViewport = new GameViewport(this, gameBlockSizeTetris);
             tetrisViewport.resize(1280, 720);
             tetris.viewportToSpawnIn = tetrisViewport;
@@ -172,6 +175,7 @@ namespace NGJ2012
             // Load sound
             MusicManager.LoadMusic(Content, "background", "background");
             SoundManager.LoadSound(Content, "bell");
+            SoundManager.LoadSound(Content, "collect_powerup");
             MusicManager.MaxVolume = 0.25f;
             SoundManager.SoundVolume = 1.0f;
 
@@ -203,6 +207,13 @@ namespace NGJ2012
                 keyboardState.IsKeyDown(Keys.Escape))
             {
                 this.Exit();
+            }
+
+            //Don't update the game while game over
+            if (gameOverLayer.IsActive)
+            {
+                base.Update(gameTime);
+                return;
             }
 
             // Start/update background music
