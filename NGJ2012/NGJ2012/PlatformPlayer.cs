@@ -1,3 +1,7 @@
+#if DEBUG
+//  #define DEBUG_COLLISION
+#endif
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,6 +35,8 @@ namespace NGJ2012
         private const float deacceleration = 256.0f;
         private const float maxRunSpeed = 8.0f;
         private const float maxSpeed = 32.0f;
+        private const float defaultJumpForce = 0.5f;
+        private const float timeUntilCanDieAgainReset = 2.0f;
 
         Game1 parent;
         const float ScalePlayerSprite = 0.25f;
@@ -40,13 +46,14 @@ namespace NGJ2012
         public Vector2 cameraPosition;
 
         private int numberOfLifes;
+        float timeUntilCanDieAgain = timeUntilCanDieAgainReset;
 
         public int NumberOfLifes
         {
             get { return numberOfLifes; }
         }
         private bool didFallSinceLastJump = true;
-        private float jumpForce = 0.5f;
+        private float jumpForce = defaultJumpForce;
         private const float BYTE_FORCE = 300.0f;
         private PowerUp currentlySelectedPowerUp;
         public float floodHeight = 0;
@@ -63,7 +70,7 @@ namespace NGJ2012
         float viewDirection;
 
         AnimatedSprite playerAnimation;
-        int animID_Stand, animID_Walk, animID_Idle, animID_Jump, animID_Fall, animID_Hit;
+        int animID_Stand, animID_Walk, animID_Jump, animID_PowerJump, animID_Bite, animID_Killed;
 
         public PlatformPlayer(Game game, World world)
             : base(game)
@@ -95,6 +102,8 @@ namespace NGJ2012
             canJumpBecauseOf.Clear();
             parent.SavePlatform.DisableTriggering();
             dead = false;
+            timeUntilCanDieAgain = timeUntilCanDieAgainReset;
+            //resetJumpPower();
         }
 
         List<Fixture> canJumpBecauseOf = new List<Fixture>();
@@ -112,6 +121,8 @@ namespace NGJ2012
             {
                 parent.SavePlatform.Trigger();
             }
+            Debug.Print("Fix:" + fixtureB.CollisionCategories);
+
             if ((fixtureB.CollisionCategories & (Game1.COLLISION_GROUP_TETRIS_BLOCKS | Game1.COLLISION_GROUP_STATIC_OBJECTS)) == 0) return true;
 
             Vector2 normal;
@@ -141,19 +152,29 @@ namespace NGJ2012
         {
             // Create player animation
             List<String> playerTextureNames = new List<String>();
-            for (int i = 0; i < 9; i++)
-                playerTextureNames.Add(String.Format("run_start/run_start_1_{0:0000}", i));
-            for (int i = 9; i < 29; i++)
-                playerTextureNames.Add(String.Format("run_loop_02/run_loop_02_{0:0000}", i));
+            int frame_Stand = 0, frameNum_Stand = 21;
+            for (int i = 0; i < frameNum_Stand; i++)
+                playerTextureNames.Add(String.Format("idle_01/jump_idle_20frs_01_{0:0000}", i));
+            int frame_Walk = frame_Stand + frameNum_Stand, frameNum_Walk = 20;
+            for (int i = 0; i < frameNum_Walk; i++)
+                playerTextureNames.Add(String.Format("run_01/run_color_01_{0:0000}", i + 9));
+            int frame_Jump = frame_Walk + frameNum_Walk, frameNum_Jump = 31;
+            for (int i = 0; i < frameNum_Jump; i++)
+                playerTextureNames.Add(String.Format("jump_01/jump_color_30frs_01_{0:0000}", i));
+            int frame_PowerJump = frame_Jump + frameNum_Jump, frameNum_PowerJump = 31;
+            for (int i = 0; i < frameNum_PowerJump; i++)
+                playerTextureNames.Add(String.Format("power_jump_01/power_jump_color_30frs_01_{0:0000}", i));
+            int frame_Bite = frame_PowerJump + frameNum_PowerJump, frameNum_Bite = 31;
+            for (int i = 0; i < frameNum_Bite; i++)
+                playerTextureNames.Add(String.Format("bite_01/bite_color_30frs_01_{0:0000}", i));
 
             playerAnimation = new AnimatedSprite(parent, "char", playerTextureNames, new Vector2(256, 336));
-            animID_Stand = playerAnimation.AddAnimation("stand", 0, 0, 125, true);
-            //animID_Walk = playerAnimation.AddAnimation("walk", 0, 29, 50, 9);
-            animID_Walk = playerAnimation.AddAnimation("walk", 9, 20, 40, true);
-            animID_Idle = playerAnimation.AddAnimation("idle", 0, 3, 125, true);
-            animID_Jump = playerAnimation.AddAnimation("jump", 0, 9, 40, false);
-            animID_Fall = playerAnimation.AddAnimation("fall", 0, 0, 125, true);
-            animID_Hit = playerAnimation.AddAnimation("hit", 0, 0, 125, true);
+            animID_Stand = playerAnimation.AddAnimation("stand", frame_Stand, frameNum_Stand, 50, true);
+            animID_Walk = playerAnimation.AddAnimation("walk", frame_Walk, frameNum_Walk, 33, true);
+            animID_Jump = playerAnimation.AddAnimation("jump", frame_Jump, frameNum_Jump, 33, false);
+            animID_PowerJump = playerAnimation.AddAnimation("power_jump", frame_PowerJump, frameNum_PowerJump, 33, false);
+            animID_Bite = playerAnimation.AddAnimation("bite", frame_Bite, frameNum_Bite, 33, false);
+            animID_Killed = animID_PowerJump; // playerAnimation.AddAnimation("killed", 0, 0, 125, true);
             playerAnimation.SetAnimation(animID_Stand);
 
             base.LoadContent();
@@ -193,11 +214,13 @@ namespace NGJ2012
             if (parent.gameOverLayer.IsActive)
                 return;
 
+            timeUntilCanDieAgain -= (float)gameTime.ElapsedGameTime.TotalSeconds;
+
             // Process user input
             int msec = gameTime.ElapsedGameTime.Milliseconds;
 
             bool eatenByWave = (Game as Game1).waveLayer.isCollidingWith(playerCollider.Position);
-            if (!dead)
+            if (!dead && timeUntilCanDieAgain<0 && (this.playerCollider.Position.Y > parent.WaterLayer.Height + 1.0f || eatenByWave))
             {
                 if (this.playerCollider.Position.Y > parent.WaterLayer.Height && autoJump) jump();
                 if (this.playerCollider.Position.Y > parent.WaterLayer.Height + 1.0f) die();
@@ -366,10 +389,21 @@ namespace NGJ2012
             this.jumpForce += inc;
         }
 
+        public void resetJumpPower()
+        {
+            this.jumpForce = defaultJumpForce;
+        }
+
         public void jump()
         {
             playerCollider.ApplyForce(new Vector2(0, -jumpForce));
-            playerAnimation.SetAnimation(animID_Jump);
+            if (jumpForce > defaultJumpForce)
+                playerAnimation.SetAnimation(animID_PowerJump);
+            else
+                playerAnimation.SetAnimation(animID_Jump);
+
+            // TODO Verify this works!
+            canJumpBecauseOf.Clear();
         }
 
         public override void DrawGameWorldOnce(Matrix camera, bool platformMode)
@@ -377,7 +411,7 @@ namespace NGJ2012
             // Draw animation
             playerAnimation.Draw(parent.TetrisBatch, playerCollider.Position, new Vector2(2, 2));
 
-#if DEBUG
+#if DEBUG_COLLISION
             parent.TetrisBatch.cameraMatrix = camera;
             parent.TetrisBatch.DrawBody(playerCollider);
 #endif

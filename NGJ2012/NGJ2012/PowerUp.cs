@@ -1,4 +1,8 @@
-﻿using System;
+﻿#if DEBUG
+//  #define DEBUG_COLLISION
+#endif
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
@@ -139,7 +143,7 @@ namespace NGJ2012
             {
                 animation.Draw(game.TetrisBatch, collisionBody.WorldCenter, new Vector2(0.5f, 0.5f));
 
-#if DEBUG
+#if DEBUG_COLLISION
                 this.game.TetrisBatch.DrawBody(collisionBody);
 #endif
             }
@@ -173,7 +177,7 @@ namespace NGJ2012
             switch (this.powerUpType)
             {
                 case EPowerUpType.MegaJump:
-                    game.PlatformPlayer.increaseJumpPower(-JUMP_INCREASE);
+                    game.PlatformPlayer.resetJumpPower();
                     break;
                 case EPowerUpType.WaterProof:
                     game.PlatformPlayer.autoJump = false;
