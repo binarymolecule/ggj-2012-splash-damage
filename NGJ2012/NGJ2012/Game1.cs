@@ -197,7 +197,11 @@ namespace NGJ2012
             }
 
             //Don't update the game while game over
-            if (gameOverLayer.IsActive) return;
+            if (gameOverLayer.IsActive)
+            {
+                base.Update(gameTime);
+                return;
+            }
 
             // Start/update background music
             if (!MusicManager.IsPlaying)
