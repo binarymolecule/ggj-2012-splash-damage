@@ -148,6 +148,9 @@ namespace NGJ2012
             background = Content.Load<Texture2D>("graphics/level/Background");
             tetrisBatch = new TetrisPieceBatch(GraphicsDevice, Content);
 
+            // Reset player state
+            platform.ResetPlayer();
+
 #if DEBUG
             DebugDrawer = new TetrisPieceBatch(GraphicsDevice, Content);
 #endif
