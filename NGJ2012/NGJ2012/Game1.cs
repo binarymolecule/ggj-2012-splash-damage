@@ -255,7 +255,7 @@ namespace NGJ2012
                 SavePlatform.StartRising(5000);
             }
 
-            tetrisViewport.cameraPosition = new Vector2(gameProgress, WaterLayer.Position.Y - 4);
+            tetrisViewport.cameraPosition = new Vector2(gameProgress, WaterLayer.Position.Y - 3);
 
             world.Step(sec);
 
