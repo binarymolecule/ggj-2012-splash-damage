@@ -35,6 +35,17 @@ namespace NGJ2012
         PlatformPlayer platform;
         public PlatformPlayer PlatformPlayer { get { return platform; } }
 
+        public PlayerIndex PlayerIdTetris = PlayerIndex.Two, PlayerIdPlatform = PlayerIndex.One;
+        double playerSwitchProgress = -1;
+        Texture2D playerSwitchTexture;
+        public void SwitchPlayers()
+        {
+            PlayerIndex tmp = PlayerIdTetris;
+            PlayerIdTetris = PlayerIdPlatform;
+            PlayerIdPlatform = tmp;
+            playerSwitchProgress = 1.0;
+        }
+
         Body staticWorldGround;
         Body staticWorldL;
         Body staticWorldR;
@@ -156,6 +167,7 @@ namespace NGJ2012
             spriteBatch = new SpriteBatch(GraphicsDevice);
             background = Content.Load<Texture2D>(@"graphics/level/Background");
             tetrisBatch = new TetrisPieceBatch(GraphicsDevice, Content);
+            playerSwitchTexture = Content.Load<Texture2D>(@"graphics/gui/PlayerSwitch");
 
             // Load sound
             MusicManager.LoadMusic(Content, "background", "background");
@@ -201,6 +213,15 @@ namespace NGJ2012
             int msec = gameTime.ElapsedGameTime.Milliseconds;
             MusicManager.Update(msec);
 
+
+            if (playerSwitchProgress > 0)
+            {
+                playerSwitchProgress -= gameTime.ElapsedGameTime.TotalSeconds;
+                return;
+            }
+
+
+
             // Move camera manually
 #if DEBUG
             if (keyboardState.IsKeyDown(Keys.PageUp) && prevKeyboardState.IsKeyUp(Keys.PageUp))
@@ -243,9 +264,14 @@ namespace NGJ2012
         {
             tetrisViewport.Draw(gameTime);
 
-            spriteBatch.Begin();
+            spriteBatch.Begin(SpriteSortMode.Immediate,BlendState.NonPremultiplied);
             tetrisViewport.Compose(spriteBatch);
+
+            if(playerSwitchProgress > 0)
+                spriteBatch.Draw(playerSwitchTexture, new Rectangle(0, 0, 1280, 720), new Color(1, 1, 1, (float)playerSwitchProgress));
+
             spriteBatch.End();
+
 
             base.Draw(gameTime);
         }
