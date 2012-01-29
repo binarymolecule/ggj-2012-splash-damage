@@ -75,8 +75,15 @@ namespace NGJ2012
         {
             if (this.Visible)
             {
-                if (this.isUsedOnCollectingAndHasNoDuration) this.use();
-                else game.PlatformPlayer.addPowerUp(this);
+                if (this.isUsedOnCollectingAndHasNoDuration)
+                {
+                    this.use();
+                }
+                else
+                {
+                    game.PlatformPlayer.addPowerUp(this);
+                }
+                SoundManager.PlaySound("collect_powerup");
 
                 this.Visible = false;
             }

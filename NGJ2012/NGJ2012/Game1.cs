@@ -163,6 +163,7 @@ namespace NGJ2012
             // Load sound
             MusicManager.LoadMusic(Content, "background", "background");
             SoundManager.LoadSound(Content, "bell");
+            SoundManager.LoadSound(Content, "collect_powerup");
             MusicManager.MaxVolume = 0.25f;
             SoundManager.SoundVolume = 1.0f;
 
