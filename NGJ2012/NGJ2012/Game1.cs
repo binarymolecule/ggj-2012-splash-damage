@@ -70,6 +70,7 @@ namespace NGJ2012
         float gameProgressSpeed = 3.5f;
         private GameViewport tetrisViewport;
 
+        public GameViewport TetrisViewport { get { return tetrisViewport; } }
         //public GameViewport PlatformViewport { get { return platformViewport; } }
 
         //Power-Ups:

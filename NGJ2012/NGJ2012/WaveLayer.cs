@@ -34,7 +34,8 @@ namespace NGJ2012
 
         public override void Update(Microsoft.Xna.Framework.GameTime gameTime)
         {
-            this.position.X = WAVE_SPEED * (float)gameTime.ElapsedGameTime.TotalSeconds; //TODO Cam Speed nehmen.
+            this.position.X = game.gameProgress - game.TetrisViewport.screenWidthInGAME / 2;
+            this.position.X = (this.position.X + Game1.worldWidthInBlocks) % Game1.worldWidthInBlocks;
             this.position.Y = game.WaterLayer.Height - texture.Height / Game1.gameBlockSizePlatform;
             base.Update(gameTime);
         }
@@ -46,9 +47,9 @@ namespace NGJ2012
             game.SpriteBatch.End();
         }
 
-        public float getRightBorder()
+        public bool isCollidingWith(Vector2 objPos)
         {
-            return position.X;
+            return (this.position.X <= objPos.X && objPos.X <= this.position.X + texture.Width / Game1.gameBlockSizePlatform);
         }
     }
 }
