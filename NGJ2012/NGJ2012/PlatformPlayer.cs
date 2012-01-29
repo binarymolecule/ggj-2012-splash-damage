@@ -1,3 +1,7 @@
+#if DEBUG
+//  #define DEBUG_COLLISION
+#endif
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -394,7 +398,7 @@ namespace NGJ2012
             // Draw animation
             playerAnimation.Draw(parent.TetrisBatch, playerCollider.Position, new Vector2(2, 2));
 
-#if DEBUG
+#if DEBUG_COLLISION
             parent.TetrisBatch.cameraMatrix = camera;
             parent.TetrisBatch.DrawBody(playerCollider);
 #endif
