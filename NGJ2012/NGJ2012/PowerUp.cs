@@ -40,6 +40,9 @@ namespace NGJ2012
         private EPowerUpType powerUpType;
         private bool usageTimerRunning = false;
         private double remainingPowerUpTimeInSecs = 3;
+        private const double START_BLINKING= 1;
+
+        public bool invisibleBecauseBlinking = false;
 
         private bool isUsedOnCollectingAndHasNoDuration;
 
@@ -132,6 +135,11 @@ namespace NGJ2012
         {
             if (usageTimerRunning) {
                 this.remainingPowerUpTimeInSecs -= gameTime.ElapsedGameTime.TotalSeconds;
+            }
+
+            if (remainingPowerUpTimeInSecs <= START_BLINKING)
+            {
+                this.invisibleBecauseBlinking = (remainingPowerUpTimeInSecs*100.0f) % 10 > 5;
             }
 
             if (remainingPowerUpTimeInSecs <= 0) this.onPowerUpExhausted();
