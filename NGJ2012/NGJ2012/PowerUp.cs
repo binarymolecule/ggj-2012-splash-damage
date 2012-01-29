@@ -187,6 +187,8 @@ namespace NGJ2012
         {
             get { return powerUpType; }
         }
-        
+
+
+        public Vector2 Position { get { return collisionBody.Position; } }
     }
 }
