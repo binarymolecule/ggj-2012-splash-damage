@@ -1,8 +1,4 @@
-﻿#if DEBUG
-//  #define DEBUG_COLLISION
-#endif
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
@@ -25,8 +21,7 @@ namespace NGJ2012
     public class SavePlatform : DrawableGameComponentExtended
     {
         Game1 parent;
-        Rectangle screenRect;
-
+        
         // Physical objects
         Body platformBody;
         Vector2 offsetToWater = new Vector2(2, 0);
@@ -45,8 +40,7 @@ namespace NGJ2012
         public SavePlatform(Game game) : base(game)
         {
             parent = (Game1)game;
-            screenRect = new Rectangle(0, 0, 640, 64);
-
+        
             // Create physical objects
             platformBody = BodyFactory.CreateRectangle(parent.World, 4, 1, 1.0f, parent.WaterLayer.Position + offsetToWater);
             platformBody.BodyType = BodyType.Kinematic;
@@ -115,20 +109,8 @@ namespace NGJ2012
 
         public override void DrawGameWorldOnce(Matrix camera, bool platformMode)
         {
-            /*
-            Vector2 screenPos = Vector2.Transform(platformBody.Position, camera);
-            screenRect.X = (int)screenPos.X;
-            screenRect.Y = (int)screenPos.Y;
-            parent.SpriteBatch.Begin();
-            parent.SpriteBatch.Draw(platformTexture, screenRect, Color.White);
-            parent.SpriteBatch.End();
-            */
-
             drawer.cameraMatrix = camera;
             drawer.DrawAlignedQuad(platformBody.WorldCenter+new Vector2(0.8f,-0.7f), new Vector2(7, 7), platformTexture);
-#if DEBUG_COLLISION
-            drawer.DrawBody(platformBody);
-#endif
         }
     }
 }
