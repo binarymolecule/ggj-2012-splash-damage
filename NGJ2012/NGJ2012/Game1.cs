@@ -371,6 +371,7 @@ namespace NGJ2012
         {
             Components.Remove(p);
             powerUps.Remove(p);
+            world.RemoveBody(p.collisionBody);
         }
     }
 }

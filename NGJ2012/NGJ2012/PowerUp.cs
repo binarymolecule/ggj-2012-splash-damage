@@ -36,7 +36,7 @@ namespace NGJ2012
         // Public getter used for displaying items in GUI
         public Texture2D Texture { get { return animation.CurrentTexture; } }
 
-        private Body collisionBody;
+        public Body collisionBody;
         private EPowerUpType powerUpType;
         private bool usageTimerRunning = false;
         private double remainingPowerUpTimeInSecs = 3;
