@@ -47,7 +47,7 @@ namespace NGJ2012
             PlayerIndex tmp = PlayerIdTetris;
             PlayerIdTetris = PlayerIdPlatform;
             PlayerIdPlatform = tmp;
-            playerSwitchProgress = 1.0;
+            playerSwitchProgress = 2.5;
         }
 
         Body staticWorldGround;
@@ -238,7 +238,7 @@ namespace NGJ2012
 
             if (playerSwitchProgress > 0)
             {
-                playerSwitchProgress -= gameTime.ElapsedGameTime.TotalSeconds * 0.4;
+                playerSwitchProgress -= gameTime.ElapsedGameTime.TotalSeconds;
                 return;
             }
 
@@ -295,7 +295,7 @@ namespace NGJ2012
             tetrisViewport.Compose(spriteBatch);
 
             if (playerSwitchProgress > 0)
-                spriteBatch.Draw(playerSwitchTexture, new Rectangle(0, 0, 1280, 720), new Color(1, 1, 1, (float)playerSwitchProgress));
+                spriteBatch.Draw(playerSwitchTexture, new Rectangle(0, 0, 1280, 720), new Color(1, 1, 1, (float)Math.Min(1,playerSwitchProgress)));
 
 
             spriteBatch.End();
