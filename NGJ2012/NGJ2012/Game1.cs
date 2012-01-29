@@ -154,11 +154,12 @@ namespace NGJ2012
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            background = Content.Load<Texture2D>("graphics/level/Background");
+            background = Content.Load<Texture2D>(@"graphics/level/Background");
             tetrisBatch = new TetrisPieceBatch(GraphicsDevice, Content);
 
             // Load sound
-            MusicManager.LoadMusic(Content, "background", "sound/level-01");
+            MusicManager.LoadMusic(Content, "background", "background");
+            SoundManager.LoadSound(Content, "bell");
             MusicManager.MaxVolume = 0.25f;
             SoundManager.SoundVolume = 1.0f;
 
