@@ -320,6 +320,11 @@ namespace NGJ2012
                     (c as DrawableGameComponentExtended).DrawGameWorldOnce(camera, platformMode);
                 }
             }
+
+            foreach (Body cur in world.BodyList)
+            {
+                tetrisBatch.DrawBody(cur);
+            }
         }
 
         private void addPowerupToWorld(float elapsedSeconds)

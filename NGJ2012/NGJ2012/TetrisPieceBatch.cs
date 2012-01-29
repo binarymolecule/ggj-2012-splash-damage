@@ -60,14 +60,8 @@ namespace NGJ2012
             _basicEffect.CurrentTechnique.Passes[0].Apply();
 
 
-            bool wrapL = bod.Position.X < Game1.worldWidthInBlocks / 2 + Game1.worldDuplicateBorder;
-            bool wrapR = bod.Position.X > Game1.worldWidthInBlocks / 2 - Game1.worldDuplicateBorder;
-
-            for (int i = -1; i <= 1; i++)
+            for (int i = -2; i <= 2; i++)
             {
-                if (i == -1 && !wrapL) continue;
-                if (i == 1 && !wrapR) continue;
-
                 _basicEffect.View = mat * Matrix.CreateTranslation(new Vector3(-i * Game1.worldWidthInBlocks, 0, 0)) * cameraMatrix;
                 _basicEffect.CurrentTechnique.Passes[0].Apply();
 

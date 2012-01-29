@@ -341,7 +341,7 @@ namespace NGJ2012
             {
                 dead = true;
                 playerCollider.Enabled = false;
-                Game1.Timers.Create(1.5f, false, ResetPlayer);
+                Game1.Timers.Create(0.5f, false, ResetPlayer);
                 SoundManager.PlaySound("splash");
                 (Game as Game1).SwitchPlayers();
             }
@@ -411,11 +411,6 @@ namespace NGJ2012
         {
             // Draw animation
             playerAnimation.Draw(parent.TetrisBatch, playerCollider.Position, new Vector2(2, 2));
-
-#if DEBUG_COLLISION
-            parent.TetrisBatch.cameraMatrix = camera;
-            parent.TetrisBatch.DrawBody(playerCollider);
-#endif
         }
 
         public void addPowerUp(PowerUp powerup)
