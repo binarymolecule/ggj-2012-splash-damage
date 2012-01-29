@@ -93,7 +93,6 @@ namespace NGJ2012
                 fixtureB.Body == parent.SavePlatform.Body)
             {
                 parent.SavePlatform.Trigger();
-                return true;
             }
             if ((fixtureB.CollisionCategories & (Game1.COLLISION_GROUP_TETRIS_BLOCKS | Game1.COLLISION_GROUP_STATIC_OBJECTS)) == 0) return true;
 
@@ -131,9 +130,10 @@ namespace NGJ2012
             
             playerAnimation = new AnimatedSprite(parent, "char", playerTextureNames, new Vector2(256, 256));
             animID_Stand = playerAnimation.AddAnimation("stand", 0, 0, 125, true);
-            animID_Walk = playerAnimation.AddAnimation("walk", 0, 29, 50, 9);
-            animID_Idle = playerAnimation.AddAnimation("idle", 0, 0, 125, true);
-            animID_Jump = playerAnimation.AddAnimation("jump", 0, 9, 60, false);
+            //animID_Walk = playerAnimation.AddAnimation("walk", 0, 29, 50, 9);
+            animID_Walk = playerAnimation.AddAnimation("walk", 9, 20, 40, true);
+            animID_Idle = playerAnimation.AddAnimation("idle", 0, 3, 125, true);
+            animID_Jump = playerAnimation.AddAnimation("jump", 0, 9, 40, false);
             animID_Fall = playerAnimation.AddAnimation("fall", 0, 0, 125, true);
             animID_Hit = playerAnimation.AddAnimation("hit", 0, 0, 125, true);
             playerAnimation.SetAnimation(animID_Stand);
