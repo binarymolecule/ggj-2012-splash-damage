@@ -163,7 +163,7 @@ namespace NGJ2012
                 playerTextureNames.Add(String.Format("idle_01/jump_idle_20frs_01_{0:0000}", i));
             int frame_Walk = frame_Stand + frameNum_Stand, frameNum_Walk = 20;
             for (int i = 0; i < frameNum_Walk; i++)
-                playerTextureNames.Add(String.Format("run_01/run_color_01_{0:0000}", i + 9));
+                playerTextureNames.Add(String.Format("run_03/run_color_03_{0:0000}", i + 9));
             int frame_Jump = frame_Walk + frameNum_Walk, frameNum_Jump = 31;
             for (int i = 0; i < frameNum_Jump; i++)
                 playerTextureNames.Add(String.Format("jump_01/jump_color_30frs_01_{0:0000}", i));
