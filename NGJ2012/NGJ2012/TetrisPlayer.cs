@@ -69,8 +69,10 @@ namespace NGJ2012
         {
             // ignore collisions with Cat30
             //            if ((fixtureA.CollisionCategories & Game1.COLLISION_GROUP_DEFAULT) != 0) return false;
-            if ((fixtureB.CollisionCategories & Game1.COLLISION_GROUP_DEFAULT) != 0) return false;
-            if ((fixtureB.CollisionCategories & Game1.COLLISION_GROUP_LEVEL_SEPARATOR) != 0) return false;
+            if ((fixtureB.CollisionCategories & Game1.COLLISION_GROUP_DEFAULT) != 0)
+                return false;
+            if ((fixtureB.CollisionCategories & Game1.COLLISION_GROUP_LEVEL_SEPARATOR) != 0) 
+                return false;
 
             dropCurrentPiece();
             return true;

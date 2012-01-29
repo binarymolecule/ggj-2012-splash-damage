@@ -61,6 +61,7 @@ namespace NGJ2012
             collisionBody.BodyType = BodyType.Kinematic;
             collisionBody.CollisionCategories = Category.Cat1;
             collisionBody.CollidesWith = Category.Cat1;
+            collisionBody.IsSensor = true;
         }
 
         public static PowerUp getRandomPowerUp(Game1 game, World world, Vector2 position) 
