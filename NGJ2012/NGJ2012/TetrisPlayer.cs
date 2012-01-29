@@ -40,6 +40,7 @@ namespace NGJ2012
         internal TetrisPiece nextTetrixPiece { get { return nextPiece; } }
         FixedAngleJoint currentPieceRotation;
         OnCollisionEventHandler currentPieceCollide;
+        OnSeparationEventHandler currentPieceSeparate;
         TetrisPieceBatch drawer;
 
         public float SPAWN_TIME = 0.5f;
@@ -63,15 +64,33 @@ namespace NGJ2012
             Game1.Timers.Create(SPAWN_TIME, false, Spawn);
         }
 
+        List<Fixture> collisionsBlockingSpawnPoint = new List<Fixture>();
+
         bool currentPieceCollision(Fixture fixtureA, Fixture fixtureB, FarseerPhysics.Dynamics.Contacts.Contact contact)
         {
             // ignore collisions with Cat30
             //            if ((fixtureA.CollisionCategories & Game1.COLLISION_GROUP_DEFAULT) != 0) return false;
             if ((fixtureB.CollisionCategories & Game1.COLLISION_GROUP_DEFAULT) != 0) return false;
-            if ((fixtureB.CollisionCategories & Game1.COLLISION_GROUP_LEVEL_SEPARATOR) != 0) return false;
+            if ((fixtureB.CollisionCategories & Game1.COLLISION_GROUP_LEVEL_SEPARATOR) != 0)
+            {
+                collisionsBlockingSpawnPoint.Add(fixtureB);
+                return false;
+            }
+            updatePieceStyle();
 
             dropCurrentPiece();
             return true;
+        }
+
+        void currentPieceSeparation(Fixture fixtureA, Fixture fixtureB)
+        {
+            while (collisionsBlockingSpawnPoint.Contains(fixtureB))
+                collisionsBlockingSpawnPoint.Remove(fixtureB);
+            updatePieceStyle();
+        }
+
+        void updatePieceStyle()
+        {
         }
 
         private void Spawn(Utility.Timer timer)
@@ -81,12 +100,14 @@ namespace NGJ2012
                 nextPiece = getRandomTetrisPiece();
             }
 
-
+            collisionsBlockingSpawnPoint.Clear();
             currentPiece = nextPiece;
             currentPieceMaxLen = Math.Max(currentPiece.shape.GetLength(0), currentPiece.shape.GetLength(1));
             currentPiece.body.Position = viewportToSpawnIn.cameraPosition + new Vector2(viewportToSpawnIn.screenWidthInGAME / 3.0f, -viewportToSpawnIn.screenHeightInGAME / 2.0f + 0.0f);
             currentPieceCollide = new OnCollisionEventHandler(currentPieceCollision);
+            currentPieceSeparate = new OnSeparationEventHandler(currentPieceSeparation);
             currentPiece.body.OnCollision += currentPieceCollide;
+            currentPiece.body.OnSeparation += currentPieceSeparate;
             currentPieceRotation = JointFactory.CreateFixedAngleJoint(_world, currentPiece.body);
             pieces.Add(currentPiece);
             activePieces.Add(currentPiece);
@@ -99,11 +120,13 @@ namespace NGJ2012
                 currentCheat.body.FixedRotation = true;
                 currentCheat.body.Rotation = (float)Math.PI / 2;
                 currentCheat.body.OnCollision += currentPieceCollide;
+                currentCheat.body.OnSeparation += currentPieceSeparate;
                 JointFactory.CreateRevoluteJoint(_world, currentCheat.body, currentPiece.body, currentPiece.body.LocalCenter);
                 pieces.Add(currentCheat);
                 activePieces.Add(currentCheat);
                 countdownToCheat = 5;
             }
+            updatePieceStyle();
 
             nextPiece = getRandomTetrisPiece();
 
@@ -118,15 +141,42 @@ namespace NGJ2012
 
         private void dropCurrentPiece()
         {
-            currentPiece.body.LinearVelocity = Vector2.Zero;
-            currentPiece.body.ResetDynamics();
-            currentPiece.body.OnCollision -= currentPieceCollide;
-            if (currentCheat != null)
-                currentCheat.body.OnCollision -= currentPieceCollide;
-            currentPieceCollide = null;
+            if (currentPiece != null)
+            {
+                if (collisionsBlockingSpawnPoint.Count > 0)
+                {
+                    _world.RemoveBody(currentPiece.body);
+                    pieces.Remove(currentPiece);
+                    activePieces.Remove(currentPiece);
+                    if (currentCheat != null)
+                    {
+                        _world.RemoveBody(currentCheat.body);
+                        pieces.Remove(currentCheat);
+                        activePieces.Remove(currentCheat);
+                    }
+                }
+                else
+                {
+                    currentPiece.body.LinearVelocity = Vector2.Zero;
+                    currentPiece.body.ResetDynamics();
+                    currentPiece.body.OnCollision -= currentPieceCollide;
+                    currentPiece.body.OnSeparation -= currentPieceSeparate;
+                    if (currentCheat != null)
+                    {
+                        currentCheat.body.OnCollision -= currentPieceCollide;
+                        currentCheat.body.OnSeparation -= currentPieceSeparate;
+                    }
+                }
+            }
+
             currentPiece = null;
-            _world.RemoveJoint(currentPieceRotation);
-            currentPieceRotation = null;
+            currentPieceCollide = null;
+            currentCheat = null;
+            if (currentPieceRotation != null)
+            {
+                _world.RemoveJoint(currentPieceRotation);
+                currentPieceRotation = null;
+            }
 
             Game1.Timers.Create(SPAWN_TIME, false, Spawn);
         }
@@ -247,7 +297,7 @@ namespace NGJ2012
             drawer.cameraMatrix = camera;
             foreach (TetrisPiece cur in pieces)
             {
-                drawer.DrawTetrisPiece(cur);
+                drawer.DrawTetrisPiece(cur, collisionsBlockingSpawnPoint.Count>0 ? new Color(1,1,1,0.5f) : Color.White);
                 drawer.DrawBody(cur.body);
             }
         }
