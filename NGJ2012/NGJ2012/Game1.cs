@@ -59,6 +59,7 @@ namespace NGJ2012
         public WaterLayer WaterLayer;
         public SavePlatform SavePlatform;
         public WaveLayer waveLayer;
+        public GameOverLayer gameOverLayer;
         private List<PowerUp> powerUps = new List<PowerUp>();
 
         // GUI components
@@ -120,6 +121,8 @@ namespace NGJ2012
 
             waveLayer = new WaveLayer(this);
             Components.Add(waveLayer);
+
+            gameOverLayer = new GameOverLayer(this);
 
             tetrisViewport = new GameViewport(this, gameBlockSizeTetris);
             tetrisViewport.resize(1280, 720);
@@ -193,6 +196,9 @@ namespace NGJ2012
             {
                 this.Exit();
             }
+
+            //Don't update the game while game over
+            if (gameOverLayer.IsActive) return;
 
             // Start/update background music
             if (!MusicManager.IsPlaying)
