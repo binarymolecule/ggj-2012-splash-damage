@@ -158,7 +158,7 @@ namespace NGJ2012
                         break;
 
                     case EPowerUpType.WaterProof:
-                        //TODO
+                        game.PlatformPlayer.autoJump = true;
                         break;
 
                     case EPowerUpType.ExtraLife:
@@ -176,7 +176,7 @@ namespace NGJ2012
                     game.PlatformPlayer.increaseJumpPower(-JUMP_INCREASE);
                     break;
                 case EPowerUpType.WaterProof:
-                    //TODO
+                    game.PlatformPlayer.autoJump = false;
                     break;
                 case EPowerUpType.ExtraLife:
                     //Nothing to be done

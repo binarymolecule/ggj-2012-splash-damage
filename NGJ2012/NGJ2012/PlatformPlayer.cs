@@ -52,6 +52,8 @@ namespace NGJ2012
         public float floodHeight = 0;
         public bool dead = false;
 
+        public bool autoJump = false;
+
         public PowerUp CurrentlySelectedPowerUp
         {
             get { return currentlySelectedPowerUp; }
@@ -195,22 +197,12 @@ namespace NGJ2012
             int msec = gameTime.ElapsedGameTime.Milliseconds;
 
             bool eatenByWave = (Game as Game1).waveLayer.isCollidingWith(playerCollider.Position);
-            if (!dead && (this.playerCollider.Position.Y > parent.WaterLayer.Height + 1.0f || eatenByWave))
+            if (!dead)
             {
-                this.numberOfLifes--;
+                if (this.playerCollider.Position.Y > parent.WaterLayer.Height && autoJump) jump();
+                if (this.playerCollider.Position.Y > parent.WaterLayer.Height + 1.0f) die();
 
-                if (this.numberOfLifes == 0)
-                {
-                    parent.gameOverLayer.onGameOver();
-                }
-                else
-                {
-                    dead = true;
-                    playerCollider.Enabled = false;
-                    Game1.Timers.Create(1.5f, false, ResetPlayer);
-                    SoundManager.PlaySound("splash");
-                    (Game as Game1).SwitchPlayers();
-                }
+                if (eatenByWave) die();
             }
 
             if (dead)
@@ -287,6 +279,7 @@ namespace NGJ2012
                     }
                 }
 
+
                 if (playerCollider.Position.X < 0)
                 {
                     playerCollider.Position = new Vector2(playerCollider.Position.X + (float)Game1.worldWidthInBlocks, playerCollider.Position.Y);
@@ -310,6 +303,24 @@ namespace NGJ2012
             }
 
             base.Update(gameTime);
+        }
+
+        private void die()
+        {
+            this.numberOfLifes--;
+
+            if (this.numberOfLifes == 0)
+            {
+                parent.gameOverLayer.onGameOver();
+            }
+            else
+            {
+                dead = true;
+                playerCollider.Enabled = false;
+                Game1.Timers.Create(1.5f, false, ResetPlayer);
+                SoundManager.PlaySound("splash");
+                (Game as Game1).SwitchPlayers();
+            }
         }
 
         private void bite()
