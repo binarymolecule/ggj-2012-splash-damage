@@ -79,6 +79,7 @@ namespace NGJ2012
         public GameOverLayer gameOverLayer;
         public TitleScreenLayer titleScreenLayer;
         private List<PowerUp> powerUps = new List<PowerUp>();
+        public bool GameIsRunning { get { return !titleScreenLayer.IsActive && !gameOverLayer.IsActive; } }
 
         // GUI components
         public GameStatusLayer StatusLayer { get; protected set; }
