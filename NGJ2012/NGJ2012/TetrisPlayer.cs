@@ -228,7 +228,7 @@ namespace NGJ2012
             // TODO: Add your update code here
             Vector2 moveDir = new Vector2();
             KeyboardState state = Keyboard.GetState();
-            GamePadState gstate = GamePad.GetState(PlayerIndex.Two);
+            GamePadState gstate = GamePad.GetState((Game as Game1).PlayerIdTetris);
             if (state.IsKeyDown(Keys.Left)) moveDir.X = -1;
             else if (state.IsKeyDown(Keys.Right)) moveDir.X = +1;
             else moveDir.X = 0;

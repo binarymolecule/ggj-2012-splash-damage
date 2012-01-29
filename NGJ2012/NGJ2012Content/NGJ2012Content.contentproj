@@ -474,6 +474,13 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
+    <Compile Include="graphics\gui\PlayerSwitch.png">
+      <Name>PlayerSwitch</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
     <Compile Include="sound\sharp_echo.wav">
       <Name>powerup-01</Name>
       <Importer>WavImporter</Importer>

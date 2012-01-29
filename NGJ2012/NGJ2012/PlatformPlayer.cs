@@ -197,12 +197,12 @@ namespace NGJ2012
                 {
                     SoundManager.PlaySound("splash");
                     ResetPlayer();
-                    //TODO Switch players:
+                    (Game as Game1).SwitchPlayers();
                 }
             }
 
             KeyboardState state = Keyboard.GetState();
-            GamePadState gstate = GamePad.GetState(PlayerIndex.One);
+            GamePadState gstate = GamePad.GetState((Game as Game1).PlayerIdPlatform);
             float move = 0;
             if (state.IsKeyDown(Keys.A))
             {

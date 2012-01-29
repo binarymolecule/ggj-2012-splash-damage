@@ -37,8 +37,8 @@ namespace NGJ2012
                 for (int x = 0; x < shape.GetLength(1); x++)
                 {
                     if (!shape[y, x]) continue;
-                    float shrink = 0.1f;
-                    Vertices v = new Vertices(new Vector2[] { new Vector2(x + 0 + shrink, y + 0 + shrink), new Vector2(x + 1 - shrink, y + 0 + shrink), new Vector2(x + 1 - shrink, y + 1 - shrink), new Vector2(x + 0 + shrink, y + 1 - shrink) });
+                    float grow = -0.01f;
+                    Vertices v = new Vertices(new Vector2[] { new Vector2(x + 0 + grow, y + 0 + grow), new Vector2(x + 1 - grow, y + 0 + grow), new Vector2(x + 1 - grow, y + 1 - grow), new Vector2(x + 0 + grow, y + 1 - grow) });
                     fixtures.Add(FixtureFactory.AttachPolygon(v, 10.0f, body));
                 }
             }
