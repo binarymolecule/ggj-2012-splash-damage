@@ -16,7 +16,8 @@ namespace NGJ2012
     {
         private Game1 game;
         private Texture2D texture;
-        private Vector2 position = new Vector2(0, 0);
+        private Vector2 inGamePosition = new Vector2(0, 0);
+        private Vector2 inGamePositionDubl = new Vector2(0, 0);
 
         private const float WAVE_SPEED = 10.0f;
 
@@ -34,22 +35,27 @@ namespace NGJ2012
 
         public override void Update(Microsoft.Xna.Framework.GameTime gameTime)
         {
-            this.position.X = game.gameProgress - game.TetrisViewport.screenWidthInGAME / 2;
-            this.position.X = (this.position.X + Game1.worldWidthInBlocks) % Game1.worldWidthInBlocks;
-            this.position.Y = game.WaterLayer.Height - texture.Height / Game1.gameBlockSizePlatform;
+            this.inGamePosition.X = game.gameProgress - game.TetrisViewport.screenWidthInGAME / 2;
+            this.inGamePosition.X = (this.inGamePosition.X + Game1.worldWidthInBlocks) % Game1.worldWidthInBlocks;
+            this.inGamePosition.Y = game.WaterLayer.Height - texture.Height / Game1.gameBlockSizePlatform;
+
+            inGamePositionDubl.X = inGamePosition.X - Game1.worldWidthInBlocks;
+            inGamePositionDubl.Y = inGamePosition.Y;
+
             base.Update(gameTime);
         }
 
         public override void DrawGameWorldOnce(Matrix camera, bool platformMode)
         {
             game.SpriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
-            game.SpriteBatch.Draw(texture, Vector2.Transform(position, camera), Color.White);
+            game.SpriteBatch.Draw(texture, Vector2.Transform(inGamePosition, camera), Color.White);
+            game.SpriteBatch.Draw(texture, Vector2.Transform(inGamePositionDubl, camera), Color.White); //Dublicate to avoid clipping on world wrap
             game.SpriteBatch.End();
         }
 
         public bool isCollidingWith(Vector2 objPos)
         {
-            return (this.position.X <= objPos.X && objPos.X <= this.position.X + texture.Width / Game1.gameBlockSizePlatform);
+            return (this.inGamePosition.X <= objPos.X && objPos.X <= this.inGamePosition.X + texture.Width / Game1.gameBlockSizePlatform);
         }
     }
 }
