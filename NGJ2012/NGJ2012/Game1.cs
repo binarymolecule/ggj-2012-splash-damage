@@ -50,7 +50,7 @@ namespace NGJ2012
         Body staticWorldL;
         Body staticWorldR;
         public const int worldWidthInBlocks = 30;
-        public const int worldHeightInBlocks = 40;
+        public const int worldHeightInBlocks = 30;
 
         public const int worldDuplicateBorder = 5;
 
@@ -82,6 +82,8 @@ namespace NGJ2012
         public const float gameBlockSizePlatform = 64;
         public const float gameBlockSizeTetris = 48;
         Texture2D background;
+        Texture2D cloud1;
+        Texture2D cloud2;
 
         public float gameProgress = 0;
         //float tetrisProgressAdd = 10;
@@ -108,7 +110,7 @@ namespace NGJ2012
             Content.RootDirectory = "Content";
             world = new World(new Vector2(0, 25));
 
-            staticWorldGround = BodyFactory.CreateRectangle(world, worldWidthInBlocks, 1, 1.0f, new Vector2(worldWidthInBlocks / 2.0f, 0));
+            staticWorldGround = BodyFactory.CreateRectangle(world, worldWidthInBlocks, 1, 1.0f, new Vector2(worldWidthInBlocks / 2.0f, 0.5f));
             staticWorldL = BodyFactory.CreateRectangle(world, 4, worldHeightInBlocks, 1.0f, new Vector2(2.0f, -worldHeightInBlocks / 2.0f));
             staticWorldR = BodyFactory.CreateRectangle(world, 1, worldHeightInBlocks, 1.0f, new Vector2(worldWidthInBlocks, -worldHeightInBlocks / 2.0f));
             staticWorldGround.BodyType = BodyType.Static;
@@ -171,6 +173,8 @@ namespace NGJ2012
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
             background = Content.Load<Texture2D>(@"graphics/level/Background");
+            cloud1 = Content.Load<Texture2D>(@"graphics/level/cloud_01");
+            cloud2 = Content.Load<Texture2D>(@"graphics/level/cloud_02");
             tetrisBatch = new TetrisPieceBatch(GraphicsDevice, Content);
             playerSwitchTexture = Content.Load<Texture2D>(@"graphics/gui/PlayerSwitch");
 
@@ -267,12 +271,20 @@ namespace NGJ2012
             base.Update(gameTime);
         }
 
+        Vector2 cloudOffsets = Vector2.Zero;
+
+
         /// <summary>
         /// This is called when the game should draw itself.
         /// </summary>
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
+            cloudOffsets.X += 0.5f * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            cloudOffsets.Y += 1.3f * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            if (cloudOffsets.X > Game1.worldWidthInBlocks) cloudOffsets.X -= Game1.worldWidthInBlocks;
+            if (cloudOffsets.Y > Game1.worldWidthInBlocks) cloudOffsets.Y -= Game1.worldWidthInBlocks;
+
             tetrisViewport.Draw(gameTime);
 
             spriteBatch.Begin(SpriteSortMode.Immediate,BlendState.NonPremultiplied);
@@ -287,24 +299,20 @@ namespace NGJ2012
             base.Draw(gameTime);
         }
 
+
         public void DrawGameWorldOnce(Matrix camera, bool platformMode, int wrapAround)
         {
-            GraphicsDevice.Clear(platformMode ? Color.CornflowerBlue : Color.Coral);
-            tetrisBatch.DrawAlignedQuad(new Vector2(worldWidthInBlocks/2, -worldHeightInBlocks/2), new Vector2(worldWidthInBlocks, worldHeightInBlocks), background);
-
-            if (false)
-            {
-                spriteBatch.Begin();
-                Vector3 tl = camera.Translation;
-                spriteBatch.Draw(background, new Rectangle(0, 0, 1280, 720), Color.White);
-                spriteBatch.End();
-            }
+            GraphicsDevice.Clear(Color.Black);
 
             tetrisBatch.cameraMatrix = camera;
-            tetrisBatch.DrawBody(staticWorldGround);
-            tetrisBatch.DrawBody(staticWorldL);
-            tetrisBatch.DrawBody(staticWorldR);
-            //tetrisBatch.DrawAlignedQuad(new Vector2(Game1.worldWidthInBlocks,0)/2, new Vector2(Game1.worldWidthInBlocks,Game1.worldHeightInBlocks), background);
+            //tetrisBatch.DrawBody(staticWorldGround);
+            //tetrisBatch.DrawBody(staticWorldL);
+            //tetrisBatch.DrawBody(staticWorldR);
+            tetrisBatch.DrawAlignedQuad(new Vector2(worldWidthInBlocks / 2, -worldHeightInBlocks / 2), new Vector2(worldWidthInBlocks, worldHeightInBlocks), background);
+            tetrisBatch.DrawAlignedQuad(tetrisViewport.cameraPosition + new Vector2(-cloudOffsets.X, 0), new Vector2(tetrisViewport.screenWidthInGAME, tetrisViewport.screenHeightInGAME), cloud1);
+            tetrisBatch.DrawAlignedQuad(tetrisViewport.cameraPosition + new Vector2(-cloudOffsets.Y, 0), new Vector2(tetrisViewport.screenWidthInGAME, tetrisViewport.screenHeightInGAME), cloud2);
+
+
             foreach (GameComponent c in Components)
             {
                 if (c is DrawableGameComponentExtended)

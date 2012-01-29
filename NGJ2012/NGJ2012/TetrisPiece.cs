@@ -48,6 +48,7 @@ namespace NGJ2012
             body.Friction = 100.0f;
             body.CollisionCategories = Game1.COLLISION_GROUP_TETRIS_BLOCKS;
             body.CollidesWith = Game1.COLLISION_GROUP_STATIC_OBJECTS | Game1.COLLISION_GROUP_TETRIS_BLOCKS | Game1.COLLISION_GROUP_DEFAULT | Game1.COLLISION_GROUP_LEVEL_SEPARATOR;
+            body.Enabled = false;
 
             this.texture = texture;
         }
