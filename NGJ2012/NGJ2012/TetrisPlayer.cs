@@ -309,7 +309,13 @@ namespace NGJ2012
             drawer.cameraMatrix = camera;
             foreach (TetrisPiece cur in pieces)
             {
-                Color colr = ((cur == currentPiece || cur == currentCheat) && isCurrentPieceBlocked()) ? new Color(1.0f, 0.5f, 0.5f, 0.5f) : Color.White;
+                bool tintMe = (cur == currentPiece || cur == currentCheat);
+                Color colr = Color.White;
+                if(tintMe) {
+                    if(isCurrentPieceBlocked()) colr = new Color(0.0f, 0.0f, 0.0f, 0.5f);
+                    else if ((Game as Game1).PlayerIdTetris == PlayerIndex.One) colr = new Color(1.0f, 0.3f, 0.3f, 1.0f);
+                    else colr = new Color(0.3f, 1.0f, 0.3f, 1.0f);
+                }
                 drawer.DrawTetrisPiece(cur, colr);
                 //drawer.DrawBody(cur.body);
             }

@@ -939,7 +939,6 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-
   </ItemGroup>
   <ItemGroup>
     <Compile Include="shapes\I2.png">
@@ -958,6 +957,13 @@
   <ItemGroup>
     <Compile Include="TitleScreen.png">
       <Name>TitleScreen</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="graphics\gui\playerMarker.png">
+      <Name>playerMarker</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
