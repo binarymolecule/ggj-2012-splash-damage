@@ -86,6 +86,7 @@ namespace NGJ2012
         {
             playerCollider.Enabled = true;
             playerCollider.Position = new Vector2(3, -2 + parent.WaterLayer.Height);
+            playerCollider.ResetDynamics();
             playerAnimation.SetAnimation(animID_Stand);
             cameraPosition = Vector2.Zero;
             canJumpBecauseOf.Clear();
