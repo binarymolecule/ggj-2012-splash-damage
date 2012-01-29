@@ -307,11 +307,7 @@ namespace NGJ2012
 
         public void DrawGameWorldOnce(Matrix camera, bool platformMode, int wrapAround)
         {
-            GraphicsDevice.Clear(platformMode ? Color.CornflowerBlue : Color.Coral);
-            spriteBatch.Begin();
-            Vector3 tl = camera.Translation;
-            spriteBatch.Draw(background, new Rectangle(0, 0, 1280, 720), Color.White);
-            spriteBatch.End();
+            GraphicsDevice.Clear(Color.Black);
 
             tetrisBatch.cameraMatrix = camera;
             //tetrisBatch.DrawBody(staticWorldGround);
@@ -377,6 +373,7 @@ namespace NGJ2012
 
         public void removePowerUp(PowerUp p)
         {
+            if (p == null) return;
             Components.Remove(p);
             powerUps.Remove(p);
             p.delme();

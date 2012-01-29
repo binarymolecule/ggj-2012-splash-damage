@@ -94,7 +94,7 @@ namespace NGJ2012
             base.Initialize();
         }
 
-        public const float waterRiseAmount = 1.5f;
+        public const float waterRiseAmount = 1.2f;
         public void StartRising(int msec)
         {
             // Start rising one block
