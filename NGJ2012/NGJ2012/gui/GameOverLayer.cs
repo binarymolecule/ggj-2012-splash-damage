@@ -44,7 +44,7 @@ namespace NGJ2012
 
             if (isActive) elapsedTimeSinceActive += secs;
 
-            if (elapsedTimeSinceActive >= DURATION) onGameOverEnd();
+            //if (elapsedTimeSinceActive >= DURATION) onGameOverEnd();
 
             base.Update(gameTime);
         }
