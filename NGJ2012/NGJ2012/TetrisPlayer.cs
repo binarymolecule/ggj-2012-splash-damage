@@ -15,6 +15,7 @@ using FarseerPhysics.Factories;
 using FarseerPhysics.Collision;
 using FarseerPhysics.Collision.Shapes;
 using FarseerPhysics.Dynamics.Joints;
+using FarseerPhysics.Dynamics.Contacts;
 
 
 namespace NGJ2012
@@ -64,32 +65,18 @@ namespace NGJ2012
             Game1.Timers.Create(SPAWN_TIME, false, Spawn);
         }
 
-        List<Fixture> collisionsBlockingSpawnPoint = new List<Fixture>();
-
         bool currentPieceCollision(Fixture fixtureA, Fixture fixtureB, FarseerPhysics.Dynamics.Contacts.Contact contact)
         {
             // ignore collisions with Cat30
             //            if ((fixtureA.CollisionCategories & Game1.COLLISION_GROUP_DEFAULT) != 0) return false;
             if ((fixtureB.CollisionCategories & Game1.COLLISION_GROUP_DEFAULT) != 0) return false;
-            if ((fixtureB.CollisionCategories & Game1.COLLISION_GROUP_LEVEL_SEPARATOR) != 0)
-            {
-                collisionsBlockingSpawnPoint.Add(fixtureB);
-                return false;
-            }
-            updatePieceStyle();
+            if ((fixtureB.CollisionCategories & Game1.COLLISION_GROUP_LEVEL_SEPARATOR) != 0) return false;
 
             dropCurrentPiece();
             return true;
         }
 
         void currentPieceSeparation(Fixture fixtureA, Fixture fixtureB)
-        {
-            while (collisionsBlockingSpawnPoint.Contains(fixtureB))
-                collisionsBlockingSpawnPoint.Remove(fixtureB);
-            updatePieceStyle();
-        }
-
-        void updatePieceStyle()
         {
         }
 
@@ -100,7 +87,6 @@ namespace NGJ2012
                 nextPiece = getRandomTetrisPiece();
             }
 
-            collisionsBlockingSpawnPoint.Clear();
             currentPiece = nextPiece;
             currentPieceMaxLen = Math.Max(currentPiece.shape.GetLength(0), currentPiece.shape.GetLength(1));
             currentPiece.body.Position = viewportToSpawnIn.cameraPosition + new Vector2(viewportToSpawnIn.screenWidthInGAME / 3.0f, -viewportToSpawnIn.screenHeightInGAME / 2.0f + 0.0f);
@@ -126,7 +112,6 @@ namespace NGJ2012
                 activePieces.Add(currentCheat);
                 countdownToCheat = 5;
             }
-            updatePieceStyle();
 
             nextPiece = getRandomTetrisPiece();
 
@@ -143,13 +128,17 @@ namespace NGJ2012
         {
             if (currentPiece != null)
             {
-                if (collisionsBlockingSpawnPoint.Count > 0)
+                if (isCurrentPieceBlocked())
                 {
+                    currentPiece.body.OnCollision -= currentPieceCollide;
+                    currentPiece.body.OnSeparation -= currentPieceSeparate;
                     _world.RemoveBody(currentPiece.body);
                     pieces.Remove(currentPiece);
                     activePieces.Remove(currentPiece);
                     if (currentCheat != null)
                     {
+                        currentCheat.body.OnCollision -= currentPieceCollide;
+                        currentCheat.body.OnSeparation -= currentPieceSeparate;
                         _world.RemoveBody(currentCheat.body);
                         pieces.Remove(currentCheat);
                         activePieces.Remove(currentCheat);
@@ -179,6 +168,27 @@ namespace NGJ2012
             }
 
             Game1.Timers.Create(SPAWN_TIME, false, Spawn);
+        }
+
+        private bool isCurrentPieceBlocked()
+        {
+            bool blocked = false;
+            ContactEdge contact = currentPiece.body.ContactList;
+            while (contact != null)
+            {
+                if ((contact.Other.FixtureList[0].CollisionCategories & Game1.COLLISION_GROUP_LEVEL_SEPARATOR) != 0) blocked = true;
+                contact = contact.Next;
+            }
+            if (currentCheat != null)
+            {
+                contact = currentCheat.body.ContactList;
+                while (contact != null)
+                {
+                    if ((contact.Other.FixtureList[0].CollisionCategories & Game1.COLLISION_GROUP_LEVEL_SEPARATOR) != 0) blocked = true;
+                    contact = contact.Next;
+                }
+            }
+            return blocked;
         }
 
         /// <summary>
@@ -297,7 +307,8 @@ namespace NGJ2012
             drawer.cameraMatrix = camera;
             foreach (TetrisPiece cur in pieces)
             {
-                drawer.DrawTetrisPiece(cur, collisionsBlockingSpawnPoint.Count>0 ? new Color(1,1,1,0.5f) : Color.White);
+                Color colr = ((cur == currentPiece || cur == currentCheat) && isCurrentPieceBlocked()) ? new Color(1, 1, 1, 0.5f) : Color.White;
+                drawer.DrawTetrisPiece(cur, colr);
                 drawer.DrawBody(cur.body);
             }
         }
