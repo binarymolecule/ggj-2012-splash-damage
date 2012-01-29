@@ -271,7 +271,6 @@ namespace NGJ2012
 
             base.Update(gameTime);
         }
-<<<<<<< HEAD
 
         public void DrawUiSprite(int index, int x, int y, int cellX = 0, int cellY = 0)
         {
@@ -286,10 +285,6 @@ namespace NGJ2012
             spriteBatch.Draw(uiSprites, destRect, srcRect, Color.White);
         }
 
-=======
-
-
->>>>>>> a938514ed6932f51cfab82636f13c1cb73c127e8
         Vector2 cloudOffsets = Vector2.Zero;
 
         /// <summary>
