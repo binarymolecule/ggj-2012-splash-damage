@@ -73,6 +73,7 @@ namespace NGJ2012
         public SavePlatform SavePlatform;
         public WaveLayer waveLayer;
         public GameOverLayer gameOverLayer;
+        public TitleScreenLayer titleScreenLayer;
         private List<PowerUp> powerUps = new List<PowerUp>();
 
         // GUI components
@@ -138,6 +139,7 @@ namespace NGJ2012
             waveLayer = new WaveLayer(this);
             Components.Add(waveLayer);
 
+            titleScreenLayer = new TitleScreenLayer(this);
             gameOverLayer = new GameOverLayer(this);
 
             tetrisViewport = new GameViewport(this, gameBlockSizeTetris);
@@ -225,8 +227,8 @@ namespace NGJ2012
             int msec = gameTime.ElapsedGameTime.Milliseconds;
             MusicManager.Update(msec);
 
-            //Don't update the game while game over
-            if (gameOverLayer.IsActive)
+            //Don't update the game while showing screens:
+            if (gameOverLayer.IsActive || titleScreenLayer.IsActive)
             {
                 base.Update(gameTime);
                 return;

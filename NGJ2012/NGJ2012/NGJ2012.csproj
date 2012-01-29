@@ -115,6 +115,7 @@
     <Compile Include="DrawableGameComponentExtended.cs" />
     <Compile Include="GameViewport.cs" />
     <Compile Include="gui\GameOverLayer.cs" />
+    <Compile Include="gui\TitleScreenLayer.cs" />
     <Compile Include="MusicManager.cs" />
     <Compile Include="SoundManager.cs" />
     <Compile Include="timers\FadeHelper.cs" />
