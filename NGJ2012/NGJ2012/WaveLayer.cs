@@ -44,7 +44,7 @@ namespace NGJ2012
 
         public override void DrawGameWorldOnce(Matrix camera, bool platformMode)
         {
-            if(true) game.TetrisBatch.DrawAlignedQuad(position, new Vector2(1, 10), texture);
+            if(Visible) game.TetrisBatch.DrawAlignedQuad(position, new Vector2(1, 10), texture);
         }
 
         public bool isCollidingWith(Vector2 objPos)
