@@ -60,8 +60,8 @@ namespace NGJ2012
             _basicEffect.CurrentTechnique.Passes[0].Apply();
 
 
-            bool wrapL = bod.Position.X < Game1.worldDuplicateBorder;
-            bool wrapR = bod.Position.X > Game1.worldWidthInBlocks - Game1.worldDuplicateBorder;
+            bool wrapL = bod.Position.X < Game1.worldWidthInBlocks / 2 + Game1.worldDuplicateBorder;
+            bool wrapR = bod.Position.X > Game1.worldWidthInBlocks / 2 - Game1.worldDuplicateBorder;
 
             for (int i = -1; i <= 1; i++)
             {
@@ -98,8 +98,8 @@ namespace NGJ2012
 //            effect.CurrentTechnique.Passes[0].Apply();
 
 
-            bool wrapL = bod.Position.X < Game1.worldDuplicateBorder;
-            bool wrapR = bod.Position.X > Game1.worldWidthInBlocks - Game1.worldDuplicateBorder;
+            bool wrapL = bod.Position.X < Game1.worldWidthInBlocks / 2 + Game1.worldDuplicateBorder;
+            bool wrapR = bod.Position.X > Game1.worldWidthInBlocks / 2 - Game1.worldDuplicateBorder;
 
             for (int i = -1; i <= 1; i++)
             {
