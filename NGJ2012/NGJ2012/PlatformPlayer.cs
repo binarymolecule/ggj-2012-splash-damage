@@ -361,7 +361,7 @@ namespace NGJ2012
         private void die()
         {
             this.numberOfLifes--;
-
+            SoundManager.PlaySound("splash");
             if (this.numberOfLifes == 0)
             {
                 parent.gameOverLayer.onGameOver();
@@ -371,7 +371,6 @@ namespace NGJ2012
                 dead = true;
                 playerCollider.Enabled = false;
                 Game1.Timers.Create(0.5f, false, ResetPlayer);
-                SoundManager.PlaySound("splash");
                 (Game as Game1).SwitchPlayers();
             }
         }
@@ -442,7 +441,8 @@ namespace NGJ2012
         public override void DrawGameWorldOnce(Matrix camera, bool platformMode)
         {
             // Draw animation
-            playerAnimation.Draw(parent.TetrisBatch, playerCollider.Position, new Vector2(2, 2));
+            if (!dead)
+                playerAnimation.Draw(parent.TetrisBatch, playerCollider.Position, new Vector2(2, 2));
             Color colr;
             if ((Game as Game1).PlayerIdPlatform == PlayerIndex.One) colr = new Color(1.0f, 0.3f, 0.3f, 1.0f);
             else colr = new Color(0.3f, 1.0f, 0.3f, 1.0f);
