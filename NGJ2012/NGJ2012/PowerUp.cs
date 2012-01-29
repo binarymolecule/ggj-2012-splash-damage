@@ -165,7 +165,7 @@ namespace NGJ2012
             switch (this.powerUpType)
             {
                 case EPowerUpType.MegaJump:
-                    game.PlatformPlayer.increaseJumpPower(-JUMP_INCREASE);
+                    game.PlatformPlayer.resetJumpPower();
                     break;
                 case EPowerUpType.ExtraLife:
                     //Nothing TODO.

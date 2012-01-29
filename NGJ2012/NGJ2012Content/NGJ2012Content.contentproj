@@ -170,284 +170,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="char\run_end\run_end_01_0046.png">
-      <Name>run_end_01_0046</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="char\run_end\run_end_01_0047.png">
-      <Name>run_end_01_0047</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="char\run_end\run_end_01_0048.png">
-      <Name>run_end_01_0048</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="char\run_end\run_end_01_0049.png">
-      <Name>run_end_01_0049</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="char\run_end\run_end_01_0050.png">
-      <Name>run_end_01_0050</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="char\run_loop_01\run_loop_01_0009.png">
-      <Name>run_loop_01_0009</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="char\run_loop_01\run_loop_01_0010.png">
-      <Name>run_loop_01_0010</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="char\run_loop_01\run_loop_01_0011.png">
-      <Name>run_loop_01_0011</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="char\run_loop_01\run_loop_01_0012.png">
-      <Name>run_loop_01_0012</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="char\run_loop_01\run_loop_01_0013.png">
-      <Name>run_loop_01_0013</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="char\run_loop_01\run_loop_01_0014.png">
-      <Name>run_loop_01_0014</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="char\run_loop_01\run_loop_01_0015.png">
-      <Name>run_loop_01_0015</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="char\run_loop_01\run_loop_01_0016.png">
-      <Name>run_loop_01_0016</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="char\run_loop_01\run_loop_01_0017.png">
-      <Name>run_loop_01_0017</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="char\run_loop_01\run_loop_01_0018.png">
-      <Name>run_loop_01_0018</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="char\run_loop_01\run_loop_01_0019.png">
-      <Name>run_loop_01_0019</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="char\run_loop_01\run_loop_01_0020.png">
-      <Name>run_loop_01_0020</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="char\run_loop_01\run_loop_01_0021.png">
-      <Name>run_loop_01_0021</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="char\run_loop_01\run_loop_01_0022.png">
-      <Name>run_loop_01_0022</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="char\run_loop_01\run_loop_01_0023.png">
-      <Name>run_loop_01_0023</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="char\run_loop_01\run_loop_01_0024.png">
-      <Name>run_loop_01_0024</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="char\run_loop_01\run_loop_01_0025.png">
-      <Name>run_loop_01_0025</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="char\run_loop_01\run_loop_01_0026.png">
-      <Name>run_loop_01_0026</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="char\run_loop_01\run_loop_01_0027.png">
-      <Name>run_loop_01_0027</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="char\run_loop_01\run_loop_01_0028.png">
-      <Name>run_loop_01_0028</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="char\run_loop_02\run_loop_02_0009.png">
-      <Name>run_loop_02_0009</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="char\run_loop_02\run_loop_02_0010.png">
-      <Name>run_loop_02_0010</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="char\run_loop_02\run_loop_02_0011.png">
-      <Name>run_loop_02_0011</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="char\run_loop_02\run_loop_02_0012.png">
-      <Name>run_loop_02_0012</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="char\run_loop_02\run_loop_02_0013.png">
-      <Name>run_loop_02_0013</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="char\run_loop_02\run_loop_02_0014.png">
-      <Name>run_loop_02_0014</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="char\run_loop_02\run_loop_02_0015.png">
-      <Name>run_loop_02_0015</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="char\run_loop_02\run_loop_02_0016.png">
-      <Name>run_loop_02_0016</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="char\run_loop_02\run_loop_02_0017.png">
-      <Name>run_loop_02_0017</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="char\run_loop_02\run_loop_02_0018.png">
-      <Name>run_loop_02_0018</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="char\run_loop_02\run_loop_02_0019.png">
-      <Name>run_loop_02_0019</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="char\run_loop_02\run_loop_02_0020.png">
-      <Name>run_loop_02_0020</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="char\run_loop_02\run_loop_02_0021.png">
-      <Name>run_loop_02_0021</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="char\run_loop_02\run_loop_02_0022.png">
-      <Name>run_loop_02_0022</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="char\run_loop_02\run_loop_02_0023.png">
-      <Name>run_loop_02_0023</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="char\run_loop_02\run_loop_02_0024.png">
-      <Name>run_loop_02_0024</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="char\run_loop_02\run_loop_02_0025.png">
-      <Name>run_loop_02_0025</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="char\run_loop_02\run_loop_02_0026.png">
-      <Name>run_loop_02_0026</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="char\run_loop_02\run_loop_02_0027.png">
-      <Name>run_loop_02_0027</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="char\run_loop_02\run_loop_02_0028.png">
-      <Name>run_loop_02_0028</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="char\run_start\run_start_1_0000.png">
-      <Name>run_start_1_0000</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="char\run_start\run_start_1_0001.png">
-      <Name>run_start_1_0001</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="char\run_start\run_start_1_0002.png">
-      <Name>run_start_1_0002</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="char\run_start\run_start_1_0003.png">
-      <Name>run_start_1_0003</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="char\run_start\run_start_1_0004.png">
-      <Name>run_start_1_0004</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="char\run_start\run_start_1_0005.png">
-      <Name>run_start_1_0005</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="char\run_start\run_start_1_0006.png">
-      <Name>run_start_1_0006</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="char\run_start\run_start_1_0007.png">
-      <Name>run_start_1_0007</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="char\run_start\run_start_1_0008.png">
-      <Name>run_start_1_0008</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="Wave.png">
       <Name>Wave</Name>
       <Importer>TextureImporter</Importer>
@@ -502,6 +224,686 @@
       <Name>splash-03</Name>
       <Importer>WavImporter</Importer>
       <Processor>SoundEffectProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="char\bite_01\bite_color_30frs_01_0000.png">
+      <Name>bite_color_30frs_01_0000</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\bite_01\bite_color_30frs_01_0001.png">
+      <Name>bite_color_30frs_01_0001</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\bite_01\bite_color_30frs_01_0002.png">
+      <Name>bite_color_30frs_01_0002</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\bite_01\bite_color_30frs_01_0003.png">
+      <Name>bite_color_30frs_01_0003</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\bite_01\bite_color_30frs_01_0004.png">
+      <Name>bite_color_30frs_01_0004</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\bite_01\bite_color_30frs_01_0005.png">
+      <Name>bite_color_30frs_01_0005</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\bite_01\bite_color_30frs_01_0006.png">
+      <Name>bite_color_30frs_01_0006</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\bite_01\bite_color_30frs_01_0007.png">
+      <Name>bite_color_30frs_01_0007</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\bite_01\bite_color_30frs_01_0008.png">
+      <Name>bite_color_30frs_01_0008</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\bite_01\bite_color_30frs_01_0009.png">
+      <Name>bite_color_30frs_01_0009</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\bite_01\bite_color_30frs_01_0010.png">
+      <Name>bite_color_30frs_01_0010</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\bite_01\bite_color_30frs_01_0011.png">
+      <Name>bite_color_30frs_01_0011</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\bite_01\bite_color_30frs_01_0012.png">
+      <Name>bite_color_30frs_01_0012</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\bite_01\bite_color_30frs_01_0013.png">
+      <Name>bite_color_30frs_01_0013</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\bite_01\bite_color_30frs_01_0014.png">
+      <Name>bite_color_30frs_01_0014</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\bite_01\bite_color_30frs_01_0015.png">
+      <Name>bite_color_30frs_01_0015</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\bite_01\bite_color_30frs_01_0016.png">
+      <Name>bite_color_30frs_01_0016</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\bite_01\bite_color_30frs_01_0017.png">
+      <Name>bite_color_30frs_01_0017</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\bite_01\bite_color_30frs_01_0018.png">
+      <Name>bite_color_30frs_01_0018</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\bite_01\bite_color_30frs_01_0019.png">
+      <Name>bite_color_30frs_01_0019</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\bite_01\bite_color_30frs_01_0020.png">
+      <Name>bite_color_30frs_01_0020</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\bite_01\bite_color_30frs_01_0021.png">
+      <Name>bite_color_30frs_01_0021</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\bite_01\bite_color_30frs_01_0022.png">
+      <Name>bite_color_30frs_01_0022</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\bite_01\bite_color_30frs_01_0023.png">
+      <Name>bite_color_30frs_01_0023</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\bite_01\bite_color_30frs_01_0024.png">
+      <Name>bite_color_30frs_01_0024</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\bite_01\bite_color_30frs_01_0025.png">
+      <Name>bite_color_30frs_01_0025</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\bite_01\bite_color_30frs_01_0026.png">
+      <Name>bite_color_30frs_01_0026</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\bite_01\bite_color_30frs_01_0027.png">
+      <Name>bite_color_30frs_01_0027</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\bite_01\bite_color_30frs_01_0028.png">
+      <Name>bite_color_30frs_01_0028</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\bite_01\bite_color_30frs_01_0029.png">
+      <Name>bite_color_30frs_01_0029</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\bite_01\bite_color_30frs_01_0030.png">
+      <Name>bite_color_30frs_01_0030</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="char\idle_01\jump_idle_20frs_01_0000.png">
+      <Name>jump_idle_20frs_01_0000</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\idle_01\jump_idle_20frs_01_0001.png">
+      <Name>jump_idle_20frs_01_0001</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\idle_01\jump_idle_20frs_01_0002.png">
+      <Name>jump_idle_20frs_01_0002</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\idle_01\jump_idle_20frs_01_0003.png">
+      <Name>jump_idle_20frs_01_0003</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\idle_01\jump_idle_20frs_01_0004.png">
+      <Name>jump_idle_20frs_01_0004</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\idle_01\jump_idle_20frs_01_0005.png">
+      <Name>jump_idle_20frs_01_0005</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\idle_01\jump_idle_20frs_01_0006.png">
+      <Name>jump_idle_20frs_01_0006</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\idle_01\jump_idle_20frs_01_0007.png">
+      <Name>jump_idle_20frs_01_0007</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\idle_01\jump_idle_20frs_01_0008.png">
+      <Name>jump_idle_20frs_01_0008</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\idle_01\jump_idle_20frs_01_0009.png">
+      <Name>jump_idle_20frs_01_0009</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\idle_01\jump_idle_20frs_01_0010.png">
+      <Name>jump_idle_20frs_01_0010</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\idle_01\jump_idle_20frs_01_0011.png">
+      <Name>jump_idle_20frs_01_0011</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\idle_01\jump_idle_20frs_01_0012.png">
+      <Name>jump_idle_20frs_01_0012</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\idle_01\jump_idle_20frs_01_0013.png">
+      <Name>jump_idle_20frs_01_0013</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\idle_01\jump_idle_20frs_01_0014.png">
+      <Name>jump_idle_20frs_01_0014</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\idle_01\jump_idle_20frs_01_0015.png">
+      <Name>jump_idle_20frs_01_0015</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\idle_01\jump_idle_20frs_01_0016.png">
+      <Name>jump_idle_20frs_01_0016</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\idle_01\jump_idle_20frs_01_0017.png">
+      <Name>jump_idle_20frs_01_0017</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\idle_01\jump_idle_20frs_01_0018.png">
+      <Name>jump_idle_20frs_01_0018</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\idle_01\jump_idle_20frs_01_0019.png">
+      <Name>jump_idle_20frs_01_0019</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\idle_01\jump_idle_20frs_01_0020.png">
+      <Name>jump_idle_20frs_01_0020</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="char\jump_01\jump_color_30frs_01_0000.png">
+      <Name>jump_color_30frs_01_0000</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\jump_01\jump_color_30frs_01_0001.png">
+      <Name>jump_color_30frs_01_0001</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\jump_01\jump_color_30frs_01_0002.png">
+      <Name>jump_color_30frs_01_0002</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\jump_01\jump_color_30frs_01_0003.png">
+      <Name>jump_color_30frs_01_0003</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\jump_01\jump_color_30frs_01_0004.png">
+      <Name>jump_color_30frs_01_0004</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\jump_01\jump_color_30frs_01_0005.png">
+      <Name>jump_color_30frs_01_0005</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\jump_01\jump_color_30frs_01_0006.png">
+      <Name>jump_color_30frs_01_0006</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\jump_01\jump_color_30frs_01_0007.png">
+      <Name>jump_color_30frs_01_0007</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\jump_01\jump_color_30frs_01_0008.png">
+      <Name>jump_color_30frs_01_0008</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\jump_01\jump_color_30frs_01_0009.png">
+      <Name>jump_color_30frs_01_0009</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\jump_01\jump_color_30frs_01_0010.png">
+      <Name>jump_color_30frs_01_0010</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\jump_01\jump_color_30frs_01_0011.png">
+      <Name>jump_color_30frs_01_0011</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\jump_01\jump_color_30frs_01_0012.png">
+      <Name>jump_color_30frs_01_0012</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\jump_01\jump_color_30frs_01_0013.png">
+      <Name>jump_color_30frs_01_0013</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\jump_01\jump_color_30frs_01_0014.png">
+      <Name>jump_color_30frs_01_0014</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\jump_01\jump_color_30frs_01_0015.png">
+      <Name>jump_color_30frs_01_0015</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\jump_01\jump_color_30frs_01_0016.png">
+      <Name>jump_color_30frs_01_0016</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\jump_01\jump_color_30frs_01_0017.png">
+      <Name>jump_color_30frs_01_0017</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\jump_01\jump_color_30frs_01_0018.png">
+      <Name>jump_color_30frs_01_0018</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\jump_01\jump_color_30frs_01_0019.png">
+      <Name>jump_color_30frs_01_0019</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\jump_01\jump_color_30frs_01_0020.png">
+      <Name>jump_color_30frs_01_0020</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\jump_01\jump_color_30frs_01_0021.png">
+      <Name>jump_color_30frs_01_0021</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\jump_01\jump_color_30frs_01_0022.png">
+      <Name>jump_color_30frs_01_0022</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\jump_01\jump_color_30frs_01_0023.png">
+      <Name>jump_color_30frs_01_0023</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\jump_01\jump_color_30frs_01_0024.png">
+      <Name>jump_color_30frs_01_0024</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\jump_01\jump_color_30frs_01_0025.png">
+      <Name>jump_color_30frs_01_0025</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\jump_01\jump_color_30frs_01_0026.png">
+      <Name>jump_color_30frs_01_0026</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\jump_01\jump_color_30frs_01_0027.png">
+      <Name>jump_color_30frs_01_0027</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\jump_01\jump_color_30frs_01_0028.png">
+      <Name>jump_color_30frs_01_0028</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\jump_01\jump_color_30frs_01_0029.png">
+      <Name>jump_color_30frs_01_0029</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\jump_01\jump_color_30frs_01_0030.png">
+      <Name>jump_color_30frs_01_0030</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="char\power_jump_01\power_jump_color_30frs_01_0000.png">
+      <Name>power_jump_color_30frs_01_0000</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\power_jump_01\power_jump_color_30frs_01_0001.png">
+      <Name>power_jump_color_30frs_01_0001</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\power_jump_01\power_jump_color_30frs_01_0002.png">
+      <Name>power_jump_color_30frs_01_0002</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\power_jump_01\power_jump_color_30frs_01_0003.png">
+      <Name>power_jump_color_30frs_01_0003</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\power_jump_01\power_jump_color_30frs_01_0004.png">
+      <Name>power_jump_color_30frs_01_0004</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\power_jump_01\power_jump_color_30frs_01_0005.png">
+      <Name>power_jump_color_30frs_01_0005</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\power_jump_01\power_jump_color_30frs_01_0006.png">
+      <Name>power_jump_color_30frs_01_0006</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\power_jump_01\power_jump_color_30frs_01_0007.png">
+      <Name>power_jump_color_30frs_01_0007</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\power_jump_01\power_jump_color_30frs_01_0008.png">
+      <Name>power_jump_color_30frs_01_0008</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\power_jump_01\power_jump_color_30frs_01_0009.png">
+      <Name>power_jump_color_30frs_01_0009</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\power_jump_01\power_jump_color_30frs_01_0010.png">
+      <Name>power_jump_color_30frs_01_0010</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\power_jump_01\power_jump_color_30frs_01_0011.png">
+      <Name>power_jump_color_30frs_01_0011</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\power_jump_01\power_jump_color_30frs_01_0012.png">
+      <Name>power_jump_color_30frs_01_0012</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\power_jump_01\power_jump_color_30frs_01_0013.png">
+      <Name>power_jump_color_30frs_01_0013</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\power_jump_01\power_jump_color_30frs_01_0014.png">
+      <Name>power_jump_color_30frs_01_0014</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\power_jump_01\power_jump_color_30frs_01_0015.png">
+      <Name>power_jump_color_30frs_01_0015</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\power_jump_01\power_jump_color_30frs_01_0016.png">
+      <Name>power_jump_color_30frs_01_0016</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\power_jump_01\power_jump_color_30frs_01_0017.png">
+      <Name>power_jump_color_30frs_01_0017</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\power_jump_01\power_jump_color_30frs_01_0018.png">
+      <Name>power_jump_color_30frs_01_0018</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\power_jump_01\power_jump_color_30frs_01_0019.png">
+      <Name>power_jump_color_30frs_01_0019</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\power_jump_01\power_jump_color_30frs_01_0020.png">
+      <Name>power_jump_color_30frs_01_0020</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\power_jump_01\power_jump_color_30frs_01_0021.png">
+      <Name>power_jump_color_30frs_01_0021</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\power_jump_01\power_jump_color_30frs_01_0022.png">
+      <Name>power_jump_color_30frs_01_0022</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\power_jump_01\power_jump_color_30frs_01_0023.png">
+      <Name>power_jump_color_30frs_01_0023</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\power_jump_01\power_jump_color_30frs_01_0024.png">
+      <Name>power_jump_color_30frs_01_0024</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\power_jump_01\power_jump_color_30frs_01_0025.png">
+      <Name>power_jump_color_30frs_01_0025</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\power_jump_01\power_jump_color_30frs_01_0026.png">
+      <Name>power_jump_color_30frs_01_0026</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\power_jump_01\power_jump_color_30frs_01_0027.png">
+      <Name>power_jump_color_30frs_01_0027</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\power_jump_01\power_jump_color_30frs_01_0028.png">
+      <Name>power_jump_color_30frs_01_0028</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\power_jump_01\power_jump_color_30frs_01_0029.png">
+      <Name>power_jump_color_30frs_01_0029</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\power_jump_01\power_jump_color_30frs_01_0030.png">
+      <Name>power_jump_color_30frs_01_0030</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="char\run_01\run_color_01_0009.png">
+      <Name>run_color_01_0009</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\run_01\run_color_01_0010.png">
+      <Name>run_color_01_0010</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\run_01\run_color_01_0011.png">
+      <Name>run_color_01_0011</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\run_01\run_color_01_0012.png">
+      <Name>run_color_01_0012</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\run_01\run_color_01_0013.png">
+      <Name>run_color_01_0013</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\run_01\run_color_01_0014.png">
+      <Name>run_color_01_0014</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\run_01\run_color_01_0015.png">
+      <Name>run_color_01_0015</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\run_01\run_color_01_0016.png">
+      <Name>run_color_01_0016</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\run_01\run_color_01_0017.png">
+      <Name>run_color_01_0017</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\run_01\run_color_01_0018.png">
+      <Name>run_color_01_0018</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\run_01\run_color_01_0019.png">
+      <Name>run_color_01_0019</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\run_01\run_color_01_0020.png">
+      <Name>run_color_01_0020</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\run_01\run_color_01_0021.png">
+      <Name>run_color_01_0021</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\run_01\run_color_01_0022.png">
+      <Name>run_color_01_0022</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\run_01\run_color_01_0023.png">
+      <Name>run_color_01_0023</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\run_01\run_color_01_0024.png">
+      <Name>run_color_01_0024</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\run_01\run_color_01_0025.png">
+      <Name>run_color_01_0025</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\run_01\run_color_01_0026.png">
+      <Name>run_color_01_0026</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\run_01\run_color_01_0027.png">
+      <Name>run_color_01_0027</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="char\run_01\run_color_01_0028.png">
+      <Name>run_color_01_0028</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\$(XnaFrameworkVersion)\Microsoft.Xna.GameStudio.ContentPipeline.targets" />
