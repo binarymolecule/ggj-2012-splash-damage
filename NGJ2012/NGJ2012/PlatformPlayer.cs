@@ -16,6 +16,7 @@ using FarseerPhysics.Factories;
 using FarseerPhysics.Collision;
 using FarseerPhysics.Collision.Shapes;
 using FarseerPhysics.Dynamics.Joints;
+using Utility;
 
 
 namespace NGJ2012
@@ -36,7 +37,7 @@ namespace NGJ2012
         World world;
         public Body playerCollider;
         public Vector2 cameraPosition;
-        
+
         private int numberOfLifes;
 
         public int NumberOfLifes
@@ -47,6 +48,8 @@ namespace NGJ2012
         private float jumpForce = 0.5f;
         private const float BYTE_FORCE = 300.0f;
         private PowerUp currentlySelectedPowerUp;
+        public float floodHeight = 0;
+        public bool dead = false;
 
         public PowerUp CurrentlySelectedPowerUp
         {
@@ -59,7 +62,8 @@ namespace NGJ2012
         AnimatedSprite playerAnimation;
         int animID_Stand, animID_Walk, animID_Idle, animID_Jump, animID_Fall, animID_Hit;
 
-        public PlatformPlayer(Game game, World world) : base(game)
+        public PlatformPlayer(Game game, World world)
+            : base(game)
         {
             this.world = world;
             parent = (Game1)game;
@@ -78,21 +82,23 @@ namespace NGJ2012
             numberOfLifes = INITIAL_NUMBER_OF_LIFES;
         }
 
-        public void ResetPlayer()
+        public void ResetPlayer(Timer timer = null)
         {
+            playerCollider.Enabled = true;
             playerCollider.Position = new Vector2(3, -2 + parent.WaterLayer.Height);
             playerAnimation.SetAnimation(animID_Stand);
             cameraPosition = Vector2.Zero;
             canJumpBecauseOf.Clear();
             parent.SavePlatform.DisableTriggering();
+            dead = false;
         }
 
         List<Fixture> canJumpBecauseOf = new List<Fixture>();
 
         void PlayerSeparatesFromWorld(Fixture fixtureA, Fixture fixtureB)
         {
-            while(canJumpBecauseOf.Contains(fixtureB))
-               canJumpBecauseOf.Remove(fixtureB);
+            while (canJumpBecauseOf.Contains(fixtureB))
+                canJumpBecauseOf.Remove(fixtureB);
         }
         bool PlayerCollidesWithWorld(Fixture fixtureA, Fixture fixtureB, FarseerPhysics.Dynamics.Contacts.Contact contact)
         {
@@ -135,7 +141,7 @@ namespace NGJ2012
                 playerTextureNames.Add(String.Format("run_start/run_start_1_{0:0000}", i));
             for (int i = 9; i < 29; i++)
                 playerTextureNames.Add(String.Format("run_loop_02/run_loop_02_{0:0000}", i));
-            
+
             playerAnimation = new AnimatedSprite(parent, "char", playerTextureNames, new Vector2(256, 336));
             animID_Stand = playerAnimation.AddAnimation("stand", 0, 0, 125, true);
             //animID_Walk = playerAnimation.AddAnimation("walk", 0, 29, 50, 9);
@@ -145,7 +151,7 @@ namespace NGJ2012
             animID_Fall = playerAnimation.AddAnimation("fall", 0, 0, 125, true);
             animID_Hit = playerAnimation.AddAnimation("hit", 0, 0, 125, true);
             playerAnimation.SetAnimation(animID_Stand);
-            
+
             base.LoadContent();
         }
 
@@ -166,14 +172,14 @@ namespace NGJ2012
         {
             if (fixture.Body == playerCollider)
                 return -1;
-            if ((fixture.CollisionCategories & (Game1.COLLISION_GROUP_TETRIS_BLOCKS|Game1.COLLISION_GROUP_STATIC_OBJECTS)) == 0)
+            if ((fixture.CollisionCategories & (Game1.COLLISION_GROUP_TETRIS_BLOCKS | Game1.COLLISION_GROUP_STATIC_OBJECTS)) == 0)
                 return 1;
-            if (normal.Y > 0.01) 
+            if (normal.Y > 0.01)
                 return 1;
             canJump = true;
             return 0;
         }
-        
+
         /// <summary>
         /// Allows the game component to update itself.
         /// </summary>
@@ -186,9 +192,8 @@ namespace NGJ2012
             // Process user input
             int msec = gameTime.ElapsedGameTime.Milliseconds;
 
-            //bool eatenByWave = playerCollider.Position.X < (Game as Game1).gameProgress && playerCollider.Position.X > (Game as Game1).gameProgress - 10;
             bool eatenByWave = (Game as Game1).waveLayer.isCollidingWith(playerCollider.Position);
-            if (this.playerCollider.Position.Y > parent.WaterLayer.Height + 1.0f || eatenByWave)
+            if (!dead && (this.playerCollider.Position.Y > parent.WaterLayer.Height + 1.0f || eatenByWave))
             {
                 this.numberOfLifes--;
 
@@ -198,95 +203,106 @@ namespace NGJ2012
                 }
                 else
                 {
+                    dead = true;
+                    playerCollider.Enabled = false;
+                    Game1.Timers.Create(1.5f, false, ResetPlayer);
                     SoundManager.PlaySound("splash");
-                    ResetPlayer();
                     (Game as Game1).SwitchPlayers();
                 }
             }
 
-            KeyboardState state = Keyboard.GetState();
-            GamePadState gstate = GamePad.GetState((Game as Game1).PlayerIdPlatform);
-            float move = 0;
-            if (state.IsKeyDown(Keys.A))
+            if (dead)
             {
-                move = -acceleration;
-                playerAnimation.Flipped = true;
-            }
-            if (state.IsKeyDown(Keys.D))
-            {
-                move = acceleration;
-                playerAnimation.Flipped = false;
-            }
-            if (gstate.IsConnected)
-            {
-                move = gstate.ThumbSticks.Left.X * Math.Abs(gstate.ThumbSticks.Left.X) * acceleration;
-                playerAnimation.Flipped = move < 0;
-            }
-
-            currentRunSpeed *= Math.Max(0.0f, 1.0f - deacceleration*(float)gameTime.ElapsedGameTime.TotalSeconds);
-            currentRunSpeed += move * (float)gameTime.ElapsedGameTime.TotalSeconds;
-            if (Math.Abs(currentRunSpeed) > maxRunSpeed)
-                currentRunSpeed *= maxRunSpeed / Math.Abs(currentRunSpeed);
-
-            bool isRunning = false;
-            if (Math.Abs(currentRunSpeed) > 0.001f)
-            {
-                viewDirection = Math.Sign(currentRunSpeed);
-                isRunning = true;
+                floodHeight = MathHelper.Clamp(floodHeight - (float)gameTime.ElapsedGameTime.TotalSeconds * 2f, 0, 1);
             }
             else
-                currentRunSpeed = 0;
-
-            float runSpeedScaleDueToVertical = 1.0f;// (float)Math.Sqrt(Math.Max(0, maxRunSpeed * maxRunSpeed - playerCollider.LinearVelocity.Y * playerCollider.LinearVelocity.Y);
-            playerCollider.LinearVelocity = new Vector2(currentRunSpeed * runSpeedScaleDueToVertical, playerCollider.LinearVelocity.Y);
-
-            if (playerCollider.LinearVelocity.Y > 0)
-                didFallSinceLastJump = true;
-
-            canJump = canJumpBecauseOf.Count > 0;
-            if (canJump && didFallSinceLastJump)
             {
-                if (isRunning)
-                    playerAnimation.SetAnimation(animID_Walk);
-                else
-                    playerAnimation.SetAnimation(animID_Stand);
-            }
+                floodHeight = MathHelper.Clamp(floodHeight + (float)gameTime.ElapsedGameTime.TotalSeconds, 0, 1);
 
-            if (state.IsKeyDown(Keys.W) || gstate.IsButtonDown(Buttons.A))
-            {
-                if (didFallSinceLastJump)
+                KeyboardState state = Keyboard.GetState();
+                GamePadState gstate = GamePad.GetState(PlayerIndex.One);
+                float move = 0;
+                if (state.IsKeyDown(Keys.A))
                 {
-                    //canJump = false;
-                    //world.RayCast(new RayCastCallback(RayCastCallbackJump), playerCollider.Position, playerCollider.Position + new Vector2(0, 1.0f));
-                    canJump = canJumpBecauseOf.Count > 0 || Math.Abs(playerCollider.LinearVelocity.Y) < 0.01;
-                    if (canJump)
+                    move = -acceleration;
+                    playerAnimation.Flipped = true;
+                }
+                if (state.IsKeyDown(Keys.D))
+                {
+                    move = acceleration;
+                    playerAnimation.Flipped = false;
+                }
+                if (gstate.IsConnected)
+                {
+                    move = gstate.ThumbSticks.Left.X * Math.Abs(gstate.ThumbSticks.Left.X) * acceleration;
+                    playerAnimation.Flipped = move < 0;
+                }
+
+                currentRunSpeed *= Math.Max(0.0f, 1.0f - deacceleration * (float)gameTime.ElapsedGameTime.TotalSeconds);
+                currentRunSpeed += move * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                if (Math.Abs(currentRunSpeed) > maxRunSpeed)
+                    currentRunSpeed *= maxRunSpeed / Math.Abs(currentRunSpeed);
+
+                bool isRunning = false;
+                if (Math.Abs(currentRunSpeed) > 0.001f)
+                {
+                    viewDirection = Math.Sign(currentRunSpeed);
+                    isRunning = true;
+                }
+                else
+                    currentRunSpeed = 0;
+
+                float runSpeedScaleDueToVertical = 1.0f;// (float)Math.Sqrt(Math.Max(0, maxRunSpeed * maxRunSpeed - playerCollider.LinearVelocity.Y * playerCollider.LinearVelocity.Y);
+                playerCollider.LinearVelocity = new Vector2(currentRunSpeed * runSpeedScaleDueToVertical, playerCollider.LinearVelocity.Y);
+
+                if (playerCollider.LinearVelocity.Y > 0)
+                    didFallSinceLastJump = true;
+
+                canJump = canJumpBecauseOf.Count > 0;
+                if (canJump && didFallSinceLastJump)
+                {
+                    if (isRunning)
+                        playerAnimation.SetAnimation(animID_Walk);
+                    else
+                        playerAnimation.SetAnimation(animID_Stand);
+                }
+
+                if (state.IsKeyDown(Keys.W) || gstate.IsButtonDown(Buttons.A))
+                {
+                    if (didFallSinceLastJump)
                     {
-                        jump();
-                        didFallSinceLastJump = false;
+                        //canJump = false;
+                        //world.RayCast(new RayCastCallback(RayCastCallbackJump), playerCollider.Position, playerCollider.Position + new Vector2(0, 1.0f));
+                        canJump = canJumpBecauseOf.Count > 0 || Math.Abs(playerCollider.LinearVelocity.Y) < 0.01;
+                        if (canJump)
+                        {
+                            jump();
+                            didFallSinceLastJump = false;
+                        }
                     }
-                } 
+                }
+
+                if (playerCollider.Position.X < 0)
+                {
+                    playerCollider.Position = new Vector2(playerCollider.Position.X + (float)Game1.worldWidthInBlocks, playerCollider.Position.Y);
+                    cameraPosition.X += Game1.worldWidthInBlocks;
+                }
+
+                if (playerCollider.Position.X > Game1.worldWidthInBlocks)
+                {
+                    playerCollider.Position = new Vector2(playerCollider.Position.X - (float)Game1.worldWidthInBlocks, playerCollider.Position.Y);
+                    cameraPosition.X -= Game1.worldWidthInBlocks;
+                }
+
+                cameraPosition = 0.5f * cameraPosition + 0.5f * playerCollider.Position;
+
+                if (state.IsKeyDown(Keys.Enter) || state.IsKeyDown(Keys.E) || gstate.IsButtonDown(Buttons.B)) usePowerUp();
+
+                if (state.IsKeyDown(Keys.F) || gstate.IsButtonDown(Buttons.X)) bite();
+
+                // Update player animation
+                playerAnimation.Update(gameTime.ElapsedGameTime.Milliseconds);
             }
-
-            if (playerCollider.Position.X < 0)
-            {
-                playerCollider.Position = new Vector2(playerCollider.Position.X + (float)Game1.worldWidthInBlocks, playerCollider.Position.Y);
-                cameraPosition.X += Game1.worldWidthInBlocks;
-            }
-
-            if (playerCollider.Position.X > Game1.worldWidthInBlocks)
-            {
-                playerCollider.Position = new Vector2(playerCollider.Position.X - (float)Game1.worldWidthInBlocks, playerCollider.Position.Y);
-                cameraPosition.X -= Game1.worldWidthInBlocks;
-            }
-
-            cameraPosition = 0.5f * cameraPosition + 0.5f * playerCollider.Position;
-
-            if (state.IsKeyDown(Keys.Enter) || state.IsKeyDown(Keys.E) || gstate.IsButtonDown(Buttons.B)) usePowerUp();
-
-            if (state.IsKeyDown(Keys.F) || gstate.IsButtonDown(Buttons.X)) bite();
-
-            // Update player animation
-            playerAnimation.Update(gameTime.ElapsedGameTime.Milliseconds);
 
             base.Update(gameTime);
         }
@@ -305,10 +321,12 @@ namespace NGJ2012
             {
                 parent.TetrisPlayer.reactiveAllPieces();
                 fixture.Body.ApplyForce(new Vector2(-this.viewDirection * BYTE_FORCE, -BYTE_FORCE));
-              
+
                 //Stop raytracing
                 return 0;
-            } else {
+            }
+            else
+            {
                 //Continue raytracing:
                 return -1;
             }
@@ -322,11 +340,13 @@ namespace NGJ2012
             }
         }
 
-        public void clearCurrentPowerUp() {
+        public void clearCurrentPowerUp()
+        {
             this.currentlySelectedPowerUp = null;
         }
 
-        public void increaseJumpPower(float inc) {
+        public void increaseJumpPower(float inc)
+        {
             this.jumpForce += inc;
         }
 
@@ -339,7 +359,7 @@ namespace NGJ2012
         public override void DrawGameWorldOnce(Matrix camera, bool platformMode)
         {
             // Draw animation
-            playerAnimation.Draw(parent.TetrisBatch, playerCollider.Position, new Vector2(2,2) );
+            playerAnimation.Draw(parent.TetrisBatch, playerCollider.Position, new Vector2(2, 2));
 
 #if DEBUG
             parent.TetrisBatch.cameraMatrix = camera;
