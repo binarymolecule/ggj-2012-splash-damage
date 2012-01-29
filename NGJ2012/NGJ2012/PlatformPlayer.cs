@@ -326,7 +326,6 @@ namespace NGJ2012
             {
                 parent.TetrisPlayer.reactiveAllPieces();
                 fixture.Body.ApplyForce(new Vector2(-this.viewDirection * BYTE_FORCE, -BYTE_FORCE));
-
                 //Stop raytracing
                 return 0;
             }
