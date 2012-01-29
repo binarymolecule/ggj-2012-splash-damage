@@ -290,10 +290,15 @@ namespace NGJ2012
         public void DrawGameWorldOnce(Matrix camera, bool platformMode, int wrapAround)
         {
             GraphicsDevice.Clear(platformMode ? Color.CornflowerBlue : Color.Coral);
-            spriteBatch.Begin();
-            Vector3 tl = camera.Translation;
-            spriteBatch.Draw(background, new Rectangle(0,0,1280,720), Color.White);
-            spriteBatch.End();
+            tetrisBatch.DrawAlignedQuad(new Vector2(worldWidthInBlocks/2, -worldHeightInBlocks/2), new Vector2(worldWidthInBlocks, worldHeightInBlocks), background);
+
+            if (false)
+            {
+                spriteBatch.Begin();
+                Vector3 tl = camera.Translation;
+                spriteBatch.Draw(background, new Rectangle(0, 0, 1280, 720), Color.White);
+                spriteBatch.End();
+            }
 
             tetrisBatch.cameraMatrix = camera;
             tetrisBatch.DrawBody(staticWorldGround);
