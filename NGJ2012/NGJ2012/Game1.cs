@@ -153,6 +153,9 @@ namespace NGJ2012
             background = Content.Load<Texture2D>("graphics/level/Background");
             tetrisBatch = new TetrisPieceBatch(GraphicsDevice, Content);
 
+            // Load sound
+            MusicManager.LoadMusic(Content, "background", "sound/level-01");
+
             // Reset player state
             platform.ResetPlayer();
 
@@ -186,6 +189,15 @@ namespace NGJ2012
                 this.Exit();
             }
 
+            // Start/update background music
+            if (!MusicManager.IsPlaying)
+            {
+                MusicManager.MaxVolume = 0.25f;
+                MusicManager.FadeInMusic("background", true, 2.0f, 0.0f);
+            }
+            int msec = gameTime.ElapsedGameTime.Milliseconds;
+            MusicManager.Update(msec);
+
             // Move camera manually
 #if DEBUG
             if (keyboardState.IsKeyDown(Keys.PageUp) && prevKeyboardState.IsKeyUp(Keys.PageUp))
@@ -194,7 +206,8 @@ namespace NGJ2012
                 manualPosition.Y += 1.0f;
 #endif
             // update game progress
-            gameProgress += gameProgressSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            float sec = (float) gameTime.ElapsedGameTime.TotalSeconds;
+            gameProgress += gameProgressSpeed * sec;
             if (gameProgress > Game1.worldWidthInBlocks)
             {
                 gameProgress -= Game1.worldWidthInBlocks;
@@ -205,15 +218,14 @@ namespace NGJ2012
 
             tetrisViewport.cameraPosition = new Vector2(gameProgress, WaterLayer.Position.Y - 4);
 
-
-            world.Step((float)gameTime.ElapsedGameTime.TotalSeconds);
+            world.Step(sec);
 
             Timers.Update(gameTime);
 
             prevKeyboardState = keyboardState;
             prevGamepadState = gamepadState;
 
-            addPowerupToWorld((float)gameTime.ElapsedGameTime.TotalSeconds);
+            addPowerupToWorld(sec);
 
             base.Update(gameTime);
         }
