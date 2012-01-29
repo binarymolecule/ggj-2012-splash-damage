@@ -31,11 +31,8 @@ namespace NGJ2012
         private const float deacceleration = 256.0f;
         private const float maxRunSpeed = 8.0f;
         private const float maxSpeed = 32.0f;
-<<<<<<< HEAD
         private const float defaultJumpForce = 0.5f;
-=======
         private const float timeUntilCanDieAgainReset = 2.0f;
->>>>>>> 381bdcf5e6387311069357e5f2f01cbb1e1e9dcc
 
         Game1 parent;
         const float ScalePlayerSprite = 0.25f;
@@ -99,12 +96,8 @@ namespace NGJ2012
             canJumpBecauseOf.Clear();
             parent.SavePlatform.DisableTriggering();
             dead = false;
-<<<<<<< HEAD
-
-            //resetJumpPower();
-=======
             timeUntilCanDieAgain = timeUntilCanDieAgainReset;
->>>>>>> 381bdcf5e6387311069357e5f2f01cbb1e1e9dcc
+            //resetJumpPower();
         }
 
         List<Fixture> canJumpBecauseOf = new List<Fixture>();
