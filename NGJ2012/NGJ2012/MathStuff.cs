@@ -23,6 +23,11 @@ namespace NGJ2012
             return toMod % d + min;
         }
 
+        public static float WorldDistanceAbs(float a, float b, float w)
+        {
+            return Math.Min(WorldDistance(a, b, w), WorldDistance(b, a, w));
+        }
+
         public static float WorldDistance(float from, float to, float w)
         {
             from = from % w;

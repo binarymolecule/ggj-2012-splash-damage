@@ -114,9 +114,10 @@ namespace NGJ2012
 
             // Create other level components
             WaterLayer = new WaterLayer(this);
-            Components.Add(WaterLayer);
             SavePlatform = new SavePlatform(this);
             Components.Add(SavePlatform);
+            Components.Add(WaterLayer);
+
             waveLayer = new WaveLayer(this);
             Components.Add(waveLayer);
 
