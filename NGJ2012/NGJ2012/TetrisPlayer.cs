@@ -61,6 +61,9 @@ namespace NGJ2012
             tetrisShapes.Add(new bool[,] { { true }, { true }, { true }, { true } });
             tetrisShapes.Add(new bool[,] { { false, true, true }, { true, true, false } });
             tetrisShapes.Add(new bool[,] { { true, true, false }, { false, true, true } });
+            tetrisShapes.Add(new bool[,] { { true } });
+            tetrisShapes.Add(new bool[,] { { true }, { true } });
+            tetrisShapes.Add(new bool[,] { { true }, { true }, { true } });
 
             Game1.Timers.Create(SPAWN_TIME, false, Spawn);
         }
@@ -203,7 +206,7 @@ namespace NGJ2012
         {
             drawer = new TetrisPieceBatch(GraphicsDevice, Game.Content);
 
-            string[] shapeNames = new string[] { "LR", "LL", "O", "T", "I", "MZ", "Z" };
+            string[] shapeNames = new string[] { "LR", "LL", "O", "T", "I", "MZ", "Z", "I1", "I2", "I3" };
             for (int i = 0; i < shapeNames.Length; i++)
             {
                 string n = "shapes/" + shapeNames[i];
@@ -306,7 +309,13 @@ namespace NGJ2012
             drawer.cameraMatrix = camera;
             foreach (TetrisPiece cur in pieces)
             {
-                Color colr = ((cur == currentPiece || cur == currentCheat) && isCurrentPieceBlocked()) ? new Color(1.0f, 0.5f, 0.5f, 0.5f) : Color.White;
+                bool tintMe = (cur == currentPiece || cur == currentCheat);
+                Color colr = Color.White;
+                if(tintMe) {
+                    if(isCurrentPieceBlocked()) colr = new Color(0.0f, 0.0f, 0.0f, 0.5f);
+                    else if ((Game as Game1).PlayerIdTetris == PlayerIndex.One) colr = new Color(1.0f, 0.3f, 0.3f, 1.0f);
+                    else colr = new Color(0.3f, 1.0f, 0.3f, 1.0f);
+                }
                 drawer.DrawTetrisPiece(cur, colr);
                 //drawer.DrawBody(cur.body);
             }

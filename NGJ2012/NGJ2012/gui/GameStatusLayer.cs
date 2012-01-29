@@ -108,7 +108,6 @@ namespace NGJ2012
             parent.SpriteBatchOnlyForGuiOverlay.Draw(tex, screenRectangle, Color.White);
             parent.SpriteBatchOnlyForGuiOverlay.Draw(tex, playerRectangle, Color.Red);
 
-
             if (parent.TetrisPlayer.nextTetrixPiece != null)
             {
                 var posX = textPositionP2.X;
@@ -151,7 +150,7 @@ namespace NGJ2012
 
 
 
-                if (parent.PlatformPlayer.CurrentlySelectedPowerUp != null)
+                if (parent.PlatformPlayer.CurrentlySelectedPowerUp != null && !parent.PlatformPlayer.CurrentlySelectedPowerUp.invisibleBecauseBlinking)
                 {
                     DrawUiSprite(62, lifeUiX, uiBaseline, 8);
                     DrawUiSprite(63, lifeUiX, uiBaseline, 9);

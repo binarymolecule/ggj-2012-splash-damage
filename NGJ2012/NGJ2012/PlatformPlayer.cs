@@ -67,6 +67,7 @@ namespace NGJ2012
 
         AnimatedSprite playerAnimation;
         int animID_Stand, animID_Walk, animID_Jump, animID_PowerJump, animID_Bite, animID_Killed;
+        Texture2D playerMarkerTex;
 
         public PlatformPlayer(Game game, World world)
             : base(game)
@@ -172,6 +173,8 @@ namespace NGJ2012
             animID_Bite = playerAnimation.AddAnimation("bite", frame_Bite, frameNum_Bite, 33, false);
             animID_Killed = animID_PowerJump; // playerAnimation.AddAnimation("killed", 0, 0, 125, true);
             playerAnimation.SetAnimation(animID_Stand);
+
+            playerMarkerTex = Game.Content.Load<Texture2D>("graphics/gui/playerMarker");
 
             base.LoadContent();
         }
@@ -288,9 +291,11 @@ namespace NGJ2012
                 {
                     if (didFallSinceLastJump)
                     {
-                        //canJump = false;
-                        //world.RayCast(new RayCastCallback(RayCastCallbackJump), playerCollider.Position, playerCollider.Position + new Vector2(0, 1.0f));
-                        canJump = canJumpBecauseOf.Count > 0 || Math.Abs(playerCollider.LinearVelocity.Y) < 0.01;
+                        canJump = false;
+                        world.RayCast(new RayCastCallback(RayCastCallbackJump), playerCollider.Position, playerCollider.Position + new Vector2(0, 1.0f));
+                        world.RayCast(new RayCastCallback(RayCastCallbackJump), playerCollider.Position, playerCollider.Position + new Vector2(-0.8f, 1.0f));
+                        world.RayCast(new RayCastCallback(RayCastCallbackJump), playerCollider.Position, playerCollider.Position + new Vector2(0.8f, 1.0f));
+                        //canJump = canJumpBecauseOf.Count > 0 || Math.Abs(playerCollider.LinearVelocity.Y) < 0.01;
                         if (canJump)
                         {
                             jump();
@@ -407,6 +412,12 @@ namespace NGJ2012
         {
             // Draw animation
             playerAnimation.Draw(parent.TetrisBatch, playerCollider.Position, new Vector2(2, 2));
+            Color colr;
+            if ((Game as Game1).PlayerIdPlatform == PlayerIndex.One) colr = new Color(1.0f, 0.3f, 0.3f, 1.0f);
+            else colr = new Color(0.3f, 1.0f, 0.3f, 1.0f);
+            parent.TetrisBatch.DrawAlignedQuad(playerCollider.Position + new Vector2(0, -1.2f), new Vector2(1, 1), playerMarkerTex, false, colr);
+
+            
         }
 
         public void addPowerUp(PowerUp powerup)
