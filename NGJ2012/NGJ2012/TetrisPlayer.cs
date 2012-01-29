@@ -68,14 +68,14 @@ namespace NGJ2012
 
             tetrisProb.Add(1); // LL
             tetrisProb.Add(1); // LR
-            tetrisProb.Add(3); // O
+            tetrisProb.Add(4); // O
             tetrisProb.Add(2); // T
-            tetrisProb.Add(3); // I
+            tetrisProb.Add(4); // I
             tetrisProb.Add(1); // Z
             tetrisProb.Add(1); // MZ
             tetrisProb.Add(1); // I1
             tetrisProb.Add(1); // I2
-            tetrisProb.Add(1); // I3
+            tetrisProb.Add(3); // I3
 
             Game1.Timers.Create(SPAWN_TIME, false, Spawn);
         }
