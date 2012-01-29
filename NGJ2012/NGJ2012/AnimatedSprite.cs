@@ -14,7 +14,7 @@ using System.Diagnostics;
 
 namespace NGJ2012
 {
-    class AnimatedSprite
+    class AnimatedSprite : DrawableGameComponent
     {
         struct Animation
         {
@@ -42,7 +42,7 @@ namespace NGJ2012
         public bool Flipped;
         Rectangle screenRect;
 
-        public AnimatedSprite(Game1 parentGame, String path, List<String> assetNames, Vector2 originInPixels)
+        public AnimatedSprite(Game1 parentGame, String path, List<String> assetNames, Vector2 originInPixels) : base(parentGame)
         {
             game = parentGame;
             textures = new List<Texture2D>(assetNames.Count);
@@ -104,6 +104,8 @@ namespace NGJ2012
 
         public void Update(int msec)
         {
+            if (!this.Enabled) return;
+
             currentMsec += msec;
             if (currentMsec >= currentAnimation.MsPerFrame)
             {
@@ -123,11 +125,13 @@ namespace NGJ2012
 
         public void Draw(SpriteBatch spriteBatch, Vector2 position, float scale)
         {
+            if (!this.Visible) return;
             spriteBatch.Draw(currentTexture, position, null, Color, 0.0f, textureOrigin, scale,
                              Flipped ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 1.0f);
         }
         public void Draw(TetrisPieceBatch batch, Vector2 position, Vector2 scale)
         {
+            if (!this.Visible) return;
             batch.DrawAlignedQuad(position, scale, currentTexture);
         }
     }

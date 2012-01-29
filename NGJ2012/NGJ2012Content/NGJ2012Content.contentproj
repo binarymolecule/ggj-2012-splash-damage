@@ -463,7 +463,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="sound\66951__benboncan__boxing-bell.wav">
-      <Name>bell</Name>
+      <Name>bell-01</Name>
       <Importer>WavImporter</Importer>
       <Processor>SoundEffectProcessor</Processor>
     </Compile>
@@ -482,7 +482,24 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="sound\sharp_echo.wav">
-      <Name>collect_powerup</Name>
+      <Name>powerup-01</Name>
+      <Importer>WavImporter</Importer>
+      <Processor>SoundEffectProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="sound\27361__junggle__water-splash-18.wav">
+      <Name>splash-01</Name>
+      <Importer>WavImporter</Importer>
+      <Processor>SoundEffectProcessor</Processor>
+    </Compile>
+    <Compile Include="sound\7054__mystiscool__eel-fishing-2.wav">
+      <Name>splash-02</Name>
+      <Importer>WavImporter</Importer>
+      <Processor>SoundEffectProcessor</Processor>
+    </Compile>
+    <Compile Include="sound\9508__petenice__splash.wav">
+      <Name>splash-03</Name>
       <Importer>WavImporter</Importer>
       <Processor>SoundEffectProcessor</Processor>
     </Compile>

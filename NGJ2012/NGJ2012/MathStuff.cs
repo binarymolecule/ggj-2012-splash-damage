@@ -23,6 +23,28 @@ namespace NGJ2012
             return toMod % d + min;
         }
 
+        public static float WorldDistanceShortest(float from, float to, float w)
+        {
+            var r = to - from;
+
+            if (r < 0)
+            {
+                r += w;
+            }
+            else if (r >= w)
+            {
+                r -= w;
+            }
+
+            var wh = (0.5f * w);
+
+            if(r >= wh) {
+                r = -(w - r);
+            }
+
+            return r;
+        }
+
         public static float WorldDistanceAbs(float a, float b, float w)
         {
             return Math.Min(WorldDistance(a, b, w), WorldDistance(b, a, w));

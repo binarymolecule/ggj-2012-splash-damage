@@ -174,8 +174,9 @@ namespace NGJ2012
 
             // Load sound
             MusicManager.LoadMusic(Content, "background", "background");
-            SoundManager.LoadSound(Content, "bell");
-            SoundManager.LoadSound(Content, "collect_powerup");
+            SoundManager.LoadSound(Content, "bell", "bell-01");
+            SoundManager.LoadSound(Content, "collect_powerup", "powerup-01");
+            SoundManager.LoadSound(Content, "splash", "splash-03");
             MusicManager.MaxVolume = 0.25f;
             SoundManager.SoundVolume = 1.0f;
 
@@ -209,13 +210,6 @@ namespace NGJ2012
                 this.Exit();
             }
 
-            //Don't update the game while game over
-            if (gameOverLayer.IsActive)
-            {
-                base.Update(gameTime);
-                return;
-            }
-
             // Start/update background music
             if (!MusicManager.IsPlaying)
             {
@@ -224,14 +218,18 @@ namespace NGJ2012
             int msec = gameTime.ElapsedGameTime.Milliseconds;
             MusicManager.Update(msec);
 
+            //Don't update the game while game over
+            if (gameOverLayer.IsActive)
+            {
+                base.Update(gameTime);
+                return;
+            }
 
             if (playerSwitchProgress > 0)
             {
                 playerSwitchProgress -= gameTime.ElapsedGameTime.TotalSeconds;
                 return;
             }
-
-
 
             // Move camera manually
 #if DEBUG
