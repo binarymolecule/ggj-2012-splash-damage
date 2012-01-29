@@ -61,6 +61,9 @@ namespace NGJ2012
             tetrisShapes.Add(new bool[,] { { true }, { true }, { true }, { true } });
             tetrisShapes.Add(new bool[,] { { false, true, true }, { true, true, false } });
             tetrisShapes.Add(new bool[,] { { true, true, false }, { false, true, true } });
+            tetrisShapes.Add(new bool[,] { { true } });
+            tetrisShapes.Add(new bool[,] { { true }, { true } });
+            tetrisShapes.Add(new bool[,] { { true }, { true }, { true } });
 
             Game1.Timers.Create(SPAWN_TIME, false, Spawn);
         }
@@ -203,7 +206,7 @@ namespace NGJ2012
         {
             drawer = new TetrisPieceBatch(GraphicsDevice, Game.Content);
 
-            string[] shapeNames = new string[] { "LR", "LL", "O", "T", "I", "MZ", "Z" };
+            string[] shapeNames = new string[] { "LR", "LL", "O", "T", "I", "MZ", "Z", "I1", "I2", "I3" };
             for (int i = 0; i < shapeNames.Length; i++)
             {
                 string n = "shapes/" + shapeNames[i];
