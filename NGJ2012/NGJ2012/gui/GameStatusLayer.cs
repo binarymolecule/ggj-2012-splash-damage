@@ -33,6 +33,7 @@ namespace NGJ2012
         // Assets
         SpriteFont font;
         Texture2D tex;
+        private Texture2D uiSprites;
 
         public GameStatusLayer(Game game) : base(game)
         {
@@ -49,6 +50,21 @@ namespace NGJ2012
         {
             font = parent.Content.Load<SpriteFont>("fonts/guifont");
             tex = parent.Content.Load<Texture2D>("graphics/gui/gui");
+            uiSprites = parent.Content.Load<Texture2D>(@"graphics/sprites");
+        }
+
+
+        public void DrawUiSprite(int index, int x, int y, int cellX = 0, int cellY = 0)
+        {
+            int itemsPerRow = 8;
+            int cellSize = uiSprites.Width / itemsPerRow;
+            int row = index / itemsPerRow;
+            int col = index % itemsPerRow;
+
+            var srcRect = new Rectangle(col * cellSize, row * cellSize, cellSize, cellSize);
+            var destRect = new Rectangle(x + cellX * cellSize, y + cellY * cellSize, cellSize, cellSize);
+
+            parent.SpriteBatchOnlyForGuiOverlay.Draw(uiSprites, destRect, srcRect, Color.White);
         }
 
         protected override void UnloadContent()
@@ -86,26 +102,61 @@ namespace NGJ2012
             parent.SpriteBatchOnlyForGuiOverlay.Draw(tex, screenRectangle, Color.White);
             parent.SpriteBatchOnlyForGuiOverlay.Draw(tex, playerRectangle, Color.Red);
 
-            //Texts p1:
-            Vector2 widthHeight = font.MeasureString(p1Text);
-            Vector2 posPowerupTxt = new Vector2(textPositionP1.X, textPositionP1.Y + widthHeight.Y);
-            
-            parent.SpriteBatchOnlyForGuiOverlay.DrawString(font, p1Text, textPositionP1, Color.White);
-            
-            widthHeight = font.MeasureString(p1Text);
-            if (texturePowerUp != null)
-            {
-                parent.SpriteBatchOnlyForGuiOverlay.DrawString(font, textPowerup, posPowerupTxt, Color.White);
-                parent.SpriteBatchOnlyForGuiOverlay.Draw(texturePowerUp, posPowerupTxt + new Vector2(font.MeasureString(textPowerup).X, 0.0f), Color.White);
+            if (parent.PlatformPlayer.CurrentlySelectedPowerUp != null) {
+                int posX = 500;
+
+                switch (parent.PlatformPlayer.CurrentlySelectedPowerUp.PowerUpType)
+                {
+                    case PowerUp.EPowerUpType.MegaJump:
+                        DrawUiSprite(4, posX, 0);
+                        break;
+                    case PowerUp.EPowerUpType.WaterProof:
+                        DrawUiSprite(5, posX, 0);
+                        break;
+                }
             }
 
-            //Texts p2:
-            parent.SpriteBatchOnlyForGuiOverlay.DrawString(font, p2Text, textPositionP2, Color.White);
-            if (parent.TetrisPlayer.nextTetrixPiece != null) parent.SpriteBatchOnlyForGuiOverlay.Draw(parent.TetrisPlayer.nextTetrixPiece.texture, textPositionP2 + new Vector2(font.MeasureString(p2Text).X, 0.0f), null, Color.White, 0.0f, new Vector2(), TETRIS_SCALE, SpriteEffects.None, 0.0f);
+            if (parent.TetrisPlayer.nextTetrixPiece != null)
+            {
+                var posX = textPositionP2.X;
+                DrawUiSprite(46, (int)posX, 0, 0, 0);
+                DrawUiSprite(46 + 1, (int)posX, 0, 1, 0);
 
+                parent.SpriteBatchOnlyForGuiOverlay.Draw(parent.TetrisPlayer.nextTetrixPiece.texture, textPositionP2 + new Vector2(64, 0), null, Color.White, 0.0f, new Vector2(), TETRIS_SCALE, SpriteEffects.None, 0.0f);
+            }
+
+            DrawLives();
             parent.SpriteBatchOnlyForGuiOverlay.End();
 
+        }
 
+        private void DrawLives()
+        {
+
+            // Life display
+            {
+                int lifeUiX = 200;
+                int lifeUiY = 20;
+
+                DrawUiSprite(0, lifeUiX, lifeUiY);
+
+                var lives = parent.platform.NumberOfLifes.ToString();
+                var i = 1;
+
+                foreach (char c in lives.ToCharArray())
+                {
+                    if (c == '0')
+                    {
+                        DrawUiSprite(17, lifeUiX, lifeUiY, i++);
+                    }
+                    else
+                    {
+                        DrawUiSprite(8 + (c - '1'), lifeUiX, lifeUiY, i++);
+                    }
+
+                }
+
+            }
         }
     }
 }

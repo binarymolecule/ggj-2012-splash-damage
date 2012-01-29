@@ -32,7 +32,7 @@ namespace NGJ2012
         public TetrisPlayer TetrisPlayer { get { return tetris; } }
         TetrisPieceBatch tetrisBatch;
         public TetrisPieceBatch TetrisBatch { get { return tetrisBatch; } }
-        PlatformPlayer platform;
+        public PlatformPlayer platform;
         public PlatformPlayer PlatformPlayer { get { return platform; } }
 
         public PlayerIndex PlayerIdTetris = PlayerIndex.Two, PlayerIdPlatform = PlayerIndex.One;
@@ -148,7 +148,7 @@ namespace NGJ2012
 
             // Add GUI components
             StatusLayer = new GameStatusLayer(this);
-            //Components.Add(StatusLayer);
+            Components.Add(StatusLayer);
         }
 
         /// <summary>
@@ -178,7 +178,6 @@ namespace NGJ2012
             cloud2 = Content.Load<Texture2D>(@"graphics/level/cloud_02");
             tetrisBatch = new TetrisPieceBatch(GraphicsDevice, Content);
             playerSwitchTexture = Content.Load<Texture2D>(@"graphics/gui/PlayerSwitch");
-            uiSprites = Content.Load<Texture2D>(@"graphics/sprites");
 
             // Load sound
             MusicManager.LoadMusic(Content, "background", "background");
@@ -272,6 +271,7 @@ namespace NGJ2012
 
             base.Update(gameTime);
         }
+<<<<<<< HEAD
 
         public void DrawUiSprite(int index, int x, int y, int cellX = 0, int cellY = 0)
         {
@@ -286,6 +286,10 @@ namespace NGJ2012
             spriteBatch.Draw(uiSprites, destRect, srcRect, Color.White);
         }
 
+=======
+
+
+>>>>>>> a938514ed6932f51cfab82636f13c1cb73c127e8
         Vector2 cloudOffsets = Vector2.Zero;
 
         /// <summary>
@@ -306,31 +310,6 @@ namespace NGJ2012
 
             if (playerSwitchProgress > 0)
                 spriteBatch.Draw(playerSwitchTexture, new Rectangle(0, 0, 1280, 720), new Color(1, 1, 1, (float)playerSwitchProgress));
-
-            // Life display
-            {
-                int lifeUiX = 200;
-                int lifeUiY = 20;
-
-                DrawUiSprite(0, lifeUiX, lifeUiY);
-
-                var lives = platform.NumberOfLifes.ToString();
-                var i = 1;
-
-                foreach (char c in lives.ToCharArray())
-                {
-                    if (c == '0')
-                    {
-                        DrawUiSprite(17, lifeUiX, lifeUiY, i++);
-                    }
-                    else
-                    {
-                        DrawUiSprite(8 + (c - '1'), lifeUiX, lifeUiY, i++);
-                    }
-
-                }
-
-            }
 
 
             spriteBatch.End();
