@@ -10,3 +10,8 @@ NGJ2012/NGJ2012/NGJ2012.csproj.Release.cachefile
 NGJ2012/NGJ2012/bin/x86/Release
 NGJ2012/NGJ2012/obj
 NGJ2012/NGJ2012Content/obj
+NGJ2012/NGJ2012Content/char/*.bat
+NGJ2012/NGJ2012Content/char/*.lst
+NGJ2012/NGJ2012Content/char_backup/*
+NGJ2012/NGJ2012Content/char_fixed/*
+NGJ2012/NGJ2012Content/char/pngcrush.exe
