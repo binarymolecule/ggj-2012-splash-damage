@@ -39,8 +39,11 @@ namespace NGJ2012
         private Body collisionBody;
         private EPowerUpType powerUpType;
         private bool usageTimerRunning = false;
-        private double remainingPowerUpTimeInSecs = 3;
-        private const double START_BLINKING= 1;
+        private double remainingPowerUpTimeInSecs = 5;
+        private const double START_BLINKING_FAST= 2;
+
+        private const double BLINK_SLOW = 60.0f;
+        private const double BLINK_FAST = 20.0f;
 
         public bool invisibleBecauseBlinking = false;
 
@@ -137,12 +140,14 @@ namespace NGJ2012
                 this.remainingPowerUpTimeInSecs -= gameTime.ElapsedGameTime.TotalSeconds;
             }
 
-            if (remainingPowerUpTimeInSecs <= START_BLINKING)
+            if (remainingPowerUpTimeInSecs <= 0) this.onPowerUpExhausted();
+            else
             {
-                this.invisibleBecauseBlinking = (remainingPowerUpTimeInSecs*100.0f) % 10 > 5;
+                if (remainingPowerUpTimeInSecs >= START_BLINKING_FAST) this.invisibleBecauseBlinking = (remainingPowerUpTimeInSecs * 100.0f) % BLINK_SLOW > BLINK_SLOW / 2;
+                else this.invisibleBecauseBlinking = (remainingPowerUpTimeInSecs * 100.0f) % BLINK_FAST > BLINK_FAST / 2;
             }
 
-            if (remainingPowerUpTimeInSecs <= 0) this.onPowerUpExhausted();
+            
 
             base.Update(gameTime);
         }
