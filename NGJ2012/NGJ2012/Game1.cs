@@ -170,8 +170,7 @@ namespace NGJ2012
             StatusLayer = new GameStatusLayer(this);
             Components.Add(StatusLayer);
 
-            MusicManager.Reset();
-            SoundManager.Reset();
+            MusicManager.StopMusic();
         }
 
         /// <summary>
@@ -254,6 +253,8 @@ namespace NGJ2012
                 base.Update(gameTime);
                 return;
             }
+
+            if (MediaPlayer.State == MediaState.Stopped) return;
 
             if (playerSwitchProgress > 0)
             {
