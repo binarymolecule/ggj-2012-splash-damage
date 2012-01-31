@@ -94,7 +94,11 @@ namespace NGJ2012
             numberOfLifes = INITIAL_NUMBER_OF_LIFES;
         }
 
-        public void ResetPlayer(Timer timer = null)
+        public void ResetPlayer()
+        {
+            ResetPlayer(null);
+        }
+        public void ResetPlayer(Timer timer)
         {
             playerCollider.Enabled = true;
             playerCollider.Position = new Vector2(3, -2 + parent.WaterLayer.Height);
@@ -127,15 +131,15 @@ namespace NGJ2012
             {
                 parent.SavePlatform.Trigger();
             }
-            Debug.Print("Fix:" + fixtureB.CollisionCategories);
+            //Debug.Print("Fix:" + fixtureB.CollisionCategories);
 
             if ((fixtureB.CollisionCategories & (Game1.COLLISION_GROUP_TETRIS_BLOCKS | Game1.COLLISION_GROUP_STATIC_OBJECTS)) == 0) return true;
 
             Vector2 normal;
             FixedArray2<Vector2> points;
             contact.GetWorldManifold(out normal, out points);
-            Debug.Print("Point1:" + points[0].X + "," + points[0].Y);
-            Debug.Print("Point2:" + points[1].X + "," + points[1].Y);
+            //Debug.Print("Point1:" + points[0].X + "," + points[0].Y);
+            //Debug.Print("Point2:" + points[1].X + "," + points[1].Y);
 
             if (normal.Y < 0)
             {

@@ -20,11 +20,9 @@ namespace NGJ2012
         Rectangle screenRectangle, playerRectangle;
 
         private String p1Text;
-        private String p2Text;
         private String textPowerup;
         private Texture2D texturePowerUp;
 
-        private Vector2 positionPowerUp;
         private Vector2 textPositionP1;
         private Vector2 textPositionP2;
 
@@ -56,7 +54,15 @@ namespace NGJ2012
         }
 
 
-        public void DrawUiSprite(int index, int x, int y, int cellX = 0, int cellY = 0)
+        public void DrawUiSprite(int index, int x, int y)
+        {
+            DrawUiSprite(index, x, y, 0, 0);
+        }
+        public void DrawUiSprite(int index, int x, int y, int cellX)
+        {
+            DrawUiSprite(index, x, y, cellX, 0);
+        }
+        public void DrawUiSprite(int index, int x, int y, int cellX, int cellY)
         {
             int itemsPerRow = 8;
             int cellSize = uiSprites.Width / itemsPerRow;
@@ -94,8 +100,6 @@ namespace NGJ2012
             {
                 textPowerup += "\n" + p.getRemainingPowerUpTimeInSecsFixedPoint() + " sec";
             }
-
-            p2Text = "Next tetris: ";
 
             base.Update(gameTime);
         }

@@ -90,7 +90,11 @@ namespace NGJ2012
             game.DrawGameWorldOnce(camera, true, wrapAround);
         }
 
-        public void Compose(SpriteBatch spriteBatch, int x = 0, int y = 0)
+        public void Compose(SpriteBatch spriteBatch)
+        {
+            Compose(spriteBatch, 0, 0);
+        }
+        public void Compose(SpriteBatch spriteBatch, int x, int y)
         {
             if (splitLine < 0)
             {

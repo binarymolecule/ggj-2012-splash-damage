@@ -135,7 +135,7 @@ namespace NGJ2012
 
             nextPiece = getRandomTetrisPiece();
 
-            Debug.Print("Spawn new tetris piece at: {0}, {1}", currentPiece.body.Position.X, currentPiece.body.Position.Y);
+            //Debug.Print("Spawn new tetris piece at: {0}, {1}", currentPiece.body.Position.X, currentPiece.body.Position.Y);
         }
 
         private Vector2 getSpawnPosition()

@@ -21,6 +21,7 @@ using FarseerPhysics.Collision;
 using FarseerPhysics.Collision.Shapes;
 using FarseerPhysics.Dynamics.Joints;
 using FarseerPhysics.Dynamics.Contacts;
+using System.Reflection;
 
 namespace NGJ2012
 {
@@ -40,7 +41,7 @@ namespace NGJ2012
         private EPowerUpType powerUpType;
         private bool usageTimerRunning = false;
         private double remainingPowerUpTimeInSecs = 5;
-        private const double START_BLINKING_FAST= 2;
+        private const double START_BLINKING_FAST = 2;
 
         private const double BLINK_SLOW = 60.0f;
         private const double BLINK_FAST = 20.0f;
@@ -74,12 +75,30 @@ namespace NGJ2012
             collisionBody.IsSensor = true;
         }
 
-        public static PowerUp getRandomPowerUp(Game1 game, World world, Vector2 position) 
+        public static String[] GetEnumNames(Type enumType)
+        {
+            if (enumType.BaseType == typeof(Enum))
+            {
+                FieldInfo[] info = enumType.GetFields(BindingFlags.Static | BindingFlags.Public);
+                String[] values = new String[info.Length];
+                for (int i = 0; i < values.Length; ++i)
+                {
+                    values[i] = (String)info[i].Name;
+                }
+                return values;
+            }
+            else
+            {
+                throw new Exception("Given type is not an Enum type");
+            }
+        }
+
+        public static PowerUp getRandomPowerUp(Game1 game, World world, Vector2 position)
         {
             Type type = typeof(EPowerUpType);
-            String[] enumArray = (String[])Enum.GetNames(type);
+            String[] enumArray = GetEnumNames(type);
             int random = (new Random()).Next(enumArray.Length);
-            return new PowerUp(game, world, (EPowerUpType)Enum.Parse(type, enumArray[random]), position);
+            return new PowerUp(game, world, (EPowerUpType)Enum.Parse(type, enumArray[random], false), position);
         }
 
         bool onPlayerCollision(Fixture fixtureA, Fixture fixtureB, Contact contact)
@@ -136,14 +155,15 @@ namespace NGJ2012
                     animation.SetAnimation("star");
                     break;
             }
-            
-            
+
+
             base.LoadContent();
         }
 
         public override void Update(GameTime gameTime)
         {
-            if (usageTimerRunning) {
+            if (usageTimerRunning)
+            {
                 this.remainingPowerUpTimeInSecs -= gameTime.ElapsedGameTime.TotalSeconds;
             }
 
@@ -154,7 +174,7 @@ namespace NGJ2012
                 else this.invisibleBecauseBlinking = (remainingPowerUpTimeInSecs * 100.0f) % BLINK_FAST > BLINK_FAST / 2;
             }
 
-            
+
 
             base.Update(gameTime);
         }
@@ -173,7 +193,7 @@ namespace NGJ2012
 
         public void use()
         {
-            if(!usageTimerRunning)
+            if (!usageTimerRunning)
             {
                 if (!isUsedOnCollectingAndHasNoDuration) usageTimerRunning = true;
 
