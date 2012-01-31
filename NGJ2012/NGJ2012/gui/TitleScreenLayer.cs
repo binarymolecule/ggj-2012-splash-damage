@@ -16,9 +16,7 @@ namespace NGJ2012
         private const float DURATION = 3.0f;
 
         Game1 game;
-        GameComponentCollection originalComponents;
         private bool isActive = true;
-        private float elapsedTimeSinceActive = 0.0f;
         private Texture2D texture;
 
         public bool IsActive
