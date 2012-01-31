@@ -16,7 +16,6 @@ namespace NGJ2012
         private const float DURATION = 3.0f;
 
         Game1 game;
-        GameComponentCollection originalComponents;
         private bool isActive = false;
         private float elapsedTimeSinceActive = 0.0f;
         private Texture2D texture;
@@ -47,7 +46,7 @@ namespace NGJ2012
 
             if (isActive) elapsedTimeSinceActive += secs;
 
-            //if (elapsedTimeSinceActive >= DURATION) onGameOverEnd();
+            if (elapsedTimeSinceActive >= DURATION) onGameOverEnd();
 
             base.Update(gameTime);
         }
@@ -75,6 +74,8 @@ namespace NGJ2012
         {
             game.Components.Remove(this);
             isActive = false;
+            (Game as Game1).ResetGame();
+            (Game as Game1).platform.ResetPlayer();
         }
     }
 }

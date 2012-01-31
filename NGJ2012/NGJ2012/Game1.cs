@@ -91,9 +91,9 @@ namespace NGJ2012
         Texture2D cloud1;
         Texture2D cloud2;
 
-        public float gameProgress = 0;
+        public float gameProgress;
         //float tetrisProgressAdd = 10;
-        float gameProgressSpeed = 3.5f;
+        const float gameProgressSpeed = 3.5f;
         private GameViewport tetrisViewport;
 
         public GameViewport TetrisViewport { get { return tetrisViewport; } }
@@ -102,7 +102,7 @@ namespace NGJ2012
         //Power-Ups:
         private const float TIME_BETWEEN_POWERUPSPAWNS_SECS = 3.0f;
         private const int SPAWNHEIGHT_OF_PWUP_ABOVE_PLAYER = 2;
-        private float elapsedTimeSinceLastPowerUp = 0.0f;
+        private float elapsedTimeSinceLastPowerUp;
 
         public Vector2 manualPosition = Vector2.Zero;
 
@@ -111,10 +111,23 @@ namespace NGJ2012
             graphics = new GraphicsDeviceManager(this);
             graphics.PreferredBackBufferWidth = SCREEN_WIDTH;
             graphics.PreferredBackBufferHeight = SCREEN_HEIGHT;
+#if !DEBUG
             graphics.IsFullScreen = true;
-#if !_DEBUG
-            Content.RootDirectory = "Content";
 #endif
+
+            Content.RootDirectory = "Content";
+
+            ResetGame();
+        }
+
+        public void ResetGame()
+        {
+            gameProgress = 0;
+            elapsedTimeSinceLastPowerUp = 0.0f;
+            cloudOffsets = Vector2.Zero;
+
+            Components.Clear();
+
             world = new World(new Vector2(0, 25));
 
             staticWorldGround = BodyFactory.CreateRectangle(world, worldWidthInBlocks, 1, 1.0f, new Vector2(worldWidthInBlocks / 2.0f, 0.5f));
@@ -279,7 +292,7 @@ namespace NGJ2012
             base.Update(gameTime);
         }
 
-        Vector2 cloudOffsets = Vector2.Zero;
+        Vector2 cloudOffsets;
 
         /// <summary>
         /// This is called when the game should draw itself.
