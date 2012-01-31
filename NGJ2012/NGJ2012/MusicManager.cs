@@ -121,6 +121,7 @@ namespace NGJ2012
             }
         }
 
+        static bool musicRunning = false;
         /// <summary>
         /// Stop background music.
         /// </summary>
@@ -130,6 +131,7 @@ namespace NGJ2012
                 MediaPlayer.Stop();
             currentMusicIndex = -1;
             fader.Reset();
+            musicRunning = false;
         }
 
         /// <summary>
@@ -198,8 +200,11 @@ namespace NGJ2012
 
 
 
-                if (fader.Value > 0 && MediaPlayer.State == MediaState.Stopped)
+                if (fader.Value > 0 && !musicRunning)
+                {
+                    musicRunning = true;
                     MediaPlayer.Play(music[currentMusicIndex]);
+                }
             }
         }
     }
