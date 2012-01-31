@@ -15,3 +15,5 @@ NGJ2012/NGJ2012Content/char/*.lst
 NGJ2012/NGJ2012Content/char_backup/*
 NGJ2012/NGJ2012Content/char_fixed/*
 NGJ2012/NGJ2012Content/char/pngcrush.exe
+NGJ2012/NGJ2012/bin/Xbox 360/Release/
+NGJ2012/NGJ2012/NGJ2012 Xbox360.csproj.Release.cachefile
