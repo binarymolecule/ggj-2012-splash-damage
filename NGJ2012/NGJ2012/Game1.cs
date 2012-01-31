@@ -169,6 +169,9 @@ namespace NGJ2012
             // Add GUI components
             StatusLayer = new GameStatusLayer(this);
             Components.Add(StatusLayer);
+
+            MusicManager.Reset();
+            SoundManager.Reset();
         }
 
         /// <summary>

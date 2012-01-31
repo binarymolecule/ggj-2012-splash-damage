@@ -191,7 +191,13 @@ namespace NGJ2012
                 MusicVolume = fader.Value;
                 //if (fader.State == FadeHelper.FadeState.Out)
                 //    StopMusic();
-                //else
+                //else 
+
+
+                // dont mark stopped so we wont re-start due to IsPlaying = false
+
+
+
                 if (fader.Value > 0 && MediaPlayer.State == MediaState.Stopped)
                     MediaPlayer.Play(music[currentMusicIndex]);
             }
